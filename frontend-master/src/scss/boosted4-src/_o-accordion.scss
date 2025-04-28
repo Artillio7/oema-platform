@@ -1,0 +1,68 @@
+//
+//    Accordion
+//
+
+.o-accordion {
+  .card {
+    margin-bottom: 0;
+    border: 0;
+    // border 1px for first child only
+    border-top: 1px solid $gray-light-o;
+    border-bottom: 1px solid $gray-light-o;
+    // remove border for card other than the first one
+    ~ .card {
+      border-top: 0;
+    }
+  }
+
+  .card-header {
+    padding: 0;
+    background-color: #fff;
+    border: 0;
+
+    &,
+    h5 {
+      margin: 0;
+      font-size: $font-size-base;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    a {
+      position: relative;
+      display: block;
+      padding: 1.0625rem 2.125rem 1.0625rem 0;
+
+      &::after {
+        position: absolute;
+        top: 1.3125rem;
+        right: .625rem;
+        width: .875rem;
+        height: .4375rem;
+        content: "";
+        background-image: $accordion-arrow-icon;
+      }
+
+      &[aria-expanded="true"]::after {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .card-block {
+    padding: 0;
+    margin: .625rem;
+  }
+}
+// For mobile display emphase the border
+@include media-breakpoint-down(sm) {
+  .o-accordion .card {
+    // border 1px for first child only
+    border-top: 2px;
+    border-bottom-width: 2px;
+    // remove border for card other than the first one
+    ~ .card {
+      border-top: 0;
+    }
+  }
+}

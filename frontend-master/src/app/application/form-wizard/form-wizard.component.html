@@ -1,0 +1,222 @@
+<div *ngIf="!steps || !aboutYouForm">
+  <div class="spinner">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+  </div>
+  <div class="loading-error">{{ loadingErrorMsg }}</div>
+</div>
+
+<div class="animated fadeIn" *ngIf="steps && aboutYouForm">
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      <div *ngIf="canSubmitForms === undefined"></div>
+      <!-- Application submission is closed ! -->
+      <div
+        *ngIf="canSubmitForms === false && connectedUser && (connectedUser.role === 'Applicant' || connectedUser.role === 'Reviewer')"
+        class="application-closed">
+        <img class="fishy"
+          src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pjxzdmcgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiNmODk5MWQ7fS5jbHMtMntmaWxsOiNmZDA7fS5jbHMtM3tmaWxsOiMzMTQ5Njc7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZS8+PGcgZGF0YS1uYW1lPSIxOCBDbG9zZWQgU2lnbiIgaWQ9Il8xOF9DbG9zZWRfU2lnbiI+PHJlY3QgY2xhc3M9ImNscy0xIiBoZWlnaHQ9IjM2IiByeD0iNiIgcnk9IjYiIHdpZHRoPSI5NiIgeD0iMTYiIHk9IjY0Ii8+PGNpcmNsZSBjbGFzcz0iY2xzLTIiIGN4PSI2NCIgY3k9IjI4IiByPSI2Ii8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNNzEuODUsNzcuODNhNC4zNyw0LjM3LDAsMCwxLDIuMzQsMSwxLjkzLDEuOTMsMCwxLDAsMi4wOC0zLjI1QTcuOTQsNy45NCwwLDAsMCw3MS44NSw3NGMtMy4xMywwLTUuNTUsMi4wNi01LjU1LDQuNTgsMCwyLjc0LDIuNjQsNC4yMSw1LjM1LDQuNTguNTUuMTEsMiwuNDUsMi4yNiwxLDAsLjU3LTEuMzgsMS0yLDFhNS4yNSw1LjI1LDAsMCwxLTIuNzktMS4xNiwxLjkzLDEuOTMsMCwxLDAtMi40MiwzLDguNzMsOC43MywwLDAsMCw1LjIzLDJjMy4xMiwwLDUuODgtMiw1Ljg4LTQuODJzLTIuODgtNC40LTUuNjYtNC43OGMtMS42LS4zMS0yLS43Ny0yLS43N0M3MC4xNSw3OC4zOSw3MC44LDc3LjgzLDcxLjg1LDc3LjgzWiIvPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTQwLDc2LjM0Vjg3YTIsMiwwLDAsMCwyLDJoNS44M2EyLDIsMCwwLDAsMC00SDQ0Vjc2LjM0QTIsMiwwLDAsMCw0MCw3Ni4zNFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik01MCw4MS40OEE3LjE2LDcuMTYsMCwxLDAsNTcuMjMsNzQsNy4zMiw3LjMyLDAsMCwwLDUwLDgxLjQ4Wm0xMC4yNiwwYzAsMi44OS0zLjIxLDQuNjQtNS4yNywyLjQzLTEuOTQtMi0uNzEtNS44NiwyLjItNS44NkEzLjI5LDMuMjksMCwwLDEsNjAuMyw4MS40OFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik0zNC40NCw3OC44MmEyLDIsMCwwLDAsMi40OS0zLjIxQTcuNyw3LjcsMCwwLDAsMzIuMTUsNzRhNy42LDcuNiwwLDAsMC03LjYsNy40OGgwYzAsNi4zLDcuNDQsOS43LDEyLjM5LDUuODZhMiwyLDAsMCwwLTIuNTEtMy4yLDMuNTIsMy41MiwwLDEsMSwwLTUuMzFaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNODcuNjksNzguMzVhMiwyLDAsMCwwLDAtNEg4MS44YTIsMiwwLDAsMC0yLDJWODdhMiwyLDAsMCwwLDEsMS43NVY4OWg2LjgzYTIsMiwwLDAsMCwwLTRIODMuODFWODMuNjVIODdhMiwyLDAsMCwwLDAtNGgtMy4yVjc4LjM1WiIvPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTEwMy4wOSw4MS42NGE3LjI5LDcuMjksMCwwLDAtNy4yOC03LjI4SDkzLjY5YTIsMiwwLDAsMC0yLDJWODdhMiwyLDAsMCwwLDIsMmgyLjEzQTcuMzEsNy4zMSwwLDAsMCwxMDMuMDksODEuNjRaTTk1LjgxLDg1aC0uMTJWNzguMzVoLjEyQzEwMC4xNCw3OC4zNSwxMDAuMTgsODQuOTMsOTUuODEsODVaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNOTIuNzMsOThIMjJhNCw0LDAsMCwxLTQtNFY3MGE0LDQsMCwwLDEsNC00SDQyLjU1YTIsMiwwLDAsMCwwLTRIMzIuODNMNTkuOTMsMzQuODlhOCw4LDAsMCwwLDguMTMsMEw4MS43MSw0OC41NGEyLDIsMCwwLDAsMi44My0yLjgzTDcwLjg4LDMyLjA2QTgsOCwwLDAsMCw2NCwyMGEyLDIsMCwwLDAsMCw0LDQsNCwwLDAsMSwyLjc5LDYuODZDNjMuNTgsMzQsNTguMjQsMzAuMDgsNjAuNTEsMjZhMiwyLDAsMCwwLTMuNDktMiw4LDgsMCwwLDAsLjA5LDhMMjcuMTcsNjJIMjJhOCw4LDAsMCwwLTgsOFY5NGE4LDgsMCwwLDAsOCw4SDkyLjczQTIsMiwwLDAsMCw5Mi43Myw5OFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik0xMDYsNjJoLTUuMTdMODguMDksNDkuMjZhMiwyLDAsMCwwLTIuODMsMi44M0w5NS4xNyw2Mkg3NmEyLDIsMCwwLDAsMCw0aDMwYTQsNCwwLDAsMSw0LDRWOTRhNCw0LDAsMCwxLTQsNEg5OC41MWEyLDIsMCwwLDAsMCw0SDEwNmE4LDgsMCwwLDAsOC04VjcwQTgsOCwwLDAsMCwxMDYsNjJaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNNzAsNjJINDkuMjJhMiwyLDAsMCwwLDAsNEg3MEEyLDIsMCwwLDAsNzAsNjJaIi8+PC9nPjwvc3ZnPg=="
+          alt="We are closed!">
+        <blockquote [innerHTML]="appDomain.formWizard.closedMsg">
+        </blockquote>
+      </div>
+      <!-- /Application submission is closed -->
+
+
+      <div
+        *ngIf="canSubmitForms === true || connectedUser && (connectedUser.role === 'Referent' || connectedUser.role === 'Admin')"
+        appCardWidget class="card">
+        <div *ngIf="urlPrefix.startsWith('senior')" class="ribbon ribbon-top-right"><span>senior</span></div>
+
+        <div class="card-header">
+          <div *ngIf="!editedFormId" [innerHTML]="formCardHeader">
+          </div>
+
+          <div *ngIf="editedFormId && isUser"><i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
+            Modifying your <span *ngIf="formType === 'renew'" class="text-primary">renewal</span> <span *ngIf="urlPrefix.startsWith('senior')" class="text-primary">Senior</span> application form for the <span
+              class="text-primary">{{ expertCommunity }}</span> community</div>
+
+          <div *ngIf="editedFormId && !isUser"><i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
+            Modifying {{ formType === 'new' ? 'the' :'the renewal' }} {{ urlPrefix.startsWith('senior') ? 'Senior' :'' }} application by <span
+            class="text-primary">{{ user.email }}</span> for the <span
+              class="text-primary">{{ expertCommunity }}</span> community</div>
+
+          <div class="card-actions widget-controls">
+            <a data-widgster="fullscreen" href="#" class="transition"><i class="fa fa-expand"></i></a>
+            <a data-widgster="restore" href="#" class="transition"><i class="fa fa-compress"></i></a>
+          </div>
+        </div>
+
+        <div class="card-block widget-body formwizard-container">
+
+          <button type="button" class="btn btn-outline-primary px-1 mb-2 form-wizard-toggle"
+            (click)="isFormWizardNavCollapsed = !isFormWizardNavCollapsed"
+            [attr.aria-expanded]="!isFormWizardNavCollapsed" aria-controls="collapseWizardNav">
+            <i class="fa fa-paw" aria-hidden="true"></i> &nbsp;Form wizard
+          </button>
+
+          <div id="collapseWizardNav" [ngbCollapse]="isFormWizardNavCollapsed">
+            <div class="row">
+              <div *ngFor="let step of steps; let last = last; let stepIdx = index" id="{{step.name.toLowerCase().split(' ').join('-')}}" class="col-sm-6 col-12 step"
+                [class.active]="step.active" [class.valid]="step.valid"
+                [ngClass]="{'last' : last, 'col-md-2': steps.length <= 6,'col-md-x-8': steps.length >= 7 }"
+                (click)="goToStep(stepIdx)">
+                <div class="step-icon">
+                  <i class="fa {{ step.icon }}" aria-hidden="true"></i>
+                </div>
+                <span class="step-name" [class.active]="step.active" [class.valid]="step.valid">{{step.name}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngFor="let step of steps; let idx = index" [hidden]="!step.active" class="col form-wizard">
+            <div class="row form-title">
+              <h4 id="{{step.name.toLowerCase().split(' ').join('-')}}"><i class="fa {{ step.icon }}" aria-hidden="true"></i>&nbsp;&nbsp;{{step.name}}</h4>
+            </div>
+
+            <!-- Wizard step 1 (about you) -->
+            <form role="form" *ngIf="!idx" class="mt-2" (ngSubmit)="saveUserProfile()" novalidate>
+              <div class="about-you-form-guidelines pb-1">
+                <p><mark>Please fill the following form fields about you with the <b>same information</b> as displayed
+                    on your profile in the Orange Intranet directory (<a
+                      href="http://annuaire.sso.infra.ftgroup/persons/oJhfyOsDziADjHYH_9OurA%3D%3D"
+                      target="_blank">see this link for an example</a>).</mark></p>
+                <p><b>Before filling the form, please read carefully these important remarks:</b></p>
+                <ul>
+                  <li><b>Identifiant (Cu-Id):</b> this is the identifiant uniquely assigned to each employee in Orange.
+                    It is formatted with 4 letters and 4 numbers (e.g. <i>csdr3681</i>). Put <i>abcd1234</i> if you do
+                    not know about your Cu-Id.</li>
+                  <li><b>Classification:</b> this is your grade in Orange. For public servants in France (a.k.a
+                    fonctionnaires), the grade is from I.3 to IV.6. For contractual employees, the grade is from A to G.
+                  </li>
+                  <li><b>Entity:</b> this is the full-path acronym of the team you belong to, <b>as displayed in the
+                      Orange Intranet directory</b>, e.g. <i>Orange/IMT/OLN/WNI/IPN/ITEQ</i> (please make Ctrl+C and
+                    Ctrl+V the Entity value in your profile in the directory).</li>
+                  <li><strong>Fields with <span class="text-danger">&#9679;</span> are mandatory.</strong></li>
+                </ul>
+              </div>
+
+              <div class="profile-cover col-xl-10 pb-1">
+                <div class="media">
+                  <div class="media-left">
+                    <app-form-user-photo [userId]="user._id" [imgSrc]="userPhotoSrc" [formControl]="profileFormUserPhoto" [profileHasError]="step.hasError"></app-form-user-photo>
+                  </div>
+
+                  <div class="media-body">
+                    <label>Upload your photo</label>
+                  </div>
+                </div>
+              </div>
+              <app-user-profile-form [profileForm]="aboutYouForm" [profileHasError]="step.hasError">
+              </app-user-profile-form>
+            </form>
+
+            <!-- Wizard Step >= 1 before Submission -->
+            <form role="form" *ngIf="idx && idx < (steps.length - 1)" [formGroup]="anyStepForms[idx-1]"
+              (ngSubmit)="retrieveCurrentStepDataAndSave()" novalidate>
+              <section *ngFor="let formPart of step.form" class="form-part row">
+                <div *ngIf="formPart.group" class="col form-part-title fp-mt-1">
+                  <h5><i class="fa fa-angle-right "></i>&nbsp;&nbsp;<span [innerHTML]="formPart.group"></span></h5>
+                </div>
+
+                <div *ngFor="let question of formPart.questions" class="form-group col-md-12 bottom-spacing"
+                  [ngSwitch]="question.type">
+                  <app-form-input-text *ngSwitchCase="FormElementType.TextInput" [formElement]="question"
+                    formControlName="{{ question.name }}"></app-form-input-text>
+                  <app-form-textarea *ngSwitchCase="FormElementType.Textarea" [formElement]="question"
+                    formControlName="{{ question.name }}"></app-form-textarea>
+                  <app-form-battery-levels *ngSwitchCase="FormElementType.BatteryLevels" [formElement]="question"
+                    formControlName="{{ question.name }}"></app-form-battery-levels>
+                  <app-form-input-checkboxes *ngSwitchCase="FormElementType.Checkbox" [formElement]="question"
+                    formControlName="{{ question.name }}"></app-form-input-checkboxes>
+                  <app-form-select *ngSwitchCase="FormElementType.Select" [formElement]="question"
+                    formControlName="{{ question.name }}"></app-form-select>
+                  <app-form-input-radio *ngSwitchCase="FormElementType.Radio" [formElement]="question"
+                    formControlName="{{ question.name }}"></app-form-input-radio>
+                  <app-form-mix-array *ngSwitchCase="FormElementType.MixArray" [formElement]="question"
+                    formGroupName="{{ question.name }}"
+                    [maForm]="getNestedFormGroup(anyStepForms[idx-1], question.name)"></app-form-mix-array>
+                  <app-form-input-file *ngSwitchCase="FormElementType.File" [formElement]="question" [userId]="user._id"
+                    [communityId]="communityId" [formId]="formId" [isSeniorApp]="urlPrefix.startsWith('senior')" [uploadTarget]="'mongo'" [userAnsweredFormData]="userFormData"
+                    formControlName="{{ question.name }}"></app-form-input-file>
+                  <app-form-input-file *ngSwitchCase="FormElementType.S3File" [formElement]="question" [userId]="user._id"
+                    [communityId]="communityId" [formId]="formId" [isSeniorApp]="urlPrefix.startsWith('senior')" [uploadTarget]="'aws-s3'" [userAnsweredFormData]="userFormData"
+                    formControlName="{{ question.name }}"></app-form-input-file>
+                  <app-form-dropzone *ngSwitchCase="FormElementType.Dropzone" [formElement]="question" [userId]="user._id"
+                    [communityId]="communityId" [formId]="formId" [isSeniorApp]="urlPrefix.startsWith('senior')" [userAnsweredFormData]="userFormData"
+                    formControlName="{{ question.name }}"></app-form-dropzone>
+                  <app-form-unknown-element *ngSwitchCase="FormElementType.Text" [formElement]="question"></app-form-unknown-element>
+                  <app-form-unknown-element *ngSwitchDefault [attr.data-name]="question.type"></app-form-unknown-element>
+                </div>
+              </section>
+            </form>
+
+            <!-- Wizard Step: Submission -->
+            <div *ngIf="idx === (steps.length - 1)" class="pb-2">
+
+              <div class="row sumitting-community mt-2 mb-1">
+                <div *ngIf="!editedFormId" class="col-xl-8 mb-1">
+                  <p>You are preparing to apply for the <strong>{{ expertCommunity }}</strong> community.</p>
+                  <p><strong>Please check your entered data carefully before submission.</strong></p>
+                </div>
+                <div *ngIf="editedFormId && isUser" class="col-xl-8 mb-1">
+                  <p>You are modifying your <span *ngIf="formType === 'renew'">renewal</span> <span *ngIf="urlPrefix.startsWith('senior')">Senior</span> application form for the
+                    {{ expertCommunity }} community.</p>
+                  <p>Please check your entered data carefully before submission.</p>
+                </div>
+                <div *ngIf="editedFormId && !isUser" class="col-xl-8 mb-1">
+                  <p>As a Referent or Admin, you are modifying <strong>{{ formType === 'new' ? 'the' :'the renewal' }} {{ urlPrefix.startsWith('senior') ? 'Senior' :'' }}
+                      application form by {{ this.user.firstname + ' ' + this.user.lastname + ' (' + this.user.email +
+                      ')' }}</strong> for the {{ expertCommunity }} community.</p>
+                  <p>Please check your entered data carefully before submission.</p>
+                </div>
+                <div class="col-xl-4">
+                  <button *ngIf="canBeSubmitted" type="button" class="btn btn-primary pull-right ml-1 mb-1" (click)="applyApplication($event)"
+                    [disabled]="alertService.lastType === 'success'" [innerHTML]="submitFormButtonLabel"></button>
+
+                  <button data-test="btn-export-app-form-pdf" type="button" class="btn btn-primary pull-right export-pdf mb-1" (click)="exportPDF($event)"
+                    [innerHTML]="pdfExportButtonLabel"></button>
+                </div>
+              </div>
+
+              <!-- app form viewer -->
+              <app-application-form-viewer *ngIf="step.active" [steps]="steps" [userAnsweredForm]="userFormData" [user]="user"
+                [communityId]="communityId" [formId]="formId" [isSeniorExpert]="urlPrefix.startsWith('senior')"
+                (msgAlert)="setEventNotification($event)"> </app-application-form-viewer>
+
+            </div>
+            <!-- /End wizard Step: Submission -->
+          </div>
+
+          <div class="row">
+            <div class="col-12 formwizard-buttons">
+              <button data-test="btn-prev-form-step" *ngIf="!steps[0].active" type="button" id="prev-form-step"
+                class="btn btn-primary pull-left btn-form-prev" (click)="prev()"><i class="fa fa-chevron-left arrow"
+                  aria-hidden="true"></i>&nbsp; Prev Step</button>
+              <button data-test="btn-save-current-form" *ngIf="!steps[0].active && !steps[steps.length-1].active" type="submit"
+              id="save-current-form" class="btn btn-outline-primary btn-form-save" (click)="retrieveCurrentStepDataAndSave($event)"
+                [disabled]="alertService.lastType === 'success'" [innerHTML]="saveFormButtonLabel"></button>
+              <button data-test="btn-next-form-step" *ngIf="!steps[steps.length-1].active" type="button" id="next-form-step"
+                class="btn btn-primary pull-right btn-form-next" (click)="next()">Next Step &nbsp;<i
+                  class="fa fa-chevron-right arrow" aria-hidden="true"></i></button>
+              <button data-test="btn-submit-form" *ngIf="steps[steps.length-1].active && canBeSubmitted" type="button"
+                id="submit-form" class="btn btn-primary pull-right btn-form-apply" (click)="applyApplication($event)"
+                [disabled]="alertService.lastType === 'success'" [innerHTML]="submitFormButtonLabel"></button>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12">
+              <button data-test="btn-cancel-app-form" id="cancel-form" class="btn pull-right btn-remove-appform" type="button" (click)="openFormDeletionModal()">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp; Cancel {{ isUser ? 'my' : 'the' }} application form
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <!-- div class="card-block widget-body" -->
+      </div>
+    </div>
+  </div>
+</div>

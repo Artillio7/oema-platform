@@ -1,0 +1,11 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<label class="form-control-label" for="{{ formElement.name }}" [innerHTML]="formElement.label"></label>
+<select data-test="form-dropdown-select" #select id="{{ formElement.name }}" class="form-control {{ formElement.options?.widthClass || 'col-md-auto' }}"
+  name="{{ formElement.name }}" size="1" (blur)="onChange($event, select.value)">
+  <option disabled value="" [selected]="selectedItem === ''">Please select</option>
+  <option *ngFor="let sl of formElement.options?.items ?? []" value="{{ sl }}" [selected]="selectedItem === sl">{{ sl }}
+  </option>
+</select>

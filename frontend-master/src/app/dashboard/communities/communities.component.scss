@@ -1,0 +1,119 @@
+$Orange-color: #f16e00;
+
+.communities-admin {
+  .main-page-menu {
+    .view-expert-community {
+      width: 300px;
+      max-width: 100%;
+
+      .senior-community {
+        color: #074153;
+        background-color: #7dd9f5;
+      }
+    }
+
+    h6 {
+      clear: both;
+      padding-top: 20px;
+    }
+  }
+
+  .selected-community-settings {
+    clear: both;
+    padding: 20px 0;
+
+    .section-part-header {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+
+      h5 {
+        color: $Orange-color;
+        border-bottom: 1px solid $Orange-color;
+        margin: 0 10px;
+        padding: 15px 0 5px;
+
+        span {
+          margin-left: 10px;
+        }
+      }
+
+      a {
+        margin-left: 20px;
+        margin-top: 5px;
+      }
+    }
+
+    .content-body {
+      margin: 20px 25px;
+      clear: both;
+
+      editable {
+        font-weight: bold;
+      }
+
+      #referent-name {
+        margin-bottom: 10px;
+      }
+
+      .other-referent {
+        display: flex;
+        align-items: center;
+
+        .select-referent {
+          .form-check {
+            margin-bottom: 0;
+          }
+        }
+
+        .referent-name {
+          margin-left: 10px;
+        }
+      }
+
+      &.application-forms {
+        display: flex;
+        flex-wrap: wrap;
+
+        .application-type-radios {
+          margin-right: 100px;
+        }
+
+        .dropdown {
+          margin: 10px 0;
+
+          .dropdown-toggle::after {
+            display: none;
+          }
+
+          .dropdown-menu {
+            transform: translate(0px, -50px) !important;
+
+            .dropdown-item {
+              font-weight: bold;
+
+              &.disabled {
+                font-weight: normal;
+              }
+
+              .hint-right {
+                top: 5px;
+                left: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .communities-admin {
+    .main-page-menu {
+      .view-expert-community {
+        width: 100%;
+      }
+    }
+  }
+}

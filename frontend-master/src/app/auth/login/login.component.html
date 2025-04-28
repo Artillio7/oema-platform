@@ -1,0 +1,76 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7 col-xl-5">
+        <div class="card mx-2 card-auth">
+          <div class="card-block p-2">
+
+            <h1>Sign in<img src="assets/img/{{ appDomain.logo.name }}"
+                class="img-orange-expert-logo col-sm-6 float-right"></h1>
+
+            <div class="pt-2 pb-2" style="clear: both">
+              <a href="/api/auth/login/oidc"><button type="button" class="btn btn-block btn-primary" (click)="signInWithOrangeConnect()">
+                <i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp;Sign in with Orange Connect
+              </button></a>
+            </div>
+
+            <p class="font-weight-bold text-center">-- or --</p>
+            <p class="text-muted">Sign in with your credentials</p>
+            <form role="form" (ngSubmit)="login()" #loginForm="ngForm" class="form-horizontal">
+              <div class="input-group mb-1 pt-2">
+                <span class="input-group-addon" aria-hidden="true"><i class="fa fa-user" aria-hidden="true"></i></span>
+                <input data-test="email-login" type="email" id="email" class="form-control text-lowercase" placeholder="Email" name="email" required
+                  [(ngModel)]="credentials.email" #email="ngModel" (focus)="alertService.clear()">
+              </div>
+              <div class="input-group mb-1">
+                <span class="input-group-addon" aria-hidden="true"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                <input data-test="passwd-login" type="password" id="password" class="form-control" placeholder="Password" name="password" required
+                  [(ngModel)]="credentials.password" #password="ngModel" (focus)="alertService.clear()">
+              </div>
+              <div class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline mb-2">
+                <input data-test="alive-email-login" type="checkbox" id="alive-login" name="keepalive" value="1" [(ngModel)]="credentials.keepalive"
+                  (focus)="alertService.clear()">
+                <label for="alive-login">
+                  Stay signed in
+                </label>
+              </div>
+              <div class="row mb-1">
+                <div class="col-4">
+                  <button data-test="btn-login" type="submit" id="login" class="btn btn-primary px-auth">Login</button>
+                </div>
+                <div class="col-8 text-right">
+                  <button type="button" id="forgot-passwd" class="btn btn-link px-0"
+                    routerLink="/{{ urlPrefix }}/auth/reset-password">Forgot password?</button>
+                </div>
+              </div>
+            </form>
+            <div class="row">
+              <div class="col-12 text-left">
+                <button type="button" class="btn btn-link px-0 text-primary"
+                  routerLink="/{{ urlPrefix }}/auth/register">First connection? Sign up now!</button>
+              </div>
+            </div>
+
+            <ng-template #privacyPolicy let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title text-primary">{{ appDomain.policy.title }}</h4>
+              </div>
+
+              <div class="modal-body" [innerHTML]="appDomain.policy.body">
+
+              </div>
+              <div class="modal-footer mt-2">
+                <button type="button" id="deny-policy" class="btn btn-secondary" (click)="declinePrivacyPolicy()">{{
+                  appDomain.policy.denyLabel }}</button>
+                <button data-test="btn-accept-policy" id="accept-policy" class="btn btn-primary" (click)="acceptPrivacyPolicy()">
+                  {{ appDomain.policy.acceptLabel }}
+                </button>
+              </div>
+            </ng-template>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

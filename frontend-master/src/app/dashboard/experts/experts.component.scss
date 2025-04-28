@@ -1,0 +1,33 @@
+.experts-table {
+  .main-page-menu {
+    .view-expert-community {
+      width: 300px;
+      max-width: 100%;
+
+      .senior-community {
+        color: #074153;
+        background-color: #7dd9f5;
+      }
+    }
+
+    h6 {
+      clear: both;
+      padding-top: 40px;
+    }
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .experts-table {
+    .main-page-menu {
+      .view-expert-community {
+        width: 100%;
+      }
+
+      .btn-export-excel {
+        width: 100%;
+        margin-top: 20px;
+      }
+    }
+  }
+}

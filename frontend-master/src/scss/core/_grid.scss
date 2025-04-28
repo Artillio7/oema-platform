@@ -1,0 +1,17 @@
+@use "sass:math";
+
+.row.row-equal {
+  padding-right: math.div($grid-gutter-width-base, 4);
+  padding-left:  math.div($grid-gutter-width-base, 4);
+  margin-right: math.div($grid-gutter-width-base, -2);
+  margin-left:  math.div($grid-gutter-width-base, -2);
+
+  [class*="col-"] {
+    padding-right: math.div($grid-gutter-width-base, 4);
+    padding-left:  math.div($grid-gutter-width-base, 4);
+  }
+}
+
+.main .container-fluid {
+  padding: 0 30px;
+}

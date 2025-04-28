@@ -1,0 +1,30 @@
+<div class="user-search-form mt-1 mb-1">
+  <ng-template #rtEmail let-r="result" let-t="term">
+    {{ r.email }}{{ r.lastname && r.firstname ? ' (' + r.lastname + ' ' + r.firstname + ')' : ''}}
+  </ng-template>
+  <ng-template #rtLastname let-r="result" let-t="term">
+    {{ r.lastname }} {{ r.firstname || '' }} ({{ r.email }})
+  </ng-template>
+  <div class="form-group">
+    <label for="typeahead-http">{{ description }}</label>
+    <div class="row">
+      <div class="input-group col-md-6 mt-1">
+        <div class="input-group-addon" aria-hidden="true"><i class="fa fa-envelope"></i></div>
+        <input id="typeahead-http" type="text" class="form-control" [class.is-invalid]="searchFailed"
+          [(ngModel)]="enteredEmail" [ngbTypeahead]="searchByEmail" [resultTemplate]="rtEmail"
+          [inputFormatter]="formatterEmail" placeholder="Search by email" />
+        <div class="invalid-feedback" *ngIf="searchFailed && enteredEmail">Sorry, suggestions could not be loaded.</div>
+      </div>
+      <div class="input-group col-md-6 mt-1">
+        <div class="input-group-addon" aria-hidden="true"><i class="fa fa-user"></i></div>
+        <input id="typeahead-http" type="text" class="form-control" [class.is-invalid]="searchFailed"
+          [(ngModel)]="enteredLastname" [ngbTypeahead]="searchByLastname" [resultTemplate]="rtLastname"
+          [inputFormatter]="formatterLastname" placeholder="Search by lastname" />
+        <div class="invalid-feedback" *ngIf="searchFailed && enteredLastname">Sorry, suggestions could not be loaded.</div>
+      </div>
+    </div>
+  </div>
+
+  <button [disabled]="myRole !== 'Referent'" type="button" class="btn btn-primary pull-right btn-add-reviewer mt-1"
+    (click)="selectUser($event)"><i class="fa fa-check" aria-hidden="true"></i> &nbsp;&nbsp;{{ buttonTitle }}</button>
+</div>

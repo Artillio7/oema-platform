@@ -1,0 +1,12 @@
+.review-settings {
+  padding-bottom: 60px;
+
+  .review-process-message {
+    vertical-align: middle;
+  }
+}
+
+.card.fullscreened {
+  .review-settings, .dataTables_length, .dt-buttons.btn-group {display: none}
+  .application-review-matrix {margin-top:0 !important}
+}

@@ -1,0 +1,68 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+
+      <div appCardWidget class="card">
+
+        <div class="card-header">
+          <i class="fa fa-pencil-square text-primary" aria-hidden="true"></i> List of Candidates
+          <div class="card-actions widget-controls">
+            <a data-widgster="fullscreen" href="#" class="transition"><i class="fa fa-expand"></i></a>
+            <a data-widgster="restore" href="#" class="transition"><i class="fa fa-compress"></i></a>
+          </div>
+        </div>
+
+        <div class="card-block widget-body forms-table">
+          <label *ngIf="urlPrefix.endsWith('orange-experts')" class="select-app-type">
+            <select (change)="onAppTypeChanged()" [(ngModel)]="selectedAppType">
+                <option value="" [selected]="selectedAppType === ''">Orange Expert</option>
+                <option value="senior" [selected]="selectedAppType === 'senior'">Senior Orange Expert</option>
+            </select>
+          </label>
+
+          <div class="main-page-menu mb-1">
+            <div *ngIf="communities.length > 1" class="input-group view-expert-community pull-left">
+              <div class="input-group-addon" aria-hidden="true"><i class="fa fa-graduation-cap"></i></div>
+              <select #community class="form-control" name="community" size="1"
+                (change)="onCommunityChange(community.options[community.selectedIndex])">
+                <option value="" disabled selected hidden>Select an expert community</option>
+                <ng-template ngFor let-community [ngForOf]="communities">
+                  <option value="{{ community['_id'] }}" [selected]="community['_id'] === myCommunityId">
+                    {{ community.name }}
+                  </option>
+                </ng-template>
+              </select>
+            </div>
+            <a href="/{{ selectedAppType === 'senior' ? 'senior-' + urlPrefix : urlPrefix }}/application" class="btn btn-outline-info pull-right btn-create-new-form">
+              <i class="fa fa-plus-square" aria-hidden="true"></i> &nbsp;Create a new form
+            </a>
+
+            <h6 *ngIf="infoMsg" [innerHTML]="infoMsg" class="pull-left"></h6>
+
+            <button [hidden]="!tableReady" [disabled]="!forms || excelExportBtn==='fa-spinner fa-pulse fa-fw'"
+              type="button" class="btn btn-default pull-right btn-export-excel mt-2 mb-1"
+              [appXlsxExport]="{community: myCommunity, communityId: myCommunityId, year: thisYear}"
+              [xlsxDataType]="'preview-candidates'" [xlsxFileName]="selectedAppType === 'senior' ? 'export-senior-applications-preview.xlsx' : 'export-applications-preview.xlsx'"
+              [isSeniorExpert]="selectedAppType === 'senior'"
+              (backEndResponse)="onExcelExport($event)">
+              <i class="fa  {{ excelExportBtn }}" aria-hidden="true"></i> &nbsp;Export as Excel
+            </button>
+          </div>
+
+          <div *ngIf="!tableReady && !infoMsg" class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+
+          <app-ongoing-forms-table [urlPrefix]="urlPrefix"
+            [myEmail]="userProfileService.user ? userProfileService.user.email : ''" [tableReady]="tableReady"
+            [dtTrigger]="dtTrigger" [forms]="forms" [isSeniorApp]="selectedAppType === 'senior'" (appMenuSelected)="setEventNotification($event)">
+          </app-ongoing-forms-table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

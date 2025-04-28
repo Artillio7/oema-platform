@@ -1,0 +1,246 @@
+<div id="export-pdf">
+  <div class="submission-step-name user-profile-step row mt-2 mb-2">
+    <div class="col-12 text-primary mb-2">
+      <h4><i class="fa fa-id-card-o" aria-hidden="true"></i>&nbsp;&nbsp;About you</h4>
+      <img *ngIf="!isPhantomatic" [src]="userPhotoSrc" class="img-avatar mt-1" alt="{{user.firstname || ''}}">
+    </div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Full name</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden">
+      <i class="text-capitalize">{{(user.firstname || '') | capitalizeName}} {{user.lastname?.toUpperCase() || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Gender</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.gender || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Birthday</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.birthday || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Cu-ID</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.cuid || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Email</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.email}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Phone</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.phone || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Classification</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.classification || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Entity</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.entity || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Country</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.country || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Location</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.location || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Manager</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden">
+      <i class="text-capitalize">{{(user.managerFirstname || '') | capitalizeName}} {{user.managerLastname?.toUpperCase() || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Manager's email</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.managerEmail || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Human resources</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden">
+      <i class="text-capitalize">{{(user.hrFirstname || '') | capitalizeName}} {{user.hrLastname?.toUpperCase() || ''}}</i></div>
+    <div class="col-sm-5 col-md-4 col-lg-3"><strong class="text-truncate">Human resources' email</strong></div>
+    <div class="col-sm-7 col-md-8 col-lg-9 text-overflow-hidden"><i>{{user.hrEmail || ''}}</i></div>
+    <div class="col-md-12"><strong class="text-truncate">Directory URL</strong></div>
+    <div class="col-md-12"><a href="{{user.directoryUrl}}" target="_blank"><i>{{user.directoryUrl || ''}}</i></a></div>
+  </div>
+  <div *ngFor="let step of steps | slice:1:(steps.length - 1)" class="submission-step-name other-steps row mb-1">
+    <div class="col-12 text-primary mt-1 step-title">
+      <h4><i class="fa {{ step.icon }}" aria-hidden="true"></i>&nbsp;&nbsp;{{ step.name }}</h4>
+    </div>
+
+    <ng-template ngFor let-formPart [ngForOf]="step.form">
+      <div class="col-12 form-group-title">
+        <h5 *ngIf="formPart.group"><i class="fa fa-angle-right" aria-hidden="true"></i>&nbsp;&nbsp;<span
+            [innerHTML]="formPart.group"></span></h5>
+        <ng-template ngFor let-question [ngForOf]="formPart.questions">
+          <div class="col-12 form-question"><strong
+              [ngClass]="{'upload-label': question.type === FormElementType.File || question.type === FormElementType.Dropzone}"
+              [innerHTML]="question.label"></strong></div>
+
+          <div *ngIf="question.type === FormElementType.Textarea || question.type === FormElementType.TextInput || question.type === FormElementType.Select"
+            class="col-12 user-response" [innerHTML]="userAnsweredForm[question.name]"></div>
+
+          <div *ngIf="question.type === FormElementType.File" class="col-12 user-response">
+            <div *ngIf="userAnsweredForm[question.name]">
+              <button class="btn btn-outline-secondary mr-1" type="button"
+                (click)="viewFile(userAnsweredForm[question.name])"><i class="fa fa-search-plus"></i></button>
+              <span [innerHTML]="userAnsweredForm[question.name]"></span>
+            </div>
+          </div>
+
+          <div *ngIf="question.type === FormElementType.S3File" class="col-12 user-response">
+            <div *ngIf="userAnsweredForm[question.name]">
+              <button class="btn btn-outline-secondary mr-1" type="button"
+                (click)="getS3File(userAnsweredForm[question.name])"><i class="fa fa-search-plus"></i></button>
+              <span [innerHTML]="userAnsweredForm[question.name]"></span>
+            </div>
+          </div>
+
+          <div *ngIf="question.type === FormElementType.Dropzone" class="col-12 user-response">
+            <div *ngIf="userAnsweredForm[question.name]">
+              <div *ngFor="let uploadedFile of userAnsweredForm[question.name]" style="margin-top:5px">
+                <button class="btn btn-outline-secondary mr-1" type="button" (click)="viewFile(uploadedFile.name)">
+                  <i class="fa fa-search-plus"></i></button>
+                <span [innerHTML]="uploadedFile.name"></span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="question.type === FormElementType.BatteryLevels" class="col-12 user-response">
+            <div *ngFor="let competence of question.options.items;" class="row battery-levels-bottom-spacing">
+              <div class="col-xs-9 col-sm-9 col-md-8 col-lg-6 col-xl-4" style="margin-left:10px">
+                <label> {{ competence.label }}</label>
+              </div>
+              <div *ngIf="userAnsweredForm[question.name]!== undefined"
+                class="col-xs-2 col-sm-2 col-md-3 col-lg-5 col-xl-7" style="margin-left:10px"
+                [ngSwitch]="userAnsweredForm[question.name][competence.name]">
+                <span *ngSwitchCase="'battery-0'" class="battery-0"><i class="fa fa-battery-0"></i></span>
+                <span *ngSwitchCase="'battery-1'" class="battery-1"><i class="fa fa-battery-1"></i></span>
+                <span *ngSwitchCase="'battery-2'" class="battery-2"><i class="fa fa-battery-2"></i></span>
+                <span *ngSwitchCase="'battery-3'" class="battery-3"><i class="fa fa-battery-3"></i></span>
+                <span *ngSwitchCase="'battery-4'" class="battery-4"><i class="fa fa-battery-4"></i></span>
+                <i *ngSwitchDefault>not answered</i>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="question.type === FormElementType.Checkbox" class="col-12 user-response" style="pointer-events: none;">
+            <div class="row">
+              <div *ngIf="question.options.items.fullscreen" class="col-md-12">
+                <div *ngFor="let competence of question.options.items.fullscreen;"
+                  class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline col-12">
+                  <input type="checkbox" id="{{ competence.name }}" name="{{ competence.name }}" value="1"
+                    [checked]="userAnsweredForm[question.name] && userAnsweredForm[question.name][competence.name]===1"
+                    readonly="readonly">
+                  <label for="{{ competence.name }}">
+                    {{ competence.label }}
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div *ngFor="let competence of question.options.items.left;"
+                  class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline col-12">
+                  <input type="checkbox" id="{{ competence.name }}" name="{{ competence.name }}" value="1"
+                    [checked]="userAnsweredForm[question.name] && userAnsweredForm[question.name][competence.name]===1"
+                    readonly="readonly">
+                  <label for="{{ competence.name }}">
+                    {{ competence.label }}
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div *ngFor="let competence of question.options.items.right;"
+                  class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline col-12">
+                  <input type="checkbox" id="{{ competence.name }}" name="{{ competence.name }}" value="1"
+                    [checked]="userAnsweredForm[question.name] && userAnsweredForm[question.name][competence.name]===1"
+                    readonly="readonly">
+                  <label for="{{ competence.name }}">
+                    {{ competence.label }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="question.type === FormElementType.MixArray" class="col-12 user-response">
+            <div class="table-responsive" id="{{ question.name }}">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th *ngFor="let column of question.options.columns">{{column.name}}</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of question.options.rows">
+                    <td *ngFor="let column of question.options.columns">
+                      <div *ngFor="let quest of row[column.prop]">
+                        <div class="mix-array-form-question" [innerHTML]="quest.label"></div>
+
+                        <div
+                          *ngIf="userAnsweredForm[question.name] && (quest.type ==='textarea' || quest.type==='input-text' || quest.type==='select' || quest.type==='input-file')"
+                          [innerHTML]="userAnsweredForm[question.name][quest.name]"></div>
+
+                        <div *ngIf="userAnsweredForm[question.name] && quest.type ==='battery-levels'">
+                          <div *ngFor="let competence of quest.options.items;"
+                            class="row battery-levels-bottom-spacing">
+                            <div class="col-md-4" style="margin-left:10px">
+                              <label>{{ competence.label }}</label>
+                            </div>
+                            <div *ngIf="userAnsweredForm[question.name][quest.name] !== undefined" class="col-md-1"
+                              style="margin-left:10px"
+                              [ngSwitch]="userAnsweredForm[question.name][quest.name][competence.name]">
+                              <span *ngSwitchCase="'battery-0'" class="battery-0"><i class="fa fa-battery-0"></i></span>
+                              <span *ngSwitchCase="'battery-1'" class="battery-1"><i class="fa fa-battery-1"></i></span>
+                              <span *ngSwitchCase="'battery-2'" class="battery-2"><i class="fa fa-battery-2"></i></span>
+                              <span *ngSwitchCase="'battery-3'" class="battery-3"><i class="fa fa-battery-3"></i></span>
+                              <span *ngSwitchCase="'battery-4'" class="battery-4"><i class="fa fa-battery-4"></i></span>
+                              <i *ngSwitchDefault>NA</i>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div *ngIf="userAnsweredForm[question.name] && quest.type ==='input-checkboxes'"
+                          style="pointer-events: none;">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div *ngFor="let competence of quest.options.items.left;"
+                                class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline col-12">
+                                <input type="checkbox" id="{{ competence.name }}" name="{{ competence.name }}" value="1"
+                                  [checked]="userAnsweredForm[question.name][quest.name] && userAnsweredForm[question.name][quest.name][competence.name]===1"
+                                  readonly="readonly">
+                                <label for="{{ competence.name }}">
+                                  {{ competence.label }}
+                                </label>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div *ngFor="let competence of quest.options.items.right;"
+                                class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline col-12">
+                                <input type="checkbox" id="{{ competence.name }}" name="{{ competence.name }}" value="1"
+                                  [checked]="userAnsweredForm[question.name][quest.name] && userAnsweredForm[question.name][quest.name][competence.name]===1"
+                                  readonly="readonly">
+                                <label for="{{ competence.name }}">
+                                  {{ competence.label }}
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div *ngIf="userAnsweredForm[question.name] && quest.type ==='input-radio'"
+                          style="pointer-events: none;">
+                          <div class="row {{ quest.options.widthClass || '' }}">
+                            <div *ngFor="let item of quest.options.items"
+                              class="radio-inline abc-radio abc-radio-primary"
+                              [ngClass]="{'w-100':quest.options.widthClass==='w-100'}">
+                              <input type="radio" id="{{ item.name }}" name="{{ quest.name }}" value="{{ item.name }}"
+                                [checked]="userAnsweredForm[question.name][quest.name]===item.name" readonly="readonly">
+                              <label for="{{ item.name }}">
+                                {{ item.label }}
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div *ngIf="question.type === FormElementType.Radio" class="col-12 user-response" style="pointer-events: none;">
+            <div class="row">
+              <div *ngFor="let item of question.options.items"
+                class="radio-inline abc-radio abc-radio-primary {{ question.options.widthClass || '' }}">
+                <input type="radio" id="{{ item.name }}" name="{{ question.name }}" value="{{ item.name }}"
+                  [checked]="userAnsweredForm[question.name]===item.name" readonly="readonly">
+                <label for="{{ item.name }}">
+                  {{ item.label }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </ng-template>
+      </div>
+    </ng-template>
+  </div>
+</div> <!-- end export-pdf -->

@@ -1,0 +1,15 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<div class="row">
+  <label class="form-control-label col" [innerHTML]="formElement.label"></label>
+</div>
+<div class="row radio-list {{ formElement.options?.widthClass || '' }}">
+  <div *ngFor="let item of formElement.options?.items ?? []" class="radio-inline abc-radio abc-radio-primary">
+    <input data-test="form-input-radio" type="radio" id="{{ item.name }}" name="{{ formElement.name }}" value="{{ item.name }}"
+      (click)="onChecked($event)" [checked]="innerValue===item.name">
+    <label for="{{ item.name }}" [innerHTML]="item.label">
+    </label>
+  </div>
+</div>

@@ -1,0 +1,178 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<div class="form-question-label">
+  <i *ngIf="formElement.options?.review" class="fa fa-star text-primary lead" aria-hidden="true" style="margin-top: -5px; margin-right: 5px;"></i>
+  <i *ngIf="labelFormControl.hasError('required')" class="fa fa-exclamation-triangle text-danger lead" aria-hidden="true" style="margin-top: -5px; margin-right: 5px;"></i>
+  <editable id="{{ formElement.name + '-label-click' }}"
+  (save)="modifyLabel()">
+    <ng-template viewMode>
+      <label class="form-control-label" for="{{ formElement.name }}" [innerHTML]="formElement.label || 'Write your question here, and start adding columns/rows hereafter...'"></label>
+    </ng-template>
+    <ng-template editMode>
+      <div class="form-group">
+        <textarea
+          class="form-control"
+          id="{{ formElement.name + '-label-click-edit' }}"
+          editableFocusable
+          placeholder="Write your question here..."
+          rows="5"
+          [formControl]="labelFormControl">
+        </textarea>
+      </div>
+    </ng-template>
+  </editable>
+  <button type="button" class="btn btn-info btn-circle btn-sm hint" (mouseover)="menuIsVisible()" (mouseout)="menuIsHidden()">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    <div class="hint-text hint-left show-template-menu">
+      <button class="btn" type="button" (click)="configureOptions()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp; Configure options</button>
+      <hr class="solid" style="width: 220px;">
+      <button class="btn" type="button" (click)="addNewElement('before')"><i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question before</button>
+      <button class="btn" type="button" (click)="addNewElement('after')"><i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question after</button>
+      <hr class="solid" style="width: 220px;">
+      <button class="btn" type="button" (click)="deleteElement()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the question</button>
+    </div>
+  </button>
+</div>
+<div class="table-responsive mix-array" id="{{ formElement.name }}" [formGroup]="maForm">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th style="text-align: center;" class="column-row">
+          <button type="button" class="btn btn-info btn-circle btn-sm hint">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            <div class="hint-text hint-bottom show-template-menu">
+              <button class="btn" type="button" (click)="addNewColumn({alignment: 'column-leading'})"><i class="fa fa-columns" aria-hidden="true"></i>&nbsp; New column</button>
+              <button class="btn" type="button" (click)="addNewRow({alignment: 'row-leading'})"><i class="fa fa-th-list" aria-hidden="true"></i>&nbsp; New row</button>
+            </div>
+          </button>
+        </th>
+        <th *ngFor="let column of formElement.options?.columns ?? []; let colIdx = index">
+          <div class="column-label">
+            <editable id="{{ column.prop + '-label-click' }}"
+            (save)="modifyColumnLabel({ alignment: getColumnNameFormControl(colIdx).value, col: colIdx })">
+            <ng-template viewMode>
+              <span>
+                {{ getColumnNameFormControl(colIdx).value || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+              </span>
+            </ng-template>
+            <ng-template editMode>
+              <div class="form-group">
+                <input
+                  class="form-control"
+                  id="{{ column.prop + '-label-click-edit' }}"
+                  editableFocusable
+                  placeholder="Column title..."
+                  type="text"
+                  [formControl]="getColumnNameFormControl(colIdx)">
+              </div>
+            </ng-template>
+            </editable>
+            <button type="button" class="btn btn-info btn-circle btn-sm hint">
+              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+              <div class="hint-text hint-bottom show-template-menu">
+                <button class="btn" type="button" (click)="addNewColumn({alignment: 'column-before', col: colIdx})"><i class="fa fa-columns" aria-hidden="true"></i>&nbsp; New column before</button>
+                <button class="btn" type="button" (click)="addNewColumn({alignment: 'column-after', col: colIdx})"><i class="fa fa-th-list" aria-hidden="true"></i>&nbsp; New column after</button>
+                <hr class="solid" style="width: 220px;">
+                <button class="btn" type="button" (click)="deleteColumn({col: colIdx})"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the column</button>
+              </div>
+            </button>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of formElement.options?.rows ?? []; let rowIdx = index">
+        <td style="text-align: center;">
+          <button type="button" class="btn btn-info btn-circle btn-sm hint">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            <div class="hint-text hint-right show-template-menu two-sections">
+              <button class="btn" type="button" (click)="addNewRow({alignment: 'row-before', row: rowIdx})"><i class="fa fa-th-list" aria-hidden="true"></i>&nbsp; New row before</button>
+              <button class="btn" type="button" (click)="addNewRow({alignment: 'row-after', row: rowIdx})"><i class="fa fa-th-list" aria-hidden="true"></i>&nbsp; New row after</button>
+              <hr class="solid" style="width: 220px;">
+              <button class="btn" type="button" (click)="deleteRow({row: rowIdx})"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the row</button>
+            </div>
+          </button>
+        </td>
+        <td *ngFor="let column of formElement.options?.columns ?? []; let colIdx = index">
+          <div *ngFor="let question of row[column.prop]; let cellIdx = index" [ngSwitch]="question.type" class="mb-1">
+            <app-form-input-text-template *ngSwitchCase="FormElementType.TextInput" [formElement]="question"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              formControlName="{{ question.name }}"
+              (itemDeleted)="deleteCell({row: rowIdx, col: colIdx, index: cellIdx})"
+              (newItem)="addNewCellIntoTable({alignment: $event, row: rowIdx, col: colIdx, index: cellIdx})"
+              (labelEdited)="modifyCellLabel({row: rowIdx, col: colIdx, index: cellIdx})"
+              (options)="configureOptions({row: rowIdx, col: colIdx, index: cellIdx})">
+            </app-form-input-text-template>
+            <app-form-textarea-template *ngSwitchCase="FormElementType.Textarea" [formElement]="question"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              formControlName="{{ question.name }}"
+              (itemDeleted)="deleteCell({row: rowIdx, col: colIdx, index: cellIdx})"
+              (newItem)="addNewCellIntoTable({alignment: $event, row: rowIdx, col: colIdx, index: cellIdx})"
+              (labelEdited)="modifyCellLabel({row: rowIdx, col: colIdx, index: cellIdx})"
+              (options)="configureOptions({row: rowIdx, col: colIdx, index: cellIdx})">
+            </app-form-textarea-template>
+            <app-form-battery-levels-template *ngSwitchCase="FormElementType.BatteryLevels" [formElement]="question"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              formControlName="{{ question.name }}"
+              (itemDeleted)="deleteCell({row: rowIdx, col: colIdx, index: cellIdx})"
+              (newItem)="addNewCellIntoTable({alignment: $event, row: rowIdx, col: colIdx, index: cellIdx})"
+              (labelEdited)="modifyCellLabel({row: rowIdx, col: colIdx, index: cellIdx})"
+              (options)="configureOptions({row: rowIdx, col: colIdx, index: cellIdx})">
+            </app-form-battery-levels-template>
+            <app-form-input-checkboxes-template *ngSwitchCase="FormElementType.Checkbox" [formElement]="question"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              formControlName="{{ question.name }}"
+              (itemDeleted)="deleteCell({row: rowIdx, col: colIdx, index: cellIdx})"
+              (newItem)="addNewCellIntoTable({alignment: $event, row: rowIdx, col: colIdx, index: cellIdx})"
+              (labelEdited)="modifyCellLabel({row: rowIdx, col: colIdx, index: cellIdx})"
+              (options)="configureOptions({row: rowIdx, col: colIdx, index: cellIdx})">
+            </app-form-input-checkboxes-template>
+            <app-form-select-template *ngSwitchCase="FormElementType.Select" [formElement]="question"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              formControlName="{{ question.name }}"
+              (itemDeleted)="deleteCell({row: rowIdx, col: colIdx, index: cellIdx})"
+              (newItem)="addNewCellIntoTable({alignment: $event, row: rowIdx, col: colIdx, index: cellIdx})"
+              (labelEdited)="modifyCellLabel({row: rowIdx, col: colIdx, index: cellIdx})"
+              (options)="configureOptions({row: rowIdx, col: colIdx, index: cellIdx})">
+            </app-form-select-template>
+            <app-form-input-radio-template *ngSwitchCase="FormElementType.Radio" [formElement]="question"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              formControlName="{{ question.name }}"
+              (itemDeleted)="deleteCell({row: rowIdx, col: colIdx, index: cellIdx})"
+              (newItem)="addNewCellIntoTable({alignment: $event, row: rowIdx, col: colIdx, index: cellIdx})"
+              (labelEdited)="modifyCellLabel({row: rowIdx, col: colIdx, index: cellIdx})"
+              (options)="configureOptions({row: rowIdx, col: colIdx, index: cellIdx})">
+            </app-form-input-radio-template>
+            <app-form-input-file-template *ngSwitchCase="FormElementType.File" [formElement]="question"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              formControlName="{{ question.name }}"
+              (itemDeleted)="deleteCell({row: rowIdx, col: colIdx, index: cellIdx})"
+              (newItem)="addNewCellIntoTable({alignment: $event, row: rowIdx, col: colIdx, index: cellIdx})"
+              (labelEdited)="modifyCellLabel({row: rowIdx, col: colIdx, index: cellIdx})"
+              (options)="configureOptions({row: rowIdx, col: colIdx, index: cellIdx})">
+            </app-form-input-file-template>
+            <app-form-text-template *ngSwitchCase="FormElementType.Text" [formElement]="question"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              (itemDeleted)="deleteCell({row: rowIdx, col: colIdx, index: cellIdx})"
+              (newItem)="addNewCellIntoTable({alignment: $event, row: rowIdx, col: colIdx, index: cellIdx})"
+              (labelEdited)="modifyCellLabel({row: rowIdx, col: colIdx, index: cellIdx})"
+              (options)="configureOptions({row: rowIdx, col: colIdx, index: cellIdx})">
+            </app-form-text-template>
+            <app-form-unknown-element-template *ngSwitchCase="FormElementType.Unknown" [formElement]="question" [noMixArray]="true"
+              [labelFormControl]="getNestedFormControl('row-' + rowIdx.toString() + '-col-' + colIdx.toString() + '-id-' + cellIdx.toString())"
+              (createFormQuestion)="createNewFormQuestion({row: rowIdx, col: colIdx, index: cellIdx}, $event)"
+              (cancelFormQuestion)="cancelNewFormQuestion({row: rowIdx, col: colIdx, index: cellIdx})">
+          </app-form-unknown-element-template>
+            <app-form-unknown-element-template *ngSwitchDefault></app-form-unknown-element-template>
+          </div>
+
+          <button *ngIf="row[column.prop].length === 0" class="btn" type="button" (click)="addNewCellIntoTable({alignment: 'leading', row: rowIdx, col: colIdx, index: 0})">
+            <i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

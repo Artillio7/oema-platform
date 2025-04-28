@@ -1,0 +1,35 @@
+include:
+  - project: "to-be-continuous/node"
+    ref: "4.0.0"
+    file: "templates/gitlab-ci-node.yml"
+  - project: 'to-be-continuous/docker'
+    ref: '5.11.1'
+    file: '/templates/gitlab-ci-docker.yml'
+  - project: 'to-be-continuous/openshift'
+    ref: '5.2.1'
+    file: '/templates/gitlab-ci-openshift.yml'
+  - project: 'to-be-continuous/hurl'
+    ref: '1.3.0'
+    file: '/templates/gitlab-ci-hurl.yml'
+
+variables:
+  NODE_SOURCE_DIR: "."
+  NODE_AUDIT_ARGS: "--audit-level=critical"
+  NODE_OUTDATED_DISABLED: "true"
+  NODE_SEMGREP_DISABLED: "true"
+
+  # Docker, pushing to Gitlab registry
+  DOCKER_SNAPSHOT_IMAGE: "$CI_REGISTRY_IMAGE:snapshot"
+  DOCKER_RELEASE_IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"
+  DOCKER_TRIVY_SECURITY_LEVEL_THRESHOLD: CRITICAL
+    
+  # Openshift variable
+  OS_URL: "https://api.fr01.paas.tech.orange"
+  OS_BASE_APP_NAME: "oswe-backend"
+  OS_INTEG_PROJECT: "oema-int" # activates 'integration' env in CD pipeline
+  OS_INTEG_ENVIRONMENT_URL: "https://oswe-backend-integration.apps.fr01.paas.tech.orange"
+  OS_STAGING_PROJECT: "oema-int" # activates 'staging' env in CD pipeline
+  OS_STAGING_ENVIRONMENT_URL: "https://oswe-backend-staging.apps.fr01.paas.tech.orange"
+  OS_PROD_PROJECT: "oema"
+  OS_PROD_APP_NAME: "oswe-backend-production"
+  OS_PROD_ENVIRONMENT_URL: "https://oswe-backend-prod.apps.fr01.paas.tech.orange"

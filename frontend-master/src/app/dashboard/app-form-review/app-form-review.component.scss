@@ -1,0 +1,259 @@
+$Orange-color: #f16e00;
+$reviewer-color: #336E7B;
+$deliberation-color: #9B59B6;
+$accepted-color: #26A65B;
+$refused-color: #D91E18;
+$fair-color: #F39C12;
+$pending-color: #F39C12;
+
+.application-review {
+  padding: 0 10px;
+
+  p {
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+
+  section {
+    display: none;
+    padding: 20px 0 0;
+    border-top: 1px solid #ddd;
+  }
+
+  > input {
+    display: none;
+  }
+
+  > label {
+    display: inline-block;
+    margin: 10px 0 -1px;
+    padding: 15px 25px;
+    font-weight: 600;
+    text-align: center;
+    color: #888;
+    border: 1px solid transparent;
+  }
+
+  > label:before {
+    font-family: fontawesome;
+    font-weight: normal;
+    margin-right: 10px;
+  }
+
+  > label[for*='tab1']:before { content: '\f0e6'; }
+  > label[for*='tab2']:before { content: '\f046'; }
+
+  > label:hover {
+    color: #444;
+    cursor: pointer;
+  }
+
+  > input:checked + label {
+    color: #000;
+    border: 1px solid #ddd;
+
+    border-bottom: 1px solid #F2F4F8;
+  }
+  > input.tab1:checked + label {
+    border-top: 2px solid $reviewer-color;
+  }
+  > input.tab2:checked + label {
+    border-top: 2px solid $deliberation-color;
+  }
+
+  .tab1:checked ~ .content1,
+  .tab2:checked ~ .content2 {
+    display: block;
+  }
+
+  section {
+    .section-part {
+      h6 {
+        font-size: 0.93rem;
+        margin: 0 10px 40px;
+        padding: 15px 0 5px;
+        span {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    /*** collapsed div for reviewers ***/
+    .collapse-list {
+      margin-bottom: 0;
+      padding-left: 0;
+      list-style: none;
+      border-bottom: 1px solid #e0e0e0;
+      clear:both;
+    }
+
+    .collapse-open {
+      display: none;
+    }
+
+    .collapse-panel {
+      visibility: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height .1s,
+      visibility .3s,
+      opacity .3s;
+
+      .collapse-inner {
+        .comments {
+          margin: 0 20px;
+          label {
+            font-weight: bold;
+            color: #444;
+            margin: 0 0 10px 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+          }
+          textarea {
+            height: 100px;
+          }
+        }
+        .left-info, .right-info {
+          display:none;
+        }
+      }
+    }
+
+    .collapse-open:checked ~ .collapse-panel {
+      max-height: 100%;
+      opacity: 100;
+      visibility: visible;
+      .comments {
+        margin: 20px 40px 40px 20px;
+      }
+      .left-info, .right-info {
+        display:block;
+      }
+    }
+
+    .collapse-list li {
+      margin-bottom: 0;
+    }
+
+    .collapse-list .collapse-btn {
+      border-top: 1px solid #e0e0e0;
+      border-left-width: 0;
+      border-right-width: 0;
+      cursor: pointer;
+      display: block;
+      padding: 15px 10px;
+      margin-bottom: 0;
+      color: #000;
+      font-weight: bold;
+      transition: background-color .2s ease;
+      text-align:left;
+    }
+
+    .collapse-list .collapse-btn:hover {
+      background: #eee;
+    }
+
+    .collapse-open ~ .collapse-btn:before {
+      content: "↓";
+      float: right;
+    }
+
+    .collapse-open:checked ~ .collapse-btn:before {
+      content: "↑";
+    }
+    /*** /collapsed div for reviewers ***/
+
+    &.content1 { /** Reviewers tab section **/
+      h6 {
+        color: $reviewer-color;
+        border-bottom: 1px solid $reviewer-color;
+      }
+      .section-part-header {
+        h6 {
+          width: calc(100% - 180px);
+          float:left;
+        }
+      }
+      .applicant-rate {
+        margin-bottom: 40px;
+        label {
+          margin: 0 0 20px 10px;
+          padding:0;
+          color:$reviewer-color;
+          font-weight: bold;
+        }
+        span {
+          color: #fff;
+          font-weight: bold;
+          padding:5px 10px;
+          margin-left: 20px;
+          margin-bottom: 40px;
+          background-color: #34495E;
+
+          &.accepted {
+            background-color: $accepted-color;
+          }
+          &.refused {
+            background-color: $refused-color;
+          }
+          &.fair {
+            background-color: $fair-color;
+          }
+        }
+      }
+    }
+
+    &.content2 { /** Deliberation tab section **/
+      h6 {
+        color: $deliberation-color;
+        border-bottom: 1px solid $deliberation-color;
+      }
+      .section-part-header {
+        h6 {
+          width: calc(100% - 180px);
+          float:left;
+        }
+      }
+
+      .deliberation {
+        clear: both;
+
+        .applicant-status {
+          margin-bottom: 40px;
+          box-sizing:border-box;
+          span {
+            color: #fff;
+            font-weight: bold;
+            padding:5px 10px;
+            margin-left: 20px;
+            margin-bottom: 40px;
+            background-color: #34495E;
+
+            &.accepted {
+              background-color: $accepted-color;
+            }
+            &.refused {
+              background-color: $refused-color;
+            }
+            &.pending {
+              background-color: $pending-color;
+            }
+          }
+        }
+
+        .comments, .notes {
+          width: 100%;
+          padding: 0 10px;
+          box-sizing:border-box;
+          label {
+            font-weight: bold;
+            color: #000;
+            margin: 0 0 10px 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+          }
+        }
+      }
+    }
+  }
+}

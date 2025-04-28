@@ -1,0 +1,7 @@
+.breadcrumb {
+  position: relative;
+  margin-bottom: 1.5 * $spacer-y;
+  font-weight: normal;
+  
+  @include borders($breadcrumb-borders);
+}

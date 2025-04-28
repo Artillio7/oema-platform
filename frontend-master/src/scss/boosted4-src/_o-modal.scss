@@ -1,0 +1,157 @@
+.modal {
+
+  .modal-content {
+    padding: 2.5rem;
+    border: 0;
+  }
+
+  .modal-header {
+    position: relative;
+    min-height: 1.25rem;
+    padding: 0;
+    margin-bottom: 2.5rem;
+    border: 0;
+
+    .btn {
+      position: absolute;
+      top: -.625rem;
+      right: -.625rem;
+      padding: .625rem;
+      background-color: transparent;
+      border: 0;
+
+
+      .close {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin: 0;
+        background-image: url("data:image/svg+xml;charset=utf8, %3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22852.063%22%20height%3D%22852.063%22%20viewBox%3D%220%200%20852.063%20852.063%22%3E%3Cpath%20id%3D%22closing_cross.svg%22%20data-name%3D%22closing%20cross.svg%22%20class%3D%22cls-1%22%20d%3D%22M.987%2057.125L57.125.987%20851.048%20794.91l-56.138%2056.138zM794.91.987l56.138%2056.138L57.125%20851.048.987%20794.91z%22%20fill%3D%22%23666%22%2F%3E%3C%2Fsvg%3E");
+        background-size: 1.25rem;
+        opacity: 1;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 0;
+    border: 0;
+  }
+
+  .modal-footer {
+    padding: 0;
+    border: 0;
+
+    .btn + .btn {
+      margin-left: 1.25rem;
+    }
+  }
+}
+
+.modal .modal-sm {
+
+  .modal-content {
+    padding: 1.25rem;
+  }
+
+  .modal-header {
+    margin-bottom: 0;
+  }
+
+  .modal-footer {
+    margin: 1.25rem 0;
+
+    .float-xs-right {
+      float: none !important;
+      text-align: center;
+    }
+  }
+}
+
+.modal {
+  .card-block,
+  .card.card-block {
+    width: auto;
+    padding: 0;
+    margin: 0 0 2.5rem;
+    border: 0;
+
+    .card-title {
+      margin-bottom: 1.25rem;
+    }
+  }
+
+  .card-block.has-info,
+  .card.card-block.has-info {
+    margin-left: 3.75rem;
+
+    .card-icon {
+      position: absolute;
+      left: -3.75rem;
+    }
+
+    .card-icon span[class^="icon-"] {
+      font-size: 2.875rem;
+    }
+
+    &.has-info .card-icon {
+      color: $brand-info;
+    }
+  }
+}
+
+.modal .modal-sm {
+  .card.card-block {
+    margin-bottom: 1.25rem;
+    margin-left: 0;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-block.has-info,
+  .card.card-block.has-info {
+    position: relative;
+    margin-top: 1.25rem;
+
+    .card-icon {
+      position: absolute;
+      left: 0;
+    }
+
+    span[class^="icon-"] {
+      font-size: 2rem;
+    }
+
+    .card-title {
+      margin-left: 2.5rem;
+    }
+
+    &.on-top {
+      margin-top: 0;
+
+      .card-icon {
+        position: static;
+        margin-bottom: 1.25rem;
+        text-align: center;
+      }
+
+      span[class^="icon-"] {
+        font-size: 4rem;
+      }
+
+      .card-title {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .modal {
+
+    .modal-content {
+      padding: 1.25rem;
+    }
+  }
+}

@@ -1,0 +1,520 @@
+// Orange navbar
+//
+//
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  z-index: 120;
+  width: 100%;
+}
+
+.navbar {
+  height: $navbar-height; // IE flex support
+  min-height: $navbar-height;
+  padding: 0;
+  font-size: $font-size-base;
+
+  &.navbar-light,
+  &.navbar-inverse {
+    color: $navbar-inverse-color;
+    background: #000;
+  }
+
+  > .container {
+    align-items: flex-end;
+  }
+
+  .navbar-brand {
+    @include focus {
+      outline: 1px dotted #fff;
+      outline-offset: .625rem;
+    }
+
+    // display: flex;
+    // align-items: flex-end;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1;
+
+    img {
+      width: auto;
+      height: 3.125rem;
+      margin-top: 0;
+      font-size: 1rem;
+      font-weight: bold;
+      color: $brand-primary;
+    }
+  }
+
+  .navbar-collapse {
+    align-self: flex-end;
+  }
+
+  .navbar-nav {
+    align-items: flex-end;
+  }
+
+  .navbar-nav + .navbar-nav {
+    margin-left: auto; // pull second navbar-nav to right
+  }
+
+  .nav-item {
+    // position: relative;
+    font-weight: bold;
+
+    > .nav-link,
+    &.nav-link {
+      padding: 0;
+      line-height: $btn-line-height;
+
+      &:focus {
+        outline: 1px dotted #fff;
+        outline-offset: .625rem;
+      }
+    }
+
+    .nav-item-cdu {
+      @include hover-focus {
+        color: $brand-primary !important;
+      }
+
+      &:focus {
+        outline: 1px dotted #fff;
+        outline-offset: .625rem;
+      }
+
+      display: block;
+      line-height: $btn-line-height;
+      color: #fff !important;
+    }
+
+    .nav-link.icon {
+      margin-top: 0;
+
+      span[class^="icon-"] {
+        font-size: 1.5rem;
+        font-weight: normal;
+      }
+    }
+
+    &.show .dropdown-toggle::after {
+      transform: rotateZ(180deg);
+    }
+
+    .dropdown-toggle {
+      @include hover-focus {
+        color: $brand-primary;
+      }
+
+      @include focus {
+        outline: 1px dotted #fff;
+        outline-offset: .625rem;
+      }
+
+      position: relative;
+      display: block;
+      line-height: $btn-line-height;
+      color: #fff;
+
+      &::after {
+        top: .3125rem;
+        color: #fff;
+      }
+
+      .caret {
+        position: absolute;
+      }
+    }
+
+    .dropdown-menu {
+      top: 2rem;
+      right: -.75rem;
+      left: auto;
+    }
+  }
+
+  .nav-item + .nav-item {
+    margin-left: 1.25rem;
+  }
+
+  .nav-item:first-child {
+    margin-left: 1.875rem;
+  }
+
+  .form-inline {
+    margin-top: 2.1875rem;
+    margin-left: .625rem;
+  }
+
+  .btn-inverse-outline {
+    @include hover-focus {
+      color: $brand-primary;
+      border-color: $brand-primary;
+    }
+
+    @include active {
+      color: #fff;
+      background-color: $brand-primary;
+      border-color: $brand-primary;
+    }
+
+    color: #fff;
+    background-color: #000;
+    border-color: #fff;
+  }
+
+
+}
+
+.navbar.minimized {
+  height: $navbar-height-minimized; // IE flex support
+  min-height: $navbar-height-minimized;
+
+  .nav-link {
+    margin-top: 0;
+  }
+
+  .navbar-brand {
+    img {
+      height: 2.5rem;
+    }
+  }
+}
+
+.navbar.supra {
+  @include media-breakpoint-down(xs) {
+    display: none;
+  }
+
+  height: $navbar-supra-height; // IE flex support
+  min-height: $navbar-supra-height;
+  font-size: $font-size-sm;
+  border-bottom: 1px solid $gray-dark;
+
+  > .container,
+  > .container .navbar-nav {
+    align-items: center;
+  }
+
+  .navbar-brand {
+    display: none;
+  }
+
+  .nav-item {
+    &:first-child {
+      margin-left: 0;
+    }
+
+    .nav-link,
+    .dropdown-toggle {
+      span[class^="icon-"] {
+        font-size: $font-size-h5;
+        font-weight: normal;
+      }
+    }
+
+    .nav-link.icon {
+      span[class^="icon-"] {
+        font-size: $font-size-h6;
+        font-weight: normal;
+      }
+    }
+
+    .dropdown-menu {
+      top: $navbar-supra-height;
+      right: 0;
+      left: auto;
+    }
+  }
+}
+
+//todo move this where it belongs
+.navbar {
+  .container,
+  .navbar-nav,
+  .navbar .nav-item {
+    position: static;
+  }
+}
+
+.navbar-toggleable {
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    $next: breakpoint-next($breakpoint, $grid-breakpoints);
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    &#{$infix} {
+      @include media-breakpoint-down($breakpoint) {
+        &,
+        &.minimized {
+          display: inline-block;
+          width: 100%;
+          height: auto;
+          min-height: $navbar-height-sm;
+
+          &.supra {
+            display: none;
+          }
+
+          .navbar-brand {
+            @include focus {
+              outline-offset: .5rem;
+            }
+            margin-left: .625rem;
+            font-size: $font-size-sm;
+          }
+          .navbar-brand img {
+            height: 1.875rem;
+          }
+
+          > .container {
+            display: block;
+            width: 100%;
+            padding: .625rem 0 0;
+            margin: 0;
+          }
+
+          .navbar-collapse {
+            position: static;
+            width: 100%;
+            margin-top: .625rem;
+          }
+
+          .navbar-collapse .navbar-nav {
+            align-items: stretch;
+          }
+
+          .navbar-toggler {
+            position: absolute;
+            top: .265625rem;
+            right: 0;
+            z-index: 1000;
+            padding: .625rem .75rem;
+            font-size: 1.25rem;
+            color: $navbar-inverse-color;
+            background-color: transparent;
+            background-image: none;
+            border: 0;
+
+            @include hover-focus {
+              color: #000;
+              background-color: #fff;
+            }
+          }
+
+          .navbar-toggler:active {
+            color: #fff;
+            background-color: $brand-primary;
+          }
+
+          .navbar-toggler:focus {
+            outline: 0;
+          }
+
+          .nav-item {
+            margin-left: 0;
+            font-size: $font-size-h5;
+            line-height: 1;
+            border-top: 1px solid $gray-dark;
+          }
+
+          .nav-item:first-child,
+          .nav-item + .nav-item {
+            margin-left: 0;
+          }
+
+          .nav-item .nav-link,
+          .nav-item .dropdown-toggle,
+          .nav-item .nav-item-cdu {
+            margin-top: 0;
+          }
+
+          .nav-item .nav-link[role="menuitem"]::before {
+            float: right;
+            margin-right: 1rem;
+            font-family: icon-orange;
+            font-size: $font-size-base;
+            font-weight: normal;
+            color: #fff;
+            content: "\e93e";
+          }
+
+          .nav-item .nav-link.active::before {
+            display: none;
+          }
+
+          .nav-item .nav-link.icon {
+            padding: .625rem;
+            margin-top: 0;
+          }
+
+          .nav-item > .nav-link {
+            @include focus {
+              outline-offset: -1px;
+            }
+
+            padding: 1rem 0 1rem .625rem;
+            margin-top: 0;
+          }
+
+          .nav-item > .nav-link.icon {
+            padding: .78125rem .625rem;
+          }
+
+          .nav-item.dropdown {
+            padding: 0;
+          }
+
+          .nav-item.dropdown .dropdown-toggle,
+          .nav-item.dropdown .dropdown-item {
+            padding: 1rem 0 1rem .625rem;
+          }
+
+          .nav-item.dropdown .dropdown-toggle:focus {
+            outline: 0;
+          }
+
+          .nav-item.dropdown .dropdown-toggle::before {
+            display: none;
+          }
+
+          .nav-item.dropdown .dropdown-toggle::after {
+            float: right;
+            margin-top: .5rem;
+            margin-right: 1.25rem;
+          }
+
+          .nav-item.dropdown .dropdown-item {
+            color: #fff;
+            background-color: #000;
+            border-top: 1px solid $gray-dark;
+          }
+
+          .mega-menu .nav-link[data-toggle="collapse"]::before {
+            margin-top: .3125rem;
+            margin-right: .9375rem;
+            content: "";
+            border-top: .4375em solid;
+            border-right: .4375em solid transparent;
+            border-left: .4375em solid transparent;
+            transform: rotateZ(180deg);
+          }
+
+          .mega-menu .nav-link.collapsed::before {
+            transform: rotateZ(0deg);
+          }
+
+          .mega-menu-panel .nav-link.back {
+            display: block;
+          }
+
+          .mega-menu-panel .nav-link.back::before {
+            float: left;
+            transform: rotateZ(180deg);
+          }
+
+          .mega-menu-panel > .container {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+          }
+
+// scss-lint:disable SelectorDepth
+
+          .mega-menu-panel > .container a[data-toggle="collapse"] {
+            display: none;
+          }
+
+          .mega-menu-panel > .container > .navbar-nav > .nav-item {
+            border: 0;
+          }
+
+          .mega-menu-panel > .container > .navbar-nav .navbar-nav .nav-item:last-child {
+            border-bottom: 1px solid #333;
+          }
+        }
+      }
+
+      @include media-breakpoint-up($next) {
+        .mega-menu {
+          overflow: visible;
+        }
+
+        .mega-menu > .navbar-nav {
+          transition: none;
+          transform: none;
+        }
+
+        .mega-menu-panel {
+          position: absolute;
+          top: 100px;
+          left: 0;
+          z-index: 2000;
+          width: 100%;
+          padding: 1rem 0;
+          background-color: #000;
+          border-top: 1px solid #333;
+
+// scss-lint:disable SelectorDepth
+
+          > .container > .navbar-nav {
+            flex-direction: row;
+            align-items: flex-start;
+          }
+
+          > .container > .navbar-nav > .nav-item {
+            flex-grow: 1;
+            padding: 1rem 0;
+          }
+
+          > .container > .navbar-nav > .nav-item > .nav-link {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+          }
+
+          > .container > .navbar-nav .navbar-nav {
+            position: static;
+            display: block;
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          > .container > .navbar-nav .nav-link {
+            @include focus {
+              outline-offset: 0;
+            }
+          }
+
+          > .container > .navbar-nav .navbar-nav .nav-link {
+            line-height: 1.25rem;
+          }
+
+          > .container > .navbar-nav .nav-item:first-child,
+          > .container > .navbar-nav .nav-item + .nav-item {
+            margin-left: 0;
+          }
+
+          > .container > .navbar-nav .nav-link {
+            color: #fff;
+          }
+
+// scss-lint:disable SelectorDepth
+
+          > .container > .navbar-nav .nav-link.back {
+            display: none;
+          }
+
+// scss-lint:enable SelectorDepth
+          a[data-toggle="collapse"] {
+            display: block;
+            float: right;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}

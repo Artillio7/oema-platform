@@ -1,0 +1,6 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<label class="form-control-label" for="{{ formElement.name }}" [innerHTML]="formElement.label"></label>
+<input #input data-test="form-input-text" id="{{ formElement.name }}" class="form-control" name="{{ formElement.name }}" type="text" (blur)="onChange($event, input.value)">

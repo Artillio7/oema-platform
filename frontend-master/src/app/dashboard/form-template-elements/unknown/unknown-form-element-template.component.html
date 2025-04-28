@@ -1,0 +1,37 @@
+<mark *ngIf="!formElement; else labelTemplate">Error: unknown form element!</mark>
+<ng-template #labelTemplate>
+  <div *ngIf="formElement!.type === FormElementType.Unknown" class="form-question-label new-form-element">
+    <i *ngIf="labelFormControl.hasError('required')" class="fa fa-exclamation-triangle text-danger lead" aria-hidden="true"
+      style="margin-top: -5px; margin-right: 5px;"></i>
+    <div class="form-group">
+      <label class="form-control-label text-primary" for="radio-width">Select your question type:</label>
+      <select class="form-control" id="radio-width" [(ngModel)]="questionType">
+        <option value="{{ FormElementType.Unknown }}">Choose a type in the list</option>
+        <option value="{{ FormElementType.Textarea }}">Textarea</option>
+        <option value="{{ FormElementType.TextInput }}">Text Input</option>
+        <option value="{{ FormElementType.Checkbox }}">Checkboxes</option>
+        <option value="{{ FormElementType.Radio }}">Radio Buttons</option>
+        <option value="{{ FormElementType.Select }}">Select</option>
+        <option *ngIf="!noMixArray" value="{{ FormElementType.MixArray }}">Mix Table</option>
+        <option value="{{ FormElementType.BatteryLevels }}">Battery Levels</option>
+        <option value="{{ FormElementType.Text }}">Only Text</option>
+        <option value="{{ FormElementType.File }}">File (upload to OEMA backend - only pdf)</option>
+        <option value="{{ FormElementType.S3File }}">File using S3 (upload to Flexible Storage S3 - videos, pdf or Microsoft Office types)</option>
+        <option value="{{ FormElementType.Dropzone }}">Dropzone (multiple file uploads to OEMA backend - only pdf)</option>
+        <option value="CV">CV</option>
+        <option value="Manager Approval">Manager Approval</option>
+        <option value="Orange Charter">Orange Expert Charter</option>
+      </select>
+    </div>
+    <div class="control-btn">
+      <button type="button" class="btn btn-danger btn-circle btn-sm cancel-form-element" (click)="cancel()">
+        <i class="fa fa-trash-o" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="btn btn-success btn-circle btn-sm create-form-element"
+        [ngClass]="{'enabled': questionType !== FormElementType.Unknown }" (click)="createFormElement()">
+        <i class="fa fa-check" aria-hidden="true"></i>
+      </button>
+    </div>
+
+  </div>
+</ng-template>

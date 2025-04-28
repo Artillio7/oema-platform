@@ -1,0 +1,58 @@
+<div [hidden]="!tableReady" class="oema-datatables mt-1 mb-2">
+  <table id="users-list" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+    class="table table-bordered table-hover nowrap" width="100%">
+    <thead>
+      <tr>
+        <th class="row-selector"></th>
+        <th class="username">Last name</th>
+        <th class="username">First name</th>
+        <th class="hidden-column">Raw data index</th>
+        <!--<th>Profile</th>-->
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Entity</th>
+        <th>Location</th>
+        <th>Country</th>
+        <th>CUID</th>
+        <th>Gender</th>
+        <th>Birthday</th>
+        <th>Class.</th>
+        <th>Manager Name</th>
+        <th>Manager Email</th>
+        <th>HR Name</th>
+        <th>HR Email</th>
+        <th>Registered on</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; let userIdx = index">
+        <td class="row-selector"></td>
+        <td class="username expandable"><span class="lastname">{{ user.lastname || '' }}</span></td>
+        <td class="username expandable"><span class="firstname">{{ (user.firstname || '') | capitalizeName }}</span></td>
+        <td class="hidden-column">{{ userIdx }}</td>
+        <!--<td>
+          <a href="{{ user.directoryUrl || '' }}" target="_blank" class="btn btn-outline-info btn-view-profile">Profile</a>
+        </td>-->
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone || '' }}</td>
+        <td>
+          <a href="{{ user.directoryUrl || '' }}" target="_blank" class="hint">
+            {{ formatEntity(user.entity) }}
+            <span class="hint-text hint-left" style="right: 100%;">{{ user.entity || '' }}</span>
+          </a>
+        </td>
+        <td>{{ (user.location || '') | capitalizeName }}</td>
+        <td>{{ user.country || '' }}</td>
+        <td>{{ user.cuid?.toLowerCase() || '' }}</td>
+        <td style="text-align:center;">{{ user.gender?.charAt(0) || '' }}</td>
+        <td>{{ user.birthday || '' }}</td>
+        <td style="text-align:center;">{{ formatClassification(user.classification) }}</td>
+        <td>{{ (user.managerFirstname || '') | capitalizeName }} {{ user.managerLastname?.toUpperCase() || '' }}</td>
+        <td>{{ user.managerEmail || '' }}</td>
+        <td>{{ (user.hrFirstname || '')  | capitalizeName }} {{ user.hrLastname?.toUpperCase() || '' }}</td>
+        <td>{{ user.hrEmail || '' }}</td>
+        <td>{{ user.createdAt | date: 'dd/MM/yyyy' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

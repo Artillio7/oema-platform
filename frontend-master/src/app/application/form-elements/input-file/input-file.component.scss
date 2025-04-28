@@ -1,0 +1,41 @@
+.file-upload {
+
+  .filename-input {
+    padding-right: 40px;
+    height: 35px;
+  }
+
+  .file-upload-input {
+    position: absolute;
+    width: 100%;
+    height: 35px;
+    z-index: 9;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .delete-file {
+    position: absolute;
+    right: 75px;
+    top: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 99;
+    color: #f16e00;
+    visibility: hidden;
+  }
+
+  &:hover .delete-file {
+    visibility: visible;
+  }
+
+  .file-upload-btn button {
+    height: 35px;
+  }
+
+  &:hover .file-upload-btn button {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+  }
+}

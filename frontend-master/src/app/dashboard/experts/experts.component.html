@@ -1,0 +1,49 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+
+      <div appCardWidget class="card">
+
+        <div class="card-header">
+          <i class="fa fa-graduation-cap text-primary" aria-hidden="true"></i>
+          <span>{{ appDomain.name }} and their Competencies</span>
+          <div class="card-actions widget-controls">
+            <a data-widgster="fullscreen" href="#" class="transition"><i class="fa fa-expand"></i></a>
+            <a data-widgster="restore" href="#" class="transition"><i class="fa fa-compress"></i></a>
+          </div>
+        </div>
+
+        <div class="card-block widget-body experts-table">
+          <div class="main-page-menu mt-2 mb-1">
+            <div *ngIf="communities.length > 1"
+              class="input-group view-expert-community pull-left">
+              <div class="input-group-addon" aria-hidden="true"><i class="fa fa-graduation-cap"></i></div>
+              <select #community class="form-control" name="community" size="1"
+                [ngClass]="{'senior-community': isSeniorOrangeExpert}"
+                (change)="onCommunityChange(community.options[community.selectedIndex].value)">
+                <option value="" disabled selected hidden>Select a community</option>
+                <ng-template ngFor let-community [ngForOf]="communities" let-communityIdx="index">
+                  <option [value]="communityIdx" [selected]="communityIdx === selectedCommunityIndex">
+                    {{ community.name }}
+                  </option>
+                </ng-template>
+              </select>
+            </div>
+            <button class="btn btn-default pull-right btn-export-excel" [appXlsxExport]="rows"
+              [xlsxFileName]="'export-experts_experts-management.xlsx'"><i class="fa  fa-file-excel-o"
+                aria-hidden="true"></i> &nbsp;Export as Excel</button>
+
+            <h6 *ngIf="infoMsg" [innerHTML]="infoMsg" class="pull-left"></h6>
+          </div>
+
+
+          <div class="experts-datatables mt-1 mb-2">
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

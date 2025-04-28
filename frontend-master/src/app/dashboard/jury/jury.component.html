@@ -1,0 +1,40 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+      <div appCardWidget class="card">
+        <div *ngIf="isSeniorExpert" class="ribbon ribbon-top-right"><span>senior</span></div>
+
+        <div class="card-header">
+          <i class="fa fa-gavel text-primary" aria-hidden="true"></i> Jury Membership
+          <div class="card-actions widget-controls">
+            <a data-widgster="fullscreen" href="#" class="transition" (click)="manageClicksOnDocument($event)">
+              <i class="fa fa-expand"></i>
+            </a>
+            <a data-widgster="restore" href="#" class="transition" (click)="manageClicksOnDocument($event)">
+              <i class="fa fa-compress"></i>
+            </a>
+          </div>
+        </div>
+        <div class="card-block widget-body">
+
+          <app-user-search-by-email-name [description]="'Add a user as a reviewer'"
+            [myRole]="myRole || 'Applicant'" (userFound)="addReviewer($event)">
+          </app-user-search-by-email-name>
+
+          <div class="pt-1 mb-1" style="clear: both">
+            <h6 [innerHTML]="infoMessage"></h6>
+          </div>
+
+          <div *ngIf="!tableReady && !infoMessage" class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+
+          <app-selected-users-table [tableReady]="tableReady" [dtTrigger]="dtTrigger" [dtOptions]="dtOptions"
+            [users]="reviewers"></app-selected-users-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

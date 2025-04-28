@@ -1,0 +1,77 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<div class="form-question-label mb-2">
+  <i *ngIf="formElement.options?.review" class="fa fa-star text-primary lead" aria-hidden="true" style="margin-top: -5px; margin-right: 5px;"></i>
+  <i *ngIf="labelFormControl.hasError('required')" class="fa fa-exclamation-triangle text-danger lead" aria-hidden="true" style="margin-top: -5px; margin-right: 5px;"></i>
+  <editable id="{{ formElement.name + '-label-click' }}"
+  (save)="modifyLabel()">
+    <ng-template viewMode>
+      <label class="form-control-label" [innerHTML]="formElement.label || 'Write your question here, and configure the battery-rating labels in the options...'"></label>
+    </ng-template>
+    <ng-template editMode>
+      <div class="form-group">
+        <textarea
+          class="form-control"
+          id="{{ formElement.name + '-label-click-edit' }}"
+          editableFocusable
+          placeholder="Write your question here..."
+          rows="5"
+          [formControl]="labelFormControl">
+        </textarea>
+      </div>
+    </ng-template>
+  </editable>
+  <button type="button" class="btn btn-info btn-circle btn-sm hint" (mouseover)="menuIsVisible()" (mouseout)="menuIsHidden()">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    <div class="hint-text hint-left show-template-menu">
+      <button class="btn" type="button" (click)="configureOptions()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp; Configure options</button>
+      <hr class="solid" style="width: 220px;">
+      <button class="btn" type="button" (click)="addNewElement('before')"><i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question before</button>
+      <button class="btn" type="button" (click)="addNewElement('after')"><i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question after</button>
+      <hr class="solid" style="width: 220px;">
+      <button class="btn" type="button" (click)="deleteElement()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the question</button>
+    </div>
+  </button>
+</div>
+<div *ngFor="let competence of formElement.options?.items ?? [];" class="row battery-levels-bottom-spacing">
+  <div class="col-xl-4" style="margin-left:10px">
+    <label class="form-control-label"> {{ competence.label }}</label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input type="radio" id="battery-0-{{ competence.name }}" name="{{ competence.name }}" value="battery-0"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-0'">
+    <label for="battery-0-{{ competence.name }}" class="battery-0">
+      <i class="fa fa-battery-0"></i>
+    </label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input type="radio" id="battery-1-{{ competence.name }}" name="{{ competence.name }}" value="battery-1"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-1'">
+    <label for="battery-1-{{ competence.name }}" class="battery-1">
+      <i class="fa fa-battery-1"></i>
+    </label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input type="radio" id="battery-2-{{ competence.name }}" name="{{ competence.name }}" value="battery-2"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-2'">
+    <label for="battery-2-{{ competence.name }}" class="battery-2">
+      <i class="fa fa-battery-2"></i>
+    </label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input type="radio" id="battery-3-{{ competence.name }}" name="{{ competence.name }}" value="battery-3"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-3'">
+    <label for="battery-3-{{ competence.name }}" class="battery-3">
+      <i class="fa fa-battery-3"></i>
+    </label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input type="radio" id="battery-4-{{ competence.name }}" name="{{ competence.name }}" value="battery-4"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-4'">
+    <label for="battery-4-{{ competence.name }}" class="battery-4">
+      <i class="fa fa-battery-4"></i>
+    </label>
+  </div>
+</div>

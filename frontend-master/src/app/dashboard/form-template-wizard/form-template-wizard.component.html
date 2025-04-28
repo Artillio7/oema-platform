@@ -1,0 +1,910 @@
+<div *ngIf="!steps || !aboutYouForm">
+  <div class="spinner">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+  </div>
+  <div class="loading-error">{{ loadingErrorMsg }}</div>
+</div>
+
+<div class="animated fadeIn editing-form-template" *ngIf="steps && aboutYouForm">
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      <div *ngIf="user && (user.role === 'Referent' || user.role === 'Admin')"
+      appCardWidget class="card">
+        <div *ngIf="formType.endsWith('senior')" class="ribbon ribbon-top-right"><span>senior</span></div>
+
+        <div class="card-header">
+          <div *ngIf="formType">
+            <i class="fa fa-pencil-square-o text-primary" aria-hidden="true"></i>
+            Modifying the application template for <span class="text-primary">{{ formType }} membership</span>
+            for the <span class="text-primary">{{ expertCommunity }}</span> community
+          </div>
+
+          <div class="card-actions widget-controls">
+            <a data-widgster="fullscreen" href="#" class="transition"><i class="fa fa-expand"></i></a>
+            <a data-widgster="restore" href="#" class="transition"><i class="fa fa-compress"></i></a>
+          </div>
+        </div>
+
+        <div class="card-block widget-body formwizard-container">
+          <button type="button" class="btn btn-outline-primary px-1 pull-left mb-2 form-wizard-toggle"
+            (click)="isFormWizardNavCollapsed = !isFormWizardNavCollapsed"
+            [attr.aria-expanded]="!isFormWizardNavCollapsed" aria-controls="collapseWizardNav">
+            <i class="fa fa-paw" aria-hidden="true"></i> &nbsp;Form wizard
+          </button>
+
+          <button type="button" class="btn btn-primary px-1 pull-right mb-2" id="publish-form-template" (click)="openModal(publishFormTemplateModal)"
+          [disabled]="alertService.lastType === 'success'" [innerHTML]="submitFormButtonLabel"></button>
+
+          <div id="collapseWizardNav" [ngbCollapse]="isFormWizardNavCollapsed">
+            <div class="row">
+              <div *ngFor="let step of steps; let last = last; let stepIdx = index" id="{{step.name.toLowerCase().split(' ').join('-')}}" class="col-sm-6 col-12 step"
+                [class.active]="step.active" [class.valid]="step.valid"
+                [ngClass]="{'last' : last, 'col-md-2': steps.length <= 6,'col-md-x-8': steps.length >= 7 }"
+                (click)="goToStep(stepIdx)">
+                <div class="step-icon">
+                  <i class="fa {{ step.icon }}" aria-hidden="true"></i>
+                </div>
+                <span class="step-name" [class.active]="step.active" [class.valid]="step.valid">{{step.name}}</span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngFor="let step of steps; let idx = index" [hidden]="!step.active" class="col form-wizard">
+            <div class="row form-title">
+              <h4 id="{{step.name.toLowerCase().split(' ').join('-')}}" (click)="editStep(stepTitleFormTemplateModal)" [ngClass]="{'anchor-disable' : idx === 0 || idx === steps.length - 1}"><i class="fa {{ step.icon }}" aria-hidden="true"></i>&nbsp;&nbsp;{{step.name}}</h4>
+              <button *ngIf="idx && idx !== steps.length - 1" type="button" class="btn btn-info btn-circle btn-sm hint">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                <div class="hint-text hint-left show-template-menu">
+                  <button class="btn" type="button" (click)="addNewFormItemIntoTemplate({alignment: 'leading', type: FormType.Group, stepIndex: idx})">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp; New group in step
+                  </button>
+                  <hr class="solid" style="width: 200px;">
+                  <button class="btn" type="button" (click)="addNewFormItemIntoTemplate({alignment: 'before', type: FormType.Step, stepIndex: idx})">
+                    <i class="fa fa-dot-circle-o" aria-hidden="true"></i>&nbsp; Add step before
+                  </button>
+                  <button class="btn" type="button" (click)="addNewFormItemIntoTemplate({alignment: 'after', type: FormType.Step, stepIndex: idx})">
+                    <i class="fa fa-dot-circle-o" aria-hidden="true"></i>&nbsp; Add step after
+                  </button>
+                  <hr class="solid" style="width: 200px;">
+                  <button class="btn" type="button" (click)="deleteFormTemplateItem({type: FormType.Step, stepIndex: idx})">
+                    <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the step
+                  </button>
+                </div>
+              </button>
+            </div>
+
+            <!-- Wizard step 1 (about you) -->
+            <form role="form" *ngIf="!idx" class="mt-2" (ngSubmit)="saveUserProfile()" novalidate>
+              <div class="about-you-form-guidelines pb-2">
+                <p><mark>The first step is for getting the user profile, you cannot modify it.</mark></p>
+                <p>If your profile is not complete, take the opportunity to fill it right now!</p>
+              </div>
+              <app-user-profile-form [profileForm]="aboutYouForm" [profileHasError]="step.hasError">
+              </app-user-profile-form>
+            </form>
+
+            <!-- Wizard Step >= 1 before Submission -->
+            <form role="form" *ngIf="idx && idx < (steps.length - 1)" [formGroup]="anyStepForms[idx-1]"
+              (ngSubmit)="retrieveCurrentStepDataAndSave()" novalidate>
+              <section *ngIf="step.form.length === 0" class="form-part row">
+                <div class="bd-callout bd-callout-warning">
+                  <h5>Your step is empty!</h5>
+
+                  <p>Delete your step or start creating a group to add questions.</p>
+                  <p>Note that a step is a list of thematic groups.
+                    Each group is a list of questions. This means that any question must be part of a group.
+                    You are not required to name a group (when the name is empty, the group header will not be displayed).</p>
+
+                  <button type="button" id="empty-step-delete"
+                    class="btn btn-outline-danger pull-right" style="margin: 5px;"
+                    (click)="deleteFormTemplateItem({type: FormType.Step, stepIndex: idx})">
+                    <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the step</button>
+                  <button type="button" id="empty-step-new-group"
+                    class="btn btn-outline-primary pull-right" style="margin: 5px;"
+                    (click)="addNewFormItemIntoTemplate({alignment: 'leading', type: FormType.Group, stepIndex: idx})">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp; Add new group</button>
+                  </div>
+              </section>
+              <section *ngFor="let formPart of step.form; let formIdx = index" class="form-part row">
+                <div class="col form-part-title fp-mt-1">
+                  <editable id="{{ 'group-' + formIdx.toString() + '-name-click' }}"
+                  (save)="updateLabelFor({type: FormType.Group, stepIndex: idx, groupIndex: formIdx})">
+                    <ng-template viewMode>
+                      <h5><i class="fa fa-angle-right "></i>&nbsp;&nbsp;<span [innerHTML]="formPart.group || 'Unnamed group'"></span></h5>
+                    </ng-template>
+                    <ng-template editMode>
+                      <div class="form-group">
+                        <input
+                          class="form-control"
+                          id="{{ 'group-' + formIdx.toString() + '-name-click-edit' }}"
+                          editableFocusable
+                          placeholder="Name the group"
+                          type="text"
+                          [formControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-name')">
+                      </div>
+                    </ng-template>
+                  </editable>
+                  <button *ngIf="idx" type="button" class="btn btn-info btn-circle btn-sm hint">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <div class="hint-text hint-left show-template-menu">
+                      <button class="btn" type="button" (click)="addNewFormItemIntoTemplate({alignment: 'leading', type: FormType.Question, stepIndex: idx, groupIndex: formIdx})">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; New question in group
+                      </button>
+                      <hr class="solid" style="width: 220px;">
+                      <button class="btn" type="button" (click)="addNewFormItemIntoTemplate({alignment: 'before', type: FormType.Group, stepIndex: idx, groupIndex: formIdx})">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp; Add group before
+                      </button>
+                      <button class="btn" type="button" (click)="addNewFormItemIntoTemplate({alignment: 'after', type: FormType.Group, stepIndex: idx, groupIndex: formIdx})">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp; Add group after
+                      </button>
+                      <hr class="solid" style="width: 220px;">
+                      <button class="btn" type="button" (click)="deleteFormTemplateItem({type: FormType.Group, stepIndex: idx, groupIndex: formIdx})">
+                        <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the group
+                      </button>
+                    </div>
+                  </button>
+                </div>
+
+                <div *ngIf="formPart.questions.length === 0" class="form-group col-md-12 bottom-spacing empty-group">
+                  <button type="button" id="empty-group-delete"
+                    class="btn btn-outline-danger pull-right" style="margin: 5px;"
+                    (click)="deleteFormTemplateItem({type: FormType.Group, stepIndex: idx, groupIndex: formIdx})">
+                    <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the group</button>
+                  <button *ngIf="!steps[steps.length-1].active" type="button" id="empty-group-new-question"
+                    class="btn btn-outline-primary pull-right" style="margin: 5px;"
+                    (click)="addNewFormItemIntoTemplate({alignment: 'leading', type: FormType.Question, stepIndex: idx, groupIndex: formIdx})">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add new question</button>
+                </div>
+                <div *ngFor="let question of formPart.questions; let questionIdx = index" class="form-group col-md-12 bottom-spacing"
+                  [ngSwitch]="question.type" [ngClass]="{'form-template-element': visibleQuestionMenuIndex === questionIdx, 'large-padding-bottom': question.type === FormElementType.S3File}">
+                  <app-form-input-text-template *ngSwitchCase="FormElementType.TextInput" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-input-text-template>
+                  <app-form-textarea-template *ngSwitchCase="FormElementType.Textarea" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-textarea-template>
+                  <app-form-battery-levels-template *ngSwitchCase="FormElementType.BatteryLevels" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-battery-levels-template>
+                  <app-form-input-checkboxes-template *ngSwitchCase="FormElementType.Checkbox" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-input-checkboxes-template>
+                  <app-form-select-template *ngSwitchCase="FormElementType.Select" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-select-template>
+                  <app-form-input-radio-template *ngSwitchCase="FormElementType.Radio" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-input-radio-template>
+                  <app-form-mix-array-template *ngSwitchCase="FormElementType.MixArray" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    formGroupName="{{ question.name }}"
+                    [maForm]="getNestedFormGroup(anyStepForms[idx-1], question.name)"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx, cell: $event})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event.alignment, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx, cell: $event.cell})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx, cell: $event})"
+                    (createFormQuestion)="createNewFormQuestion({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx, cell: $event.cell}, $event.questionType)"
+                    (cancelFormQuestion)="cancelNewFormQuestion({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx, cell: $event})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx, cell: $event})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-mix-array-template>
+                  <app-form-input-file-template *ngSwitchCase="FormElementType.File" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    [userId]="user._id" [communityId]="communityId" [communityName]="expertCommunity" [uploadTarget]="'mongo'" [userAnsweredFormData]="userFormData"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-input-file-template>
+                  <app-form-input-file-template *ngSwitchCase="FormElementType.S3File" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    [userId]="user._id" [communityId]="communityId" [uploadTarget]="'aws-s3'" [userAnsweredFormData]="userFormData"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (options)="configureOptions({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-input-file-template>
+                  <app-form-dropzone-template *ngSwitchCase="FormElementType.Dropzone" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    [userId]="user._id" [communityId]="communityId" [userAnsweredFormData]="userFormData"
+                    formControlName="{{ question.name }}"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-dropzone-template>
+                  <app-form-text-template *ngSwitchCase="FormElementType.Text" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    (itemDeleted)="deleteFormTemplateItem({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (newItem)="addNewFormItemIntoTemplate({alignment: $event, type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (labelEdited)="updateLabelFor({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})"
+                    (menuVisible)="visibleQuestionMenuIndex = questionIdx" (menuHidden)="visibleQuestionMenuIndex = -1">
+                  </app-form-text-template>
+                  <app-form-unknown-element-template *ngSwitchCase="FormElementType.Unknown" [formElement]="question"
+                    [labelFormControl]="getNestedFormControl(anyStepForms[idx-1], 'group-' + formIdx.toString() + '-question-' + questionIdx.toString())"
+                    (createFormQuestion)="createNewFormQuestion({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx}, $event)"
+                    (cancelFormQuestion)="cancelNewFormQuestion({type: FormType.Question, stepIndex: idx, groupIndex: formIdx, questionIndex: questionIdx})">
+                  </app-form-unknown-element-template>
+                  <app-form-unknown-element-template *ngSwitchDefault [attr.data-name]="question.type"></app-form-unknown-element-template>
+                </div>
+              </section>
+            </form>
+
+            <!-- Wizard Step: Submission -->
+            <div *ngIf="idx === (steps.length - 1)" class="pb-2">
+              <!-- app form viewer -->
+              <app-application-form-viewer *ngIf="step.active" [steps]="steps" [userAnsweredForm]="userFormData" [user]="user"
+                [communityId]="communityId" (msgAlert)="setEventNotification($event)"> </app-application-form-viewer>
+            </div>
+            <!-- /End wizard Step: Submission -->
+          </div>
+
+          <div class="row">
+            <div class="form-template-wizard-buttons">
+              <button *ngIf="!steps[0].active" type="button" id="prev-form-template-step"
+                class="btn btn-primary btn-form-prev" (click)="prevStep()"><i class="fa fa-chevron-left arrow"
+                  aria-hidden="true"></i>&nbsp; Prev Step</button>
+
+              <div class="btn-form-writing">
+                <button *ngIf="!steps[0].active" type="button" id="new-form-step-before"
+                  class="btn btn-outline-info btn-new-step"
+                  (click)="addNewFormItemIntoTemplate({alignment: 'before', type: FormType.Step, stepIndex: currentStepIndex})">
+                  <i class="fa fa-undo" aria-hidden="true"></i>&nbsp; New Step Before
+                </button>
+                <button *ngIf="!steps[0].active && !steps[steps.length-1].active" type="submit"
+                id="save-current-form-template" class="btn btn-outline-primary btn-form-template-save" (click)="retrieveCurrentStepDataAndSave($event)"
+                  [disabled]="alertService.lastType === 'success'" [innerHTML]="saveFormButtonLabel"></button>
+                <button *ngIf="!steps[steps.length-1].active" type="button" id="new-form-step-after"
+                  class="btn btn-outline-info btn-new-step"
+                  (click)="addNewFormItemIntoTemplate({alignment: 'after', type: FormType.Step, stepIndex: currentStepIndex})">
+                  <i class="fa fa-repeat" aria-hidden="true"></i>&nbsp; New Step After</button>
+              </div>
+
+              <button *ngIf="!steps[steps.length-1].active" type="button" id="next-form-template-step"
+                class="btn btn-primary btn-form-next" (click)="nextStep()">Next Step &nbsp;<i
+                  class="fa fa-chevron-right arrow" aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12">
+              <button id="delete-form-template" class="btn btn-danger pull-right btn-delete-form-template" type="button" (click)="deleteEntireFormTemplate()">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp; Delete draft template
+              </button>
+            </div>
+          </div>
+
+          <ng-template #deleteFormTemplateModal let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">{{ deletionModalTitle }}</h4>
+              <button type="button" id="close-form-deletion" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>{{ deletionModalBody }} The action is irreversible.</p>
+              <p>Please confirm.</p>
+            </div>
+            <div class="modal-footer mt-2">
+              <button type="button" id="cancel-form-template-deletion" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" id="delete-form-template" class="btn btn-danger" (click)="onDeletingFormTemplateItem()">Delete</button>
+            </div>
+          </ng-template>
+
+          <ng-template #stepTitleFormTemplateModal let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title text-primary">{{ stepTitleFormHeader }}</h4>
+              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form role="form" [formGroup]="stepTitleFormHeader.startsWith('Modify') ? getNestedFormGroup(anyStepForms[currentStepIndex - 1], 'step-title') : newStepForm"
+              (ngSubmit)="submitStepTitleForm()" novalidate>
+              <div class="modal-body">
+                <div class="form-group" [ngClass]="{'has-danger': stepTitleFormHasError && stepTitleFormIcon.hasError('required'), 'has-success': !stepTitleFormIcon.hasError('required') }">
+                  <label class="form-control-label" for="step-icon-input">Icon</label>
+                  <p>(Choose your icon in this list <a href="https://fontawesome.com/v4/icons/" target="_blank">https://fontawesome.com/v4/icons/</a>)</p>
+                  <div class="input-group">
+                    <div class="input-group-addon" aria-hidden="true" style="width: 40px;">
+                      <i class="fa {{ stepTitleFormHeader.startsWith('Modify') ?
+                        (getNestedFormGroup(anyStepForms[currentStepIndex - 1], 'step-title').value.icon === '' ?
+                            'fa-dot-circle-o' : 'fa-' + getNestedFormGroup(anyStepForms[currentStepIndex - 1], 'step-title').value.icon)
+                        : (newStepForm.value.icon === '' ? 'fa-dot-circle-o' : 'fa-' + newStepForm.value.icon) }}" aria-hidden="true"></i>
+                    </div>
+                    <input formControlName="icon" id="step-icon-input"
+                      name="step-icon-input" class="form-control" placeholder="Icon name" type="text"
+                      [ngClass]="{'form-control-danger':  stepTitleFormIcon.hasError('required'), 'form-control-success':  !stepTitleFormIcon.hasError('required') }">
+                  </div>
+                  <span class="help-block text-danger" *ngIf="stepTitleFormHasError && stepTitleFormIcon.hasError('required')">
+                    Icon name is required</span>
+                </div>
+                <div class="form-group" [ngClass]="{'has-danger': stepTitleFormHasError && stepTitleFormName.hasError('required'), 'has-success': !stepTitleFormName.hasError('required') }">
+                  <label class="form-control-label" for="step-title-input">Title</label>
+                  <div class="input-group">
+                    <input formControlName="name" id="step-title-input"
+                      name="step-title-input" class="form-control" placeholder="Step title" type="text"
+                      [ngClass]="{'form-control-danger':  stepTitleFormName.hasError('required'), 'form-control-success':  !stepTitleFormName.hasError('required') }">
+                  </div>
+                  <span class="help-block text-danger" *ngIf="stepTitleFormHasError && stepTitleFormName.hasError('required')">
+                    Step title is required</span>
+                </div>
+              </div>
+              <div class="modal-footer mt-2">
+                <button type="button" id="cancel-step-modal" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="submit" id="do-step-modal" class="btn btn-primary">{{ stepTitleFormHeader.startsWith('Modify') ? 'Modify' : 'Add step' }}</button>
+              </div>
+            </form>
+          </ng-template>
+
+          <ng-template #newGroupTemplateModal let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">Add a new thematic group of questions</h4>
+              <button type="button" id="close-form-deletion" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label class="form-control-label" for="group-title-input">
+                  Name the group (not required: if you leave the field empty,
+                  all questions in the group will be displayed as a list without any section header):
+                </label>
+                <input [formControl]="newQuestionGroupCtrl" id="group-title-input"
+                  name="group-title-input" class="form-control" placeholder="Group name" type="text">
+              </div>
+            </div>
+            <div class="modal-footer mt-2">
+              <button type="button" id="cancel-adding-group" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" id="add-new-group" class="btn btn-primary" (click)="addNewGroup()">Add group</button>
+            </div>
+          </ng-template>
+
+          <ng-template #optionsTemplateModal let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">Configure options</h4>
+              <button type="button" id="close-form-deletion" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body form-element-options" style="margin-top: 0;">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="mandatory-question" [checked]="mandatoryQuestion" (change)="setQuestionAsMandatory($event)" style="margin-left: -4.025rem">
+                <label class="form-check-label" for="mandatory-question" style="padding-top: .5rem;">Mandatory question (applicants must answer before going to next step)</label>
+              </div>
+              <div *ngIf="mandatoryQuestion" class="form-group">
+                <label class="form-control-label" for="mandatory-question-hint">Set a hint to indicate the question is mandatory (optional - default to `Mandatory question, you must answer before going to next step.`)</label>
+                <div class="input-group">
+                  <div class="input-group-addon" aria-hidden="true" style="width: 40px;">
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                  </div>
+                  <input id="mandatory-question-hint" [(ngModel)]="mandatoryHint"
+                    name="preview-title" class="form-control" placeholder="Hint for the mandatory question" type="text">
+                </div>
+              </div>
+              <div class="form-check form-switch mt-2">
+                <input class="form-check-input" type="checkbox" id="preview-question" [checked]="previewQuestion" (change)="previewQuestionInReviews($event)" style="margin-left: -4.025rem">
+                <label class="form-check-label" for="preview-question" style="padding-top: .5rem;">Preview the question in the reviews table</label>
+              </div>
+              <div *ngIf="previewQuestion" class="form-group">
+                <label class="form-control-label" for="preview-question-title">Set a title for the preview (optional)</label>
+                <div class="input-group">
+                  <div class="input-group-addon" aria-hidden="true" style="width: 40px;">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                  </div>
+                  <input id="preview-question-title" [(ngModel)]="previewTitle"
+                    name="preview-title" class="form-control" placeholder="Preview title" type="text">
+                </div>
+              </div>
+
+              <hr *ngIf="questionType !== FormElementType.TextInput && questionType !== FormElementType.MixArray && questionType !== FormElementType.File"
+                class="solid mt-2" style="width: 50%; height: 1px;">
+
+              <div *ngIf="questionType === FormElementType.Textarea">
+                <h6 class="text-primary" style="margin-bottom: 2rem;">Layout for the textarea tag</h6>
+                <div class="form-group">
+                  <label class="form-control-label" for="textarea-height">Set the height for the textarea (in px - default to 300 if empty):</label>
+                  <div class="input-group">
+                    <div class="input-group-addon" aria-hidden="true" style="width: 40px;">
+                      <i class="fa fa-text-height" aria-hidden="true"></i>
+                    </div>
+                    <input id="textarea-height" [(ngModel)]="textareaHeight"
+                      name="textarea-height" class="form-control" placeholder="Enter the height as a number" type="text">
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="questionType === FormElementType.Select">
+                <h6 class="text-primary" style="margin-bottom: 2rem;">Layout for the select tag</h6>
+                <div class="form-group select-option-label">
+                  <label class="form-control-label">Add, drag to sort, or double click to modify or delete values/choices for select:</label>
+                  <div class="new-label-box">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input id="new-option-label" [(ngModel)]="newOptionLabel"
+                          name="new-option-label" class="form-control" placeholder="Enter a new label" type="text">
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-circle btn-sm hint" (click)="addOptionLabel()">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                      <span class="hint-text hint-left">
+                        Add label
+                      </span>
+                    </button>
+                  </div>
+
+                  <div cdkDropList class="label-list" (cdkDropListDropped)="dropOptionLabel($event)">
+                    <div class="label-box" *ngFor="let optionLabel of optionLabels; let optLabelIdx = index" cdkDrag>
+                      <editable id="{{ optionLabel.name + '-label-dbl-click' }}"
+                      (save)="modifyOptionLabel(optionLabels, optionLabelFormCtrls, optLabelIdx)" openBindingEvent="dblclick">
+                        <ng-template viewMode>
+                          {{ optionLabel || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+                        </ng-template>
+                        <ng-template editMode>
+                          <div class="form-group">
+                            <input
+                              class="form-control"
+                              id="{{ optionLabel.name + '-label-dbl-click-edit' }}"
+                              editableFocusable
+                              placeholder="Set a value for select..."
+                              type="text"
+                              [formControl]="getOptionLabelFormControl(optionLabelFormCtrls, optLabelIdx)">
+                          </div>
+                          <button type="button" class="btn btn-danger btn-circle btn-sm hint" (click)="deleteOptionLabel(optionLabels, optionLabelFormCtrls, optLabelIdx)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            <span class="hint-text hint-left">
+                              Delete label
+                            </span>
+                          </button>
+                        </ng-template>
+                      </editable>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-control-label" for="select-width">Set the width for your select (how large the select values should be displayed - default to col-md-auto):</label>
+                  <select class="form-control" id="select-width" [(ngModel)]="widthClass">
+                    <option value="">Choose a width</option>
+                    <option value="col-md-auto">col-md-auto</option>
+                    <option value="col-md-12">col-md-12 (== 100%)</option>
+                    <option value="col-md-10">col-md-10</option>
+                    <option value="col-md-8">col-md-8</option>
+                    <option value="col-md-6">col-md-6</option>
+                    <option value="col-md-4">col-md-4</option>
+                    <option value="col-md-2">col-md-2</option>
+                  </select>
+                </div>
+              </div>
+
+              <div *ngIf="questionType === FormElementType.Checkbox" class="checkbox-options">
+                <h6 class="text-primary" style="margin-bottom: 2rem;">Layout for the checkbox list</h6>
+                <div class="form-group mb-2 abc-radio-container">
+                  <label class="form-control-label">Select how to display the checkbox labels (default to fullwidth):</label>
+                  <div class="radio abc-radio abc-radio-primary">
+                    <input type="radio" id="full" name="checkbox-display" [(ngModel)]="checkboxDisplayMode" value="fullwidth">
+                    <label for="full">
+                      Fullwidth (one fullwidth column)
+                    </label>
+                  </div>
+                  <div class="radio abc-radio abc-radio-primary">
+                    <input type="radio" id="half" name="checkbox-display" [(ngModel)]="checkboxDisplayMode" value="halfwidth">
+                    <label for="half">
+                      Halfwidth (with left and right columns)
+                    </label>
+                  </div>
+                </div>
+                <div *ngIf="checkboxDisplayMode === 'fullwidth'" class="form-group fullwidth-labels">
+                  <label class="form-control-label">Add, drag to sort, or double click to modify or delete checkbox labels:</label>
+                  <div class="new-label-box">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input id="new-option-label" [(ngModel)]="newOptionLabel"
+                          name="new-option-label" class="form-control" placeholder="Enter a new label" type="text">
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-circle btn-sm hint" (click)="addOptionLabel()">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                      <span class="hint-text hint-left">
+                        Add label
+                      </span>
+                    </button>
+                  </div>
+
+                  <div cdkDropList class="label-list" (cdkDropListDropped)="dropOptionLabel($event)">
+                    <div class="label-box" *ngFor="let optionLabel of optionLabels; let optLabelIdx = index" cdkDrag [cdkDragDisabled]="optLabelIdx === editingOptionLabelIndex">
+                      <editable id="{{ optionLabel.name + '-label-dbl-click' }}"
+                      (modeChange)="startEditingOptionLabel($event, optLabelIdx)"
+                      (save)="modifyOptionLabel(optionLabels, optionLabelFormCtrls, optLabelIdx)" openBindingEvent="dblclick">
+                        <ng-template viewMode>
+                          {{ optionLabel.label || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+                        </ng-template>
+                        <ng-template editMode>
+                          <div class="form-group">
+                            <input
+                              class="form-control"
+                              id="{{ optionLabel.name + '-label-dbl-click-edit' }}"
+                              editableFocusable
+                              placeholder="Set a checkbox label..."
+                              type="text"
+                              [formControl]="getOptionLabelFormControl(optionLabelFormCtrls, optLabelIdx)">
+                          </div>
+                          <button type="button" class="btn btn-danger btn-circle btn-sm hint" (click)="deleteOptionLabel(optionLabels, optionLabelFormCtrls, optLabelIdx)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            <span class="hint-text hint-left">
+                              Delete label
+                            </span>
+                          </button>
+                        </ng-template>
+                      </editable>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="checkboxDisplayMode === 'halfwidth'" class="halfwidth-labels">
+                  <label class="form-control-label">Add, drag to sort, or double click to modify or delete checkbox labels:</label>
+                  <div class="w-100"></div>
+                  <div class="label-container">
+                    <label>Left column</label>
+                    <div class="new-label-box">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input id="new-option-label" [(ngModel)]="newLeftOptionLabel"
+                            name="new-option-label" class="form-control" placeholder="Enter a new label" type="text">
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-circle btn-sm hint" (click)="addLeftOptionLabel(newLeftOptionLabel)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        <span class="hint-text hint-left">
+                          Add label
+                        </span>
+                      </button>
+                    </div>
+
+                    <div
+                      cdkDropList
+                      #leftList="cdkDropList"
+                      [cdkDropListData]="checkboxLeftLabels"
+                      [cdkDropListConnectedTo]="[rightList]"
+                      class="label-list"
+                      (cdkDropListDropped)="dropHalfwidthLabel($event)">
+                      <div class="label-box" *ngFor="let item of checkboxLeftLabels; let leftLabelIdx = index" cdkDrag [cdkDragDisabled]="leftLabelIdx === editingOptionLabelIndex">
+                        <editable id="{{ item.name + '-label-dbl-click' }}"
+                        (modeChange)="startEditingOptionLabel($event, leftLabelIdx)"
+                        (save)="modifyOptionLabel(checkboxLeftLabels, checkboxLeftLabelFormCtrls, leftLabelIdx)" openBindingEvent="dblclick">
+                          <ng-template viewMode>
+                            {{ item.label || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+                          </ng-template>
+                          <ng-template editMode>
+                            <div class="form-group">
+                              <input
+                                class="form-control"
+                                id="{{ item.name + '-label-dbl-click-edit' }}"
+                                editableFocusable
+                                placeholder="Set a checkbox label..."
+                                type="text"
+                                [formControl]="getOptionLabelFormControl(checkboxLeftLabelFormCtrls, leftLabelIdx)">
+                            </div>
+                            <button type="button" class="btn btn-danger btn-circle btn-sm hint" (click)="deleteOptionLabel(checkboxLeftLabels, checkboxLeftLabelFormCtrls, leftLabelIdx)">
+                              <i class="fa fa-trash-o" aria-hidden="true"></i>
+                              <span class="hint-text hint-left">
+                                Delete label
+                              </span>
+                            </button>
+                          </ng-template>
+                        </editable>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="label-container">
+                    <label>Right column</label>
+                    <div class="new-label-box">
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input id="new-option-label" [(ngModel)]="newRightOptionLabel"
+                            name="new-option-label" class="form-control" placeholder="Enter a new label" type="text">
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-circle btn-sm hint" (click)="addRightOptionLabel(newRightOptionLabel)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        <span class="hint-text hint-left">
+                          Add label
+                        </span>
+                      </button>
+                    </div>
+
+                    <div
+                      cdkDropList
+                      #rightList="cdkDropList"
+                      [cdkDropListData]="checkboxRightLabels"
+                      [cdkDropListConnectedTo]="[leftList]"
+                      class="label-list"
+                      (cdkDropListDropped)="dropHalfwidthLabel($event)">
+                      <div class="label-box" *ngFor="let item of checkboxRightLabels; let rightLabelIdx = index" cdkDrag [cdkDragDisabled]="rightLabelIdx === editingOptionLabelIndex">
+                        <editable id="{{ item.name + '-label-dbl-click' }}"
+                        (modeChange)="startEditingOptionLabel($event, rightLabelIdx)"
+                        (save)="modifyOptionLabel(checkboxRightLabels, checkboxRightLabelFormCtrls, rightLabelIdx)" openBindingEvent="dblclick">
+                          <ng-template viewMode>
+                            {{ item.label || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+                          </ng-template>
+                          <ng-template editMode>
+                            <div class="form-group">
+                              <input
+                                class="form-control"
+                                id="{{ item.name + '-label-dbl-click-edit' }}"
+                                editableFocusable
+                                placeholder="Set a checkbox label..."
+                                type="text"
+                                [formControl]="getOptionLabelFormControl(checkboxRightLabelFormCtrls, rightLabelIdx)">
+                            </div>
+                            <button type="button" class="btn btn-danger btn-circle btn-sm hint" (click)="deleteOptionLabel(checkboxRightLabels, checkboxRightLabelFormCtrls, rightLabelIdx)">
+                              <i class="fa fa-trash-o" aria-hidden="true"></i>
+                              <span class="hint-text hint-left">
+                                Delete label
+                              </span>
+                            </button>
+                          </ng-template>
+                        </editable>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="questionType === FormElementType.Radio" class="radio-input-options">
+                <h6 class="text-primary" style="margin-bottom: 2rem;">Layout for the radio button list</h6>
+                <div class="form-group radio-labels">
+                  <label class="form-control-label">Add, drag to sort, or double click to modify or delete radio button labels:</label>
+                  <div class="new-label-box">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input id="new-option-label" [(ngModel)]="newOptionLabel"
+                          name="new-option-label" class="form-control" placeholder="Enter a new label" type="text">
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-circle btn-sm hint" (click)="addOptionLabel()">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                      <span class="hint-text hint-left">
+                        Add label
+                      </span>
+                    </button>
+                  </div>
+
+                  <div cdkDropList class="label-list" (cdkDropListDropped)="dropOptionLabel($event)">
+                    <div class="label-box" *ngFor="let optionLabel of optionLabels; let optLabelIdx = index" cdkDrag [cdkDragDisabled]="optLabelIdx === editingOptionLabelIndex">
+                      <editable id="{{ optionLabel.name + '-label-dbl-click' }}"
+                      (modeChange)="startEditingOptionLabel($event, optLabelIdx)"
+                      (save)="modifyOptionLabel(optionLabels, optionLabelFormCtrls, optLabelIdx)" openBindingEvent="dblclick">
+                        <ng-template viewMode>
+                          {{ optionLabel.label || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+                        </ng-template>
+                        <ng-template editMode>
+                          <div class="form-group">
+                            <input
+                              class="form-control"
+                              id="{{ optionLabel.name + '-label-dbl-click-edit' }}"
+                              editableFocusable
+                              placeholder="Set a radio button label..."
+                              type="text"
+                              [formControl]="getOptionLabelFormControl(optionLabelFormCtrls, optLabelIdx)">
+                          </div>
+                          <button type="button" class="btn btn-danger btn-circle btn-sm hint" (click)="deleteOptionLabel(optionLabels, optionLabelFormCtrls, optLabelIdx)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            <span class="hint-text hint-left">
+                              Delete label
+                            </span>
+                          </button>
+                        </ng-template>
+                      </editable>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-control-label" for="radio-width">Select a width for your radio list (how large the radio button labels should be displayed - default to col-md-auto):</label>
+                  <select class="form-control" id="radio-width" [(ngModel)]="widthClass">
+                    <option value="">Choose a width</option>
+                    <option value="col-md-auto">col-md-auto</option>
+                    <option value="col-md-12">col-md-12 (== 100%)</option>
+                    <option value="col-md-10">col-md-10</option>
+                    <option value="col-md-8">col-md-8</option>
+                    <option value="col-md-6">col-md-6</option>
+                    <option value="col-md-4">col-md-4</option>
+                    <option value="col-md-3">col-md-3</option>
+                    <option value="col-md-2">col-md-2</option>
+                    <option value="col-md-1">col-md-1</option>
+                  </select>
+                </div>
+              </div>
+
+              <div *ngIf="questionType === FormElementType.BatteryLevels" class="battery-levels-options">
+                <h6 class="text-primary" style="margin-bottom: 2rem;">Layout for the battery levels</h6>
+                <div class="form-group battery-labels">
+                  <label class="form-control-label">Add, drag to sort, or double click to modify or delete battery-rating labels:</label>
+                  <div class="new-label-box">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input id="new-option-label" [(ngModel)]="newOptionLabel"
+                          name="new-option-label" class="form-control" placeholder="Enter a new label" type="text">
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-circle btn-sm hint" (click)="addOptionLabel()">
+                      <i class="fa fa-plus" aria-hidden="true"></i>
+                      <span class="hint-text hint-left">
+                        Add label
+                      </span>
+                    </button>
+                  </div>
+
+                  <div cdkDropList class="label-list" (cdkDropListDropped)="dropOptionLabel($event)">
+                    <div class="label-box" *ngFor="let optionLabel of optionLabels; let optLabelIdx = index" cdkDrag [cdkDragDisabled]="optLabelIdx === editingOptionLabelIndex">
+                      <editable id="{{ optionLabel.name + '-label-dbl-click' }}"
+                      (modeChange)="startEditingOptionLabel($event, optLabelIdx)"
+                      (save)="modifyOptionLabel(optionLabels, optionLabelFormCtrls, optLabelIdx)" openBindingEvent="dblclick">
+                        <ng-template viewMode>
+                          {{ optionLabel.label || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' }}
+                        </ng-template>
+                        <ng-template editMode>
+                          <div class="form-group">
+                            <input
+                              class="form-control"
+                              id="{{ optionLabel.name + '-label-dbl-click-edit' }}"
+                              editableFocusable
+                              placeholder="Set a battery-rating label..."
+                              type="text"
+                              [formControl]="getOptionLabelFormControl(optionLabelFormCtrls, optLabelIdx)">
+                          </div>
+                          <button type="button" class="btn btn-danger btn-circle btn-sm hint" (click)="deleteOptionLabel(optionLabels, optionLabelFormCtrls, optLabelIdx)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                            <span class="hint-text hint-left">
+                              Delete label
+                            </span>
+                          </button>
+                        </ng-template>
+                      </editable>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="questionType === FormElementType.ManagerApproval">
+                <h6 class="text-primary" style="margin-bottom: 2rem;">Upload your manager approval template</h6>
+                <div class="col-md-12">
+                  <label class="form-control-label" for="manager-approval">NB: only MS Word format is accepted and the URL (i.e. the HTML &lt;a&gt; href attribute) for the template will be always<br/>api/upload/{{ managerApprovalFilename }}</label>
+                </div>
+                <div class="input-group file-upload col-md-6">
+                  <input type="file" (change)="managerApprovalChange(input)" #input name="manager-approval" class="file-upload-input"
+                    accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                  <input type="text" class="form-control filename-input" placeholder="Choose a file..." value="{{ managerApprovalFile }}">
+                  <i class="fa fa-times delete-file" (click)="removeManagerApprovalFile()" *ngIf="managerApprovalFile"></i>
+                  <span class="input-group-btn file-upload-btn">
+                    <button class="btn btn-primary" type="button" [innerHTML]="uploadManagerApprovalButton"></button>
+                  </span>
+                </div>
+                <span class="help-block text-danger col-md-12" *ngIf="managerApprovalUploadError">{{ managerApprovalUploadError }}</span>
+              </div>
+
+              <div *ngIf="questionType === FormElementType.S3File">
+                <div class="form-group mb-2 abc-radio-container">
+                  <label class="form-control-label">Select the authorized file type(s) for upload:</label>
+                  <div class="radio abc-radio abc-radio-primary">
+                    <input type="radio" id="pdf" name="file-input-accept" [(ngModel)]="fileInputAccept" value="application/pdf">
+                    <label for="pdf">
+                      PDF
+                    </label>
+                  </div>
+                  <div class="radio abc-radio abc-radio-primary">
+                    <input type="radio" id="videos" name="file-input-accept" [(ngModel)]="fileInputAccept" value="video/mp4,video/x-m4v,video/*">
+                    <label for="videos">
+                      Videos
+                    </label>
+                  </div>
+                  <div class="radio abc-radio abc-radio-primary">
+                    <input type="radio" id="ms-office" name="file-input-accept" [(ngModel)]="fileInputAccept"
+                      value="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+                    <label for="ms-office">
+                      Microsoft Office (.doc[x], .xls[x], .ppt[x])
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <hr *ngIf="showOptionsForMixArray" class="solid mt-2" style="width: 50%; height: 1px;">
+
+              <div *ngIf="showOptionsForMixArray" class="table-settings">
+                <h6 class="text-primary" style="margin-bottom: 2rem;">Adjustment for the table</h6>
+                <div class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline">
+                  <input type="checkbox" id="enable-question-identifier" name="enable-question-identifier" value="1" [(ngModel)]="useOwnIdentifier">
+                  <label for="enable-question-identifier">
+                    Use my own identifier for the question
+                  </label>
+                </div>
+                <p>This option allows you to split the {{ questionType === FormElementType.Checkbox ? 'checkbox labels' : 'radio buttons' }} into different rows of the table. Please don't enable the option, if you don't know what you are doing.</p>
+                <div class="form-group">
+                  <label class="form-control-label" for="question-identifier">Enter your identifier:</label>
+                  <div class="input-group">
+                    <div class="input-group-addon" aria-hidden="true">
+                      <i class="fa fa-tag" aria-hidden="true"></i>
+                    </div>
+                    <input id="question-identifier" [(ngModel)]="ownIdentifier"
+                      name="question-identifier" class="form-control" placeholder="Only letters and/or numbers: e.g. myAw3s0meQuestion" type="text"
+                      [disabled]="!useOwnIdentifier">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer mt-2">
+              <button type="button" id="apply-options" class="btn btn-primary" (click)="applyOptions()">Apply</button>
+            </div>
+          </ng-template>
+
+          <ng-template #publishFormTemplateModal let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">Publish the template?</h4>
+              <button type="button" id="close-form-deletion" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="before-publishing">
+                You are about to publish your application form template. If the recruitment campaign is ongoing, you can notify users about the changelog.
+              </div>
+              <div class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline notify-changelog-users mt-1">
+                <input type="checkbox" id="notify-users" name="notify-users" value="1" [(ngModel)]="notifyUsersFormTemplateChanges">
+                <label for="notify-users">
+                  Notify users
+                </label>
+              </div>
+              <div class="form-group mt-1">
+                <textarea class="form-control" placeholder="Describe the changelog..." rows="8"
+                  [disabled]="!notifyUsersFormTemplateChanges" [(ngModel)]="formTemplateChangelog"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer mt-2">
+              <button type="button" id="cancel-form-template-deletion" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+              <button type="button" id="delete-form-template" class="btn btn-primary" (click)="publishAppFormTemplate($event)">Publish</button>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

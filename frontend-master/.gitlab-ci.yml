@@ -1,0 +1,55 @@
+include:
+  # Angular template
+  - project: 'to-be-continuous/angular'
+    ref: '4.9.1'
+    file: '/templates/gitlab-ci-angular.yml'
+  # Docker template
+  - project: 'to-be-continuous/docker'
+    ref: '5.11.1'
+    file: '/templates/gitlab-ci-docker.yml'
+  - project: 'to-be-continuous/openshift'
+    ref: '5.2.3'
+    file: '/templates/gitlab-ci-openshift.yml'
+  - project: 'to-be-continuous/cypress'
+    ref: '3.6.1'
+    file: '/templates/gitlab-ci-cypress.yml'
+
+variables:
+  # Angular template parameters
+  NG_BUILD_ARGS: "build --configuration production"
+  NG_LINT_ARGS: "lint --format=json --silent"
+  NG_CLI_IMAGE: "dockerproxy.repos.tech.orange/trion/ng-cli-karma:16.1.5"
+  NG_TEST_ARGS: ""
+ 
+  # Sonar parameters
+  SONAR_HOST_URL: "https://sqaas.dos.tech.orange"
+  # Docker, pushing to Gitlab registry
+  DOCKER_FILE: "./docker/Dockerfile"
+  DOCKER_CONTEXT_PATH: "."
+  DOCKER_SNAPSHOT_IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+  DOCKER_RELEASE_IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"
+  DOCKER_TRIVY_SECURITY_LEVEL_THRESHOLD: CRITICAL
+ 
+  # Openshift variable
+  OS_URL: "https://api.fr01.paas.tech.orange"
+  OS_BASE_APP_NAME: "oswe-frontend"
+  OS_INTEG_PROJECT: "oema-int" # activates 'integration' env in CD pipeline
+  OS_INTEG_ENVIRONMENT_URL: "https://oswe-frontend-integration.apps.fr01.paas.tech.orange"
+  OS_STAGING_PROJECT: "oema-int" # activates 'staging' env in CD pipeline
+  OS_STAGING_ENVIRONMENT_URL: "https://oswe-frontend-staging.apps.fr01.paas.tech.orange"
+  OS_PROD_PROJECT: "oema"
+  OS_PROD_APP_NAME: "oswe-frontend-production"
+  OS_PROD_ENVIRONMENT_URL: "https://oswe-frontend-prod.apps.fr01.paas.tech.orange"
+
+  # Cypress
+  CYPRESS_EXTRA_ARGS: "--env ADMIN_PASSWORD=$ADMIN_PASSWORD"
+  CYPRESS_IMAGE: "dockerproxy.repos.tech.orange/cypress/included:13.13.3"
+
+ng-build:
+  script:
+    - run_ng_build_for_libraries
+    - run_ng_build_for_applications
+  artifacts:
+    paths:
+      - $NG_WORKSPACE_DIR/dist
+    expire_in: 1 day

@@ -1,0 +1,73 @@
+<div class="animated fadeIn" [ngClass]="{'isPhantomatic': token}">
+  <div class="row justify-content-center">
+
+    <div class="col-xl-10">
+      <div class="card">
+        <div *ngIf="isSeniorAppPart.endsWith('senior') && canBeDisplayed" class="ribbon ribbon-top-right"><span>senior</span></div>
+
+        <div class="card-header">
+          <i class="fa fa-history text-primary" aria-hidden="true"></i> {{ formTypeText }} application for {{
+          expertCommunity }} community
+        </div>
+        <div class="card-block">
+
+          <div *ngIf="messageBody" class="card card-inverse text-center"
+            [ngClass]="{'card-success': messageType === 'success', 'card-warning': messageType === 'warning', 'card-danger': messageType === 'danger'}">
+            <div class="card-block">
+              <blockquote class="card-blockquote">
+                <p>
+                  {{ messageBody }}
+                </p>
+              </blockquote>
+            </div>
+          </div>
+
+
+          <div *ngIf="canBeDisplayed" class="row app-form-history-view mt-1">
+            <div class="col-xl-8 mb-1">
+              <p *ngIf="submittedAt">
+                Application {{ appFilledBy }} submitted on {{ submittedAt | date: 'dd/MM/yyyy @ HH:mm' }}.
+              </p>
+              <p *ngIf="!submittedAt">
+                <span *ngIf="formYear === thisYear;else old_content">
+                  Application {{ appFilledBy }} not yet submitted.
+                </span>
+              </p>
+              <ng-template #old_content>Application filled in {{ formYear - 1 }} {{ appFilledBy }} but not submitted.</ng-template>
+            </div>
+            <div class="col-xl-4">
+              <button class="btn btn-primary pull-right export-pdf ml-1 mb-1" (click)="exportPDF($event)"
+                [innerHTML]="pdfExportButtonLabel"></button>
+
+              <div
+                *ngIf="(canBeEdited && user.email === userProfile.email) || user.role === 'Referent' || user.role === 'Admin'"
+                class="d-inline-block pull-right edit-app-form" ngbDropdown>
+                <button data-test="btn-dropdown-edit-form-menu" class="btn btn-outline-primary" id="dropdown-edit-form" ngbDropdownToggle>Edit
+                  form&nbsp;&nbsp;</button>
+                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown-edit-form">
+                  <button data-test="btn-dropdown-modify-form" class="dropdown-item" (click)="onModifyingAppForm()">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Modify form</button>
+                  <button data-test="btn-dropdown-download-form" class="dropdown-item" (click)="downloadArchive($event)">
+                    <i class="fa fa-download" aria-hidden="true"></i> Download form</button>
+                  <button data-test="btn-dropdown-delete-form" class="dropdown-item" (click)="openFormDeletionModal()">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Delete form</button>
+                </div>
+              </div>
+              <button
+                *ngIf="(canBeEdited && user.role === 'Reviewer' && user.email !== userProfile.email) || (!canBeEdited && user.email === userProfile.email && user.role !== 'Referent' && user.role !== 'Admin')"
+                class="btn btn-outline-primary pull-right edit-app-form" (click)="downloadArchive($event)">
+                <i class="fa fa-download" aria-hidden="true"></i> Download form
+              </button>
+
+            </div>
+            <div class="col-xl-12">
+              <app-application-form-viewer [steps]="steps" [userAnsweredForm]="userAnsweredForm" [user]="userProfile"
+                [communityId]="communityId" [formId]="formId" [isSeniorExpert]="isSeniorAppPart.endsWith('senior')"
+                [isPhantomatic]="token !== undefined" (msgAlert)="setEventNotification($event)"> </app-application-form-viewer>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+$brand-primary: #f16e00;
+$brand-inverse: #000;
+
+#export-pdf {
+  .img-avatar {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    object-fit: cover;
+  }
+
+  .submission-step-name {
+    h4 {
+      margin-bottom: 0;
+      padding-top: 0.8rem;
+      font-size: 1.2rem;
+    }
+
+    h5 {
+      border-bottom: 1px solid $brand-primary;
+      color: $brand-inverse;
+      margin-top: 30px;
+      margin-bottom: 0;
+      padding: 10px 0;
+    }
+
+    .form-question {
+      margin-top: 1.8rem;
+    }
+
+    .user-response {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .text-overflow-hidden {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .battery-levels-bottom-spacing {
+    margin-bottom: 10px;
+  }
+}

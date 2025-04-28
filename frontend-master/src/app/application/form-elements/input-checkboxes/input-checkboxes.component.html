@@ -1,0 +1,36 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<div class="row">
+  <label class="form-control-label col" [innerHTML]="formElement.label"></label>
+</div>
+<div class="row checboxes-list">
+  <div *ngIf="formElement.options?.items?.fullscreen" class="col-md-12 checboxes-list-fullscreen">
+    <div *ngFor="let competence of formElement.options.items.fullscreen"
+      class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline col-12">
+      <input data-test="form-input-checkbox" type="checkbox" id="{{ competence.name }}" name="{{ competence.name }}" value="1"
+        (click)="onChecked($event)" [checked]="innerCompetencesList[competence.name]===1">
+      <label for="{{ competence.name }}" [innerHTML]="competence.label">
+      </label>
+    </div>
+  </div>
+  <div *ngIf="formElement.options?.items?.left" class="col-md-6 checboxes-list-left">
+    <div *ngFor="let competence of formElement.options.items.left"
+      class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline col-12">
+      <input data-test="form-input-checkbox" type="checkbox" id="{{ competence.name }}" name="{{ competence.name }}" value="1"
+        (click)="onChecked($event)" [checked]="innerCompetencesList[competence.name]===1">
+      <label for="{{ competence.name }}" [innerHTML]="competence.label">
+      </label>
+    </div>
+  </div>
+  <div *ngIf="formElement.options?.items?.right" class="col-md-6 checboxes-list-right">
+    <div *ngFor="let competence of formElement.options.items.right;"
+      class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline col-12">
+      <input data-test="form-input-checkbox" type="checkbox" id="{{ competence.name }}" name="{{ competence.name }}" value="1"
+        (click)="onChecked($event)" [checked]="innerCompetencesList[competence.name]===1">
+      <label for="{{ competence.name }}" [innerHTML]="competence.label">
+      </label>
+    </div>
+  </div>
+</div>

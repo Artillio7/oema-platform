@@ -1,0 +1,49 @@
+.mix-array {
+  overflow: visible;
+
+  th {
+    &.column-row {
+      .show-template-menu {
+        top: 32px;
+        left: 50px;
+      }
+
+      .hint-bottom::after {
+        left: 25px;
+      }
+    }
+
+    .column-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      editable {
+        flex-grow: 2;
+
+        .form-group {
+          margin-bottom: 0;
+        }
+      }
+
+      .btn-circle.btn-sm.hint {
+        margin: 0 5px;
+
+        .show-template-menu {
+          top: 32px;
+          left: -134px;
+        }
+
+        .hint-bottom::after {
+          left: 90%;
+        }
+      }
+    }
+  }
+
+  tbody {
+    .show-template-menu.two-sections {
+      top: -50px;
+    }
+  }
+}

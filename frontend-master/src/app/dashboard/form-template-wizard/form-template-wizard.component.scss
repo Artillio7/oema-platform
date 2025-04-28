@@ -1,0 +1,205 @@
+.label-container {
+  width: 50%;
+  padding: 0 20px 20px 0;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.label-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  display: block;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.label-box {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+
+
+  editable {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .form-group {
+      flex-grow: 2;
+    }
+
+    .btn-circle.btn-sm.hint {
+      margin: 5px 5px 5px 15px;
+      padding: 0;
+      font-size: 14px;
+
+      .hint-text.hint-left {
+        top: 0;
+      }
+    }
+  }
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.label-box:last-child {
+  border: none;
+}
+
+.label-list.cdk-drop-list-dragging .label-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+
+.form-element-options {
+  .abc-radio-container {
+    .abc-radio {
+      margin-left: 5px;
+
+      &:not(:first-child) {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .new-label-box {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    .form-group {
+      flex-grow: 2;
+
+      input {
+        border-radius: 4px;
+      }
+    }
+
+    .btn-circle.btn-sm.hint {
+      margin: 5px 15px;
+      padding: 0;
+      font-size: 15px;
+
+      .hint-text.hint-left {
+        top: 0;
+        z-index: 999;
+      }
+    }
+  }
+
+  .table-settings {
+    .abc-checkbox {
+      padding-left: 8px;
+    }
+  }
+
+  .file-upload {
+
+    .filename-input {
+      padding-right: 40px;
+      height: 35px;
+    }
+
+    .file-upload-input {
+      position: absolute;
+      width: 100%;
+      height: 35px;
+      z-index: 9;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .delete-file {
+      position: absolute;
+      right: 75px;
+      top: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 99;
+      color: #f16e00;
+      visibility: hidden;
+    }
+
+    &:hover .delete-file {
+      visibility: visible;
+    }
+
+    .file-upload-btn button {
+      height: 35px;
+    }
+
+    &:hover .file-upload-btn button {
+      background-color: #000;
+      color: #fff;
+      border-color: #000;
+    }
+  }
+}
+
+.form-group.bottom-spacing {
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  &.large-padding-bottom {
+    padding-bottom: 60px;
+  }
+}
+
+.form-template-element {
+  position: relative;
+  display: inline-block;
+  background-color: #f2f4f8;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.form-template-element::after {
+  content: "";
+  border-radius: 5px;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  -webkit-transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.form-template-element:hover {
+  -webkit-transform: scale(1.01, 1.01);
+  transform: scale(1.01, 1.01);
+}
+
+.form-template-element:hover::after {
+  opacity: 1;
+}

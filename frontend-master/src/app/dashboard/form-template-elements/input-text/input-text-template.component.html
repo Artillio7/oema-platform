@@ -1,0 +1,38 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<div class="form-question-label">
+  <i *ngIf="formElement.options?.review" class="fa fa-star text-primary lead" aria-hidden="true" style="margin-top: -5px; margin-right: 5px;"></i>
+  <i *ngIf="labelFormControl.hasError('required')" class="fa fa-exclamation-triangle text-danger lead" aria-hidden="true" style="margin-top: -5px; margin-right: 5px;"></i>
+  <editable id="{{ formElement.name + '-label-click' }}"
+  (save)="modifyLabel()">
+    <ng-template viewMode>
+      <label class="form-control-label" for="{{ formElement.name }}" [innerHTML]="formElement.label || 'Write your question here...'"></label>
+    </ng-template>
+    <ng-template editMode>
+      <div class="form-group">
+        <textarea
+          class="form-control"
+          id="{{ formElement.name + '-label-click-edit' }}"
+          editableFocusable
+          placeholder="Write your question here..."
+          rows="5"
+          [formControl]="labelFormControl">
+        </textarea>
+      </div>
+    </ng-template>
+  </editable>
+  <button type="button" class="btn btn-info btn-circle btn-sm hint" (mouseover)="menuIsVisible()" (mouseout)="menuIsHidden()">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    <div class="hint-text hint-left show-template-menu">
+      <button class="btn" type="button" (click)="configureOptions()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp; Configure options</button>
+      <hr class="solid" style="width: 220px;">
+      <button class="btn" type="button" (click)="addNewElement('before')"><i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question before</button>
+      <button class="btn" type="button" (click)="addNewElement('after')"><i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question after</button>
+      <hr class="solid" style="width: 220px;">
+      <button class="btn" type="button" (click)="deleteElement()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the question</button>
+    </div>
+  </button>
+</div>
+<input #input id="{{ formElement.name }}" class="form-control" name="{{ formElement.name }}" type="text" (blur)="onChange($event, input.value)">

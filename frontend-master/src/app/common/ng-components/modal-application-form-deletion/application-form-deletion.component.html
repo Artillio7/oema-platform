@@ -1,0 +1,41 @@
+<div class="modal-header">
+  <h4 *ngIf="isUser" class="modal-title">Cancel and delete your application?</h4>
+  <h4 *ngIf="!isUser" class="modal-title">Cancel and delete the user's application?</h4>
+  <button type="button" id="close-form-deletion" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form role="form" [formGroup]="deleteAppForm" (ngSubmit)="onDeletingAppForm()" class="row mt-2" novalidate>
+  <div class="modal-body">
+    <p *ngIf="isUser">Your application will be canceled. Your application form, as well as all your uploaded documents (if
+      any), will then be immediately deleted. The action is irreversible.</p>
+    <p *ngIf="!isUser">The application will be canceled. The application form, as well as all uploaded documents (if
+      any), will then be immediately deleted. The action is irreversible.</p>
+    <hr>
+
+    <h6 class="text-semibold"><strong>To cancel and delete {{ isUser ? 'your' : 'the' }} application, please enter</strong></h6>
+    <div class="form-group">
+      <label class="form-control-label" for="email">{{ isUser ? 'Your' : 'The user\'s' }} account email</label>
+      <input data-test="input-email-app-deletion" formControlName="email" type="text" class="form-control text-semibold" id="email" name="email">
+      <span class="help-block text-danger"
+        *ngIf="deleteAppFormHasError && deleteAppFormEmail.hasError('required')">Email is required</span>
+      <span class="help-block text-danger"
+        *ngIf="deleteAppFormHasError && deleteAppFormEmail.hasError('invalidUserEmail')">Invalid user email
+        address</span>
+    </div>
+    <div class="form-group">
+      <label class="form-control-label" for="confirm" style="margin-top:10px">
+        To confirm, type <code class="noselect text-danger">delete {{ isUser ? 'my' : 'the' }} application</code> below:
+      </label>
+      <input data-test="input-confirm-app-deletion" formControlName="confirm" type="text"
+        class="form-control text-danger text-semibold text-size-small" id="confirm" name="confirm">
+      <span class="help-block text-danger"
+        *ngIf="deleteAppFormHasError && deleteAppFormConfirm.hasError('invalidConfirmMsg')">
+        Write <code class="noselect">delete {{ isUser ? 'my' : 'the' }} application</code> to confirm removal</span>
+    </div>
+  </div>
+  <div class="modal-footer mt-2">
+    <button data-test="btn-cancel-app-deletion" type="button" id="cancel-form-deletion" class="btn btn-secondary" (click)="activeModal.close('Close click')">Cancel</button>
+    <button data-test="btn-app-deletion" type="submit" id="delete-form" class="btn btn-danger">Delete now</button>
+  </div>
+</form>

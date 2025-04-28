@@ -1,0 +1,92 @@
+@mixin object-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+$circleSize: 140px;
+$radius: 50%;
+$border: 3px solid #fff;
+$shadow: 0 0 8px 0 rgba(19, 19, 18, 0.8);
+$fontColor: rgb(250, 250, 250);
+
+.profile-image {
+  color: transparent;
+  transition: all .3s ease;
+  @include object-center;
+  position: relative;
+  transition: all .3s ease;
+
+  input {
+    display: none;
+  }
+
+  img {
+    position: absolute;
+    object-fit: cover;
+    width: $circleSize;
+    height: $circleSize;
+    box-shadow: $shadow;
+    border-radius: $radius;
+    border: $border;
+    z-index: 0;
+  }
+
+  .image-label {
+    cursor: pointer;
+    height: $circleSize;
+    width: $circleSize;
+    margin-bottom: 0;
+  }
+
+  .error-label {
+    position: absolute;
+    @include object-center;
+    color: red;
+    background-color: rgba(0, 0, 0, .8);
+    height: $circleSize;
+    width: $circleSize;
+    border-radius: $radius;
+    border: $border;
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    .image-label {
+      @include object-center;
+      background-color: rgba(0, 0, 0, .8);
+      z-index: 10000;
+      color: $fontColor;
+      transition: background-color .2s ease-in-out;
+      border-radius: $radius;
+      border: $border;
+    }
+  }
+
+  span,
+  i {
+    display: inline-flex;
+    padding: .2em;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .profile-image {
+
+    img,
+    .image-label {
+      width: 70px;
+      height: 70px;
+    }
+
+    .image-label {
+      color: transparent !important;
+    }
+
+    &:hover {
+      .image-label {
+        background-color: transparent;
+      }
+    }
+  }
+}

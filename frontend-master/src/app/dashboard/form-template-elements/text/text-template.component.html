@@ -1,0 +1,30 @@
+<div class="form-question-label">
+  <i *ngIf="labelFormControl.hasError('required')" class="fa fa-exclamation-triangle text-danger lead" aria-hidden="true" style="margin-top: -5px; margin-right: 5px;"></i>
+  <editable id="{{ formElement!.name + '-label-click' }}"
+  (save)="modifyLabel()">
+    <ng-template viewMode>
+    <p class="fw-bold" [innerHTML]="formElement!.label || 'Write your text here...'"></p>
+    </ng-template>
+    <ng-template editMode>
+      <div class="form-group">
+        <textarea
+          class="form-control"
+          id="{{ formElement!.name + '-label-click-edit' }}"
+          editableFocusable
+          placeholder="[Only text or html code] Write your text here..."
+          rows="8"
+          [formControl]="labelFormControl">
+        </textarea>
+      </div>
+    </ng-template>
+  </editable>
+  <button type="button" class="btn btn-info btn-circle btn-sm hint" (mouseover)="menuIsVisible()" (mouseout)="menuIsHidden()">
+    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    <div class="hint-text hint-left show-template-menu two-sections">
+      <button class="btn" type="button" (click)="addNewElement('before')"><i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question before</button>
+      <button class="btn" type="button" (click)="addNewElement('after')"><i class="fa fa-question-circle" aria-hidden="true"></i>&nbsp; Add question after</button>
+      <hr class="solid" style="width: 220px;">
+      <button class="btn" type="button" (click)="deleteElement()"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp; Delete the text block</button>
+    </div>
+  </button>
+</div>

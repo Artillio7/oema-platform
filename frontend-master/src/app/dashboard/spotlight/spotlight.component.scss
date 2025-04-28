@@ -1,0 +1,38 @@
+.spotlight {
+  .select-year {
+    .view-campaign-year {
+      width: 240px;
+      max-width: 100%;
+    }
+  }
+
+  .select-community {
+    clear: both;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+
+    .view-expert-community,
+    .view-application-state {
+      width: 300px;
+      max-width: 100%;
+    }
+  }
+
+  .applications-over-years {
+    height: 600px;
+  }
+
+  .applications-per-year,
+  .community-forms-stats {
+    height: 400px;
+  }
+
+  .community-gender-stats,
+  .community-country-stats,
+  .community-classification-stats {
+    height: 300px;
+  }
+}

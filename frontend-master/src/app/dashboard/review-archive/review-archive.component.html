@@ -1,0 +1,304 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+
+      <div appCardWidget class="card">
+        <div *ngIf="isSeniorExpert" class="ribbon ribbon-top-right"><span>senior</span></div>
+
+        <div class="card-header">
+          <i class="fa fa-cubes text-primary" aria-hidden="true"></i> Archive of Reviews in the Past Years
+          <div class="card-actions widget-controls">
+            <a data-widgster="fullscreen" href="#" class="transition" (click)="manageClicksOnDocument($event)">
+              <i class="fa fa-expand"></i>
+            </a>
+            <a data-widgster="restore" href="#" class="transition" (click)="manageClicksOnDocument($event)">
+              <i class="fa fa-compress"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-block widget-body reviews-archive-table">
+          <div *ngIf="yearsList.length > 0" class="main-page-menu mt-2 mb-1">
+            <div class="input-group view-archive-year pull-left">
+              <div class="input-group-addon text-primary font-weight-bold" aria-hidden="true">Select a year</div>
+              <select #reviewsYear class="form-control" name="reviewsYear" size="1"
+                (change)="onArchiveYearChange(reviewsYear.options[reviewsYear.selectedIndex].value)">
+                <option *ngFor="let year of yearsList" value="{{ year }}" [selected]="year === yearForReviews">{{ year - 1 }}</option>
+              </select>
+            </div>
+
+            <button class="btn btn-default pull-right btn-export-excel"
+              [appXlsxExport]="{community: expertCommunity, communityId: expertCommunityId, year: yearForReviews}"
+              [xlsxDataType]="'reviews'"
+              xlsxFileName="{{ 'export-reviews-archive-' + yearForReviews +'.xlsx' }}"
+              [isSeniorExpert]="isSeniorExpert"
+              (backEndResponse)="onExcelExport($event)"><i class="fa  fa-file-excel-o"
+                aria-hidden="true"></i> &nbsp;Export as Excel</button>
+          </div>
+
+          <div *ngIf="errorMessage" class="pt-1 mb-1" style="clear: both">
+            <h6 [innerHTML]="errorMessage"></h6>
+          </div>
+
+          <div *ngIf="!revealTable && !errorMessage && !alertService.lastType" class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+
+          <div [hidden]="!tableReady" [ngClass]="{ 'show-table': revealTable, 'hide-table': !revealTable }" class="application-review-matrix mt-1 mb-2 pt-2" style="clear: both">
+            <div id="tooltip" data-balloon="" data-balloon-length="fit" data-balloon-pos="up-right"></div>
+
+            <div *ngIf="activeApplicantIndex >= 0 && activeReviewerIndex >= 0" class="reviewer-bubble">
+              <button type="button" class="btn btn-outline-primary"
+                (click)="contactReviewer()">Contact reviewer</button>
+            </div>
+
+            <ng-template #reviewReportModal let-c="close" let-d="dismiss">
+              <div *ngIf="activeApplicantIndex >= 0" class="modal-header">
+                <h4 class="modal-title">Review for {{applicants![activeApplicantIndex].applicant.firstname}}
+                  {{applicants![activeApplicantIndex].applicant.lastname}}</h4>
+                <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <form role="form" [formGroup]="appReviewForm"
+                (ngSubmit)="updateReferentReview(true, activeApplicantIndex)" class="mt-2" novalidate>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label class="form-control-label" for="textarea-review-comment">Comments</label>
+                    <textarea formControlName="textarea-review-comment" id="textarea-review-comment"
+                      name="textarea-review-comment" rows="3" class="form-control"
+                      placeholder="Write your comments on the applicant..."></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-control-label" for="review-status">Status</label>
+                    <select formControlName="review-status" id="review-status" class="form-control"
+                      name="review-status">
+                      <option value="">Please select</option>
+                      <option value="Approved">Approved</option>
+                      <option value="Rejected">Rejected</option>
+                      <option value="To be discussed">To be discussed</option>
+                      <option value="Waiting for info">Waiting for info</option>
+                      <option value="Low contribution">Low contribution</option>
+                      <option value="Next year(s)">Candidate next year(s)</option>
+                      <option value="Maybe">Maybe</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-control-label" for="textarea-review-notes">Notes</label>
+                    <textarea formControlName="textarea-review-notes" id="textarea-review-notes"
+                      name="textarea-review-notes" rows="3" class="form-control"
+                      placeholder="Some notes for the final recommendation..."></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-control-label" for="review-final-recommendation">Final recommendation</label>
+                    <select formControlName="review-final-recommendation" id="review-final-recommendation"
+                      class="form-control" name="review-final-recommendation">
+                      <option value="">Please select</option>
+                      <option value="Approved">Approved</option>
+                      <option value="Rejected">Rejected</option>
+                      <option value="Pending">Pending</option>
+                    </select>
+                  </div>
+
+                </div>
+                <div class="modal-footer mt-2">
+                  <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+              </form>
+            </ng-template>
+
+            <table id="review-new-applicants" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+              class="table table-bordered table-hover" width="100%">
+              <thead>
+                <tr>
+                  <th class="row-selector"></th>
+                  <th class="user-name">Last name</th>
+                  <th class="user-name">First name</th>
+                  <th class="hidden-column">Email</th>
+                  <th class="hidden-column">Application type</th>
+                  <th class="hidden-column">Raw data index</th>
+                  <th class="hidden-column">Community</th>
+
+                  <ng-template *ngIf="applicants" #t [ngTemplateOutlet]="t"
+                    let-candidates [ngTemplateOutletContext]="{ $implicit: isSeniorExpert ? backupApplicants![0].reviewers : applicants![0].reviewers }">
+                    <ng-template  ngFor let-a [ngForOf]="fixedReviewers" let-reviewerIdx="index">
+                      <th class="reviewer-name {{ reviewerIdx < candidates.length ? candidates[reviewerIdx].reviewer.email.split('@')[0].replace('.', '-') : '' }}"
+                        [ngClass]="{'hidden-column': reviewerIdx >= candidates.length,
+                          'the-reviewer' : reviewerIdx < candidates.length && candidates[reviewerIdx].reviewer.email === user!.email }"
+                        (click)="filterReviewer(reviewerIdx)">
+                        <div class="vertical-writing">{{reviewerIdx < candidates.length ?
+                          (candidates[reviewerIdx].reviewer.firstname && candidates[reviewerIdx].reviewer.lastname ?
+                            (candidates[reviewerIdx].reviewer.firstname | capitalizeName) + ' ' + candidates[reviewerIdx].reviewer.lastname.toUpperCase() :
+                            candidates[reviewerIdx].reviewer.email)
+                          : '' }}</div>
+                      </th>
+                    </ng-template>
+                  </ng-template>
+
+                  <th class="review-score strong-accept">
+                    <div class="vertical-writing">#&nbsp;Strong accept</div>
+                  </th>
+                  <th class="review-score weak-accept">
+                    <div class="vertical-writing">#&nbsp;Weak accept</div>
+                  </th>
+                  <th class="review-score fair">
+                    <div class="vertical-writing">#&nbsp;Fair</div>
+                  </th>
+                  <th class="review-score weak-reject">
+                    <div class="vertical-writing">#&nbsp;Weak reject</div>
+                  </th>
+                  <th class="review-score strong-reject">
+                    <div class="vertical-writing">#&nbsp;Strong reject</div>
+                  </th>
+                  <th class="final-review-score total-score">
+                    <div class="vertical-writing">Total Score</div>
+                  </th>
+                  <th class="final-review-score nb-reviewers">
+                    <div class="vertical-writing">Nb. reviewers</div>
+                  </th>
+                  <th class="final-review-score nb-reviews">
+                    <div class="vertical-writing">Nb. reviews</div>
+                  </th>
+                  <th class="final-review-score avg-score">
+                    <div class="vertical-writing">Avg. score</div>
+                  </th>
+                  <th class="final-review-score std-dev-score">
+                    <div class="vertical-writing">Std. Dev. score</div>
+                  </th>
+                  <th class="final-review-comments review-report">
+                    Comments
+                  </th>
+                  <th class="final-review-status review-report">
+                    Status
+                  </th>
+                  <th class="final-review-recommendation review-report">
+                    Final recommendation
+                  </th>
+                  <th class="review-notification">Notification</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let applicant of applicants; let applicantIdx = index">
+                  <td class="row-selector"></td>
+                  <td class="user-name"
+                    [ngClass]="{ 'missing-reviewers': applicant.rate['rate-count'] === 1 }">
+                    <span class="lastname" [ngClass]="{ 'new-applicant' : applicant.formType === 'new' }">{{
+                      applicant.applicant.lastname || '' }}</span></td>
+                  <td class="user-name"
+                    [ngClass]="{ 'missing-reviewers': applicant.rate['rate-count'] === 1 }">
+                    <span class="firstname" [ngClass]="{ 'new-applicant' : applicant.formType === 'new' }">{{
+                      applicant.applicant.firstname ? (applicant.applicant.firstname | capitalizeName) : '' }}</span></td>
+                  <td class="hidden-column">{{ applicant.applicant.email }}</td>
+                  <td class="hidden-column">{{ applicant.formType }}</td>
+                  <td class="hidden-column">{{ applicantIdx }}</td>
+                  <td class="hidden-column">{{ applicant.communityName }}</td>
+
+                  <ng-template ngFor let-a [ngForOf]="fixedReviewers" let-reviewerIdx="index">
+                    <td class="reviewer-name" [attr.data-applicant]="applicantIdx" [attr.data-reviewer]="reviewerIdx"
+                      [ngClass]="{ 'hidden-column': reviewerIdx >= applicant.reviewers.length,
+                        'not-the-reviewer' : reviewerIdx < applicant.reviewers.length && applicant.reviewers[reviewerIdx].reviewer.email !== user!.email }">
+                      <div *ngIf="reviewerIdx < applicant.reviewers.length;then reviewer_content else no_reviewer"></div>
+                      <ng-template #no_reviewer></ng-template>
+                      <ng-template #reviewer_content>
+                        <span *ngIf="applicant.reviewers[reviewerIdx].reviews === 'yes' && !applicant.reviewers[reviewerIdx].rating.rate"
+                          class="does-review">Y</span>
+                        <span *ngIf="applicant.reviewers[reviewerIdx].reviews === 'maybe' && !applicant.reviewers[reviewerIdx].rating.rate"
+                          class="may-review">M</span>
+                        <span *ngIf="applicant.reviewers[reviewerIdx].reviews === 'no'"
+                          class="deny-review">N</span>
+                        <div *ngIf="applicant.reviewers[reviewerIdx].reviews === 'yes' && applicant.reviewers[reviewerIdx].rating.rate"
+                          class="reviewer-rate"
+                          [ngClass]="{ 'strong-reject' : applicant.reviewers[reviewerIdx].rating.rate === '-2',
+                            'weak-reject': applicant.reviewers[reviewerIdx].rating.rate === '-1',
+                            'fair': applicant.reviewers[reviewerIdx].rating.rate === '0',
+                            'weak-accept': applicant.reviewers[reviewerIdx].rating.rate === '+1',
+                            'strong-accept': applicant.reviewers[reviewerIdx].rating.rate === '+2' }">
+                          <span>{{ applicant.reviewers[reviewerIdx].rating.rate }}</span>
+                        </div>
+                        <div *ngIf="applicant.reviewers[reviewerIdx].reviews === 'maybe' && applicant.reviewers[reviewerIdx].rating.rate"
+                          class="reviewer-rate"
+                          [ngClass]="{  'strong-reject' : applicant.reviewers[reviewerIdx].rating.rate === '-2',
+                            'weak-reject': applicant.reviewers[reviewerIdx].rating.rate === '-1',
+                            'fair': applicant.reviewers[reviewerIdx].rating.rate === '0',
+                            'weak-accept': applicant.reviewers[reviewerIdx].rating.rate === '+1',
+                            'strong-accept': applicant.reviewers[reviewerIdx].rating.rate === '+2'}">
+                          <span>{{ applicant.reviewers[reviewerIdx].rating.rate }}</span>
+                        </div>
+                        <span *ngIf="!applicant.reviewers[reviewerIdx].reviews"></span>
+                      </ng-template>
+                    </td>
+                  </ng-template>
+
+                  <td class="review-score strong-accept">{{ applicant.rate['strong-accept'] || '' }}</td>
+                  <td class="review-score weak-accept">{{ applicant.rate['weak-accept'] || '' }}</td>
+                  <td class="review-score fair">{{ applicant.rate.fair || ''}}</td>
+                  <td class="review-score weak-reject">{{ applicant.rate['weak-reject'] || '' }}</td>
+                  <td class="review-score strong-reject">{{ applicant.rate['strong-reject'] || '' }}</td>
+
+                  <td class="final-review-score total-score"
+                    [ngClass]="{'accepted' : applicant.rate['total-score'] > 0, 'fair': applicant.rate['total-score'] === 0,'refused': applicant.rate['total-score'] < 0}">
+                    {{ applicant.rate['total-score'] }}</td>
+                  <td class="final-review-score nb-reviewers">{{ applicant.rate['rate-count'] }}</td>
+                  <td class="final-review-score nb-reviews">{{ applicant.rate['review-count'] }}</td>
+                  <td class="final-review-score avg-score"
+                    [ngClass]="{'accepted' : applicant.rate['avg-score'] > 0, 'fair': applicant.rate['avg-score'] === 0,'refused': applicant.rate['avg-score'] < 0}">
+                    {{ applicant.rate['avg-score'] }}</td>
+                  <td class="final-review-score std-dev-score">{{ applicant.rate['std-dev-score'] }}</td>
+
+                  <td class="final-review-comments review-report" [attr.data-applicant]="applicantIdx"
+                    (click)="openReviewModal(reviewReportModal, applicantIdx, $event)">{{
+                    applicant.deliberation.comments }}</td>
+                  <td class="final-review-status review-report"
+                    (click)="openReviewModal(reviewReportModal, applicantIdx, $event)">
+                    <span
+                      [hidden]="!applicant.deliberation.status"
+                      [ngClass]="{ 'accepted' : applicant.deliberation.status === 'Approved',
+                        'refused': applicant.deliberation.status === 'Rejected' }">
+                      {{ applicant.deliberation.status }}
+                    </span>
+                  </td>
+                  <td class="final-review-recommendation review-report"
+                    (click)="openReviewModal(reviewReportModal, applicantIdx, $event)">
+                    <span [hidden]="!applicant.deliberation.recommendation"
+                      [ngClass]="{ 'accepted' : applicant.deliberation.recommendation === 'Approved',
+                        'refused': applicant.deliberation.recommendation === 'Rejected',
+                        'pending': applicant.deliberation.recommendation === 'Pending' }">
+                        {{ applicant.deliberation.recommendation }}
+                    </span>
+                  </td>
+                  <td class="review-notification"
+                    (click)="changeReviewNotification(applicantIdx)">
+                    <span *ngIf="applicant.notification ==='email' && !applicant.notifying"
+                      class="notification-change"><i class="fa fa-envelope" aria-hidden="true"
+                        style="pointer-events:none;"></i> &nbsp;to Applicant</span>
+                    <span *ngIf="applicant.notification ==='phone' && !applicant.notifying"
+                      class="notification-change"><i class="fa fa-phone" aria-hidden="true"
+                        style="pointer-events:none;"></i> &nbsp;to Applicant</span>
+                    <span *ngIf="applicant.notification ==='phone-manager' && !applicant.notifying"
+                      class="notification-change"><i class="fa fa-phone" aria-hidden="true"
+                        style="pointer-events:none;"></i> &nbsp;&nbsp;&nbsp;w. Manager</span>
+                    <select *ngIf="applicant.notifying" class="notification-select" [ngModel]="applicant.notification"
+                      (ngModelChange)="onReviewNotificationChange($event, applicantIdx)">
+                      <option value="">Select</option>
+                      <option value="email">Email to applicant</option>
+                      <option value="phone">Phone to applicant</option>
+                      <option value="phone-manager">Phone w. manager</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

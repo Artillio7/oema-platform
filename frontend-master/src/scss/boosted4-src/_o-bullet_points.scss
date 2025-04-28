@@ -1,0 +1,44 @@
+// Bullet point
+//
+//
+
+.o-square-list {
+  padding-left: 0;
+  color: $brand-primary;
+  text-align: left;
+
+  &,
+  ul * {
+    list-style-type: none;
+  }
+
+  li {
+    color: #000;
+
+    &::before {
+      margin-right: 1rem;
+      font-size: $font-size-sm;
+      line-height: 1.25rem;
+      color: $brand-primary;
+      vertical-align: text-top;
+      content: "\25A0";
+    }
+
+    span {
+      display: inline-block;
+      margin-bottom: .625rem;
+    }
+
+    > ul {
+      padding-left: 1rem;
+    }
+  }
+
+  ul > li::before {
+    color: $gray-light;
+  }
+
+  ul ul > li::before {
+    color: $gray-light-o;
+  }
+}

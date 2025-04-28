@@ -1,0 +1,22 @@
+button {
+  cursor: pointer;
+}
+
+.btn-transparent {
+  $color: #fff;
+  $background: transparent;
+  $border: transparent;
+
+  @include button-variant($color, $background, $border)
+}
+
+
+.btn {
+  [class^="icon-"], [class*=" icon-"] {
+    display: inline-block;
+    margin-top: -2px;
+    vertical-align: middle;
+  }
+}
+
+

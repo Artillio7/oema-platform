@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle || 'Compose message' }}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form role="form" [formGroup]="composeMessageForm" (ngSubmit)="sendMail()" class="mt-2" novalidate>
+  <div class="modal-body">
+    <p *ngIf="sentStatusMsg" [class]="sentStatus">{{ sentStatusMsg }}</p>
+    <div class="form-group">
+      <label class="form-control-label" for="select-mail-from">From</label>
+      <select formControlName="select-mail-from" class="form-control" id="select-mail-from" name="select-mail-from">
+        <option disabled value="">Please select</option>
+        <option value="orange-experts.programme@orange.com">Codex.experts-communities</option>
+        <option *ngIf="emailFrom" value="{{ emailFrom }}">{{ emailFrom }}</option>
+      </select>
+      <span class="help-block text-danger"
+        *ngIf="composeMessageFormHasError && composeMessageFormSelectMailFrom.hasError('required')">
+        Select the address used to send your email.</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-control-label" for="input-mail-subject">Subject</label>
+      <input formControlName="input-mail-subject" type="text" class="form-control" id="input-mail-subject"
+        name="input-mail-subject" required>
+      <span class="help-block text-danger"
+        *ngIf="composeMessageFormHasError && composeMessageFormInputMailSubject.hasError('required')">
+        Mail subject is required.</span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-control-label" for="textarea-mail-message">Message</label>
+      <textarea formControlName="textarea-mail-message" class="form-control" id="textarea-mail-message"
+        name="textarea-mail-message" rows="3" placeholder="Write your message to the selected user(s)..."
+        required></textarea>
+      <span class="help-block text-danger"
+        *ngIf="composeMessageFormHasError && composeMessageFormTextareaMailMessage.hasError('required')">
+        Message is required.</span>
+    </div>
+
+    <div class="form-group checkbox abc-checkbox abc-checkbox-primary checkbox-inline mb-1">
+      <input formControlName="keepcopy" type="checkbox" id="keepcopy" name="keepcopy" value="1">
+      <label for="keepcopy">
+        Put me in copy
+      </label>
+    </div>
+  </div>
+
+  <div class="modal-footer mt-2">
+    <button type="button" class="btn btn-secondary" (click)="activeModal.close('Close click')">Cancel</button>
+    <button type="submit" class="btn btn-primary"
+      [disabled]="sentStatus === 'sending' || sentStatus === 'success'">Send</button>
+  </div>
+</form>

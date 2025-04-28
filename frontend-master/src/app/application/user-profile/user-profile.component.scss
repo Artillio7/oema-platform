@@ -1,0 +1,33 @@
+.user-profile {
+  .profile-cover {
+    margin: 40px 0;
+  }
+}
+
+.modal-danger .modal-header {
+  color: #CD3C14;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Chrome/Safari/Opera */
+  -khtml-user-select: none;
+  /* Konqueror */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+  not supported by any browser */
+}
+
+.text-size-small {
+  font-size: 0.9rem;
+}
+
+.text-semibold {
+  font-weight: 500;
+}

@@ -1,0 +1,48 @@
+//
+// Cards
+//
+
+.card.o-card {
+  background-color: #000;
+  border-color: #000;
+
+  .card-img-top {
+    width: 100%;
+    height: auto;
+    margin-bottom: 1.875rem;
+  }
+
+  .card-block {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    min-height: 3.25rem;
+    padding: .625rem .75rem;
+    overflow: hidden;
+
+    .card-title {
+      margin-bottom: 0;
+      font-size: $font-size-lg;
+      line-height: 1;
+    }
+  }
+
+  .card-block,
+  .card-block .card-title,
+  .card-block .card-title a {
+    color: #fff;
+    background-color: #000;
+  }
+
+}
+
+@include media-breakpoint-down(md) {
+  .o-card.card {
+
+    .card-block {
+      .card-title {
+        font-size: 1rem;
+      }
+    }
+  }
+}

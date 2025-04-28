@@ -1,0 +1,111 @@
+// Core variables and mixins
+@import "boosted4-src/variables";
+@import "boosted4-src/custom";
+@import "boosted-variables";
+@import "custom-variables";
+@import "boosted4-src/mixins";
+@import "core/mixins";
+
+// Core CSS
+@import "boosted4-src/reboot";
+@import "boosted4-src/type";
+@import "boosted4-src/code";
+@import "boosted4-src/grid";
+
+@import "boosted4-src/tables";
+
+@import "boosted4-src/forms";
+@import "boosted4-src/o-forms";
+@import "my-boosted4/awesome-bootstrap-checkbox";
+
+@import "boosted4-src/buttons";
+@import "boosted4-src/o-buttons";
+
+// Components
+@import "boosted4-src/transitions";
+
+@import "boosted4-src/dropdown";
+@import "my-boosted4/dropdown";
+
+@import "boosted4-src/button-group";
+
+@import "boosted4-src/input-group";
+
+@import "boosted4-src/nav";
+@import "my-boosted4/nav";
+
+@import "boosted4-src/navbar";
+@import "my-boosted4/navbar";
+
+@import "boosted4-src/card";
+@import "my-boosted4/card";
+
+@import "boosted4-src/breadcrumb";
+@import "my-boosted4/breadcrumb";
+
+@import "boosted4-src/pagination";
+
+@import "boosted4-src/badge";
+
+@import "boosted4-src/alert";
+@import "boosted4-src/o-alert";
+
+@import "boosted4-src/media";
+@import "boosted4-src/list-group";
+@import "boosted4-src/responsive-embed";
+@import "boosted4-src/close";
+
+// Components w/ JavaScript
+@import "boosted4-src/modal";
+@import "boosted4-src/o-modal";
+
+@import "boosted4-src/tooltip";
+@import "boosted4-src/popover";
+
+// Utility classes
+@import "boosted4-src/utilities";
+
+
+// CoreUI Styles
+// Additional typography
+@import "core/typography";
+
+// Animations
+@import "core/animate";
+
+// Core files
+@import "core/aside";
+@import "core/avatars";
+@import "core/breadcrumb-menu";
+@import "core/buttons";
+@import "core/callout";
+//@import "core/charts";
+@import "core/footer";
+@import "core/grid";
+@import "core/layout";
+@import "core/loading";
+@import "core/sidebar";
+@import "core/switches";
+@import "core/tables";
+@import "core/widgets";
+
+@import "core/others";
+
+@import "core/utilities-border";
+
+// Temporary fixes
+@import "core/temp";
+
+// Mobile View
+@import "core/mobile";
+
+@import "../../node_modules/dropzone/dist/dropzone";
+
+// media print
+@import "boosted4-src/print";
+
+
+// Style specific to Orange Expert Management application
+@import "oema-form-wizard";
+@import "oema-datatables";
+@import "oema";

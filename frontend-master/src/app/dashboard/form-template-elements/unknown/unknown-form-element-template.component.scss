@@ -1,0 +1,30 @@
+.new-form-element {
+  .form-group {
+    flex-grow: 2;
+  }
+
+  .control-btn {
+    margin: 0 5px;
+
+    button {
+      display: block;
+      font-size: 14px;
+      padding: 0;
+
+      &.cancel-form-element {
+        margin-top: -4px;
+      }
+      &.create-form-element {
+        color: #fff;
+        margin-top: 6px;
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        &.enabled {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+<div *ngIf="pendingCommunity" class="animated fadeIn">
+  <div class="row justify-content-center">
+    <div class="col-xl-8">
+      <div *ngIf="canSubmitForms === undefined"></div>
+      <!-- Application submission is closed ! -->
+      <div *ngIf="canSubmitForms === false && user && (user.role === 'Applicant' || user.role === 'Reviewer')"
+        class="application-closed">
+        <img class="fishy"
+          src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pjxzdmcgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiNmODk5MWQ7fS5jbHMtMntmaWxsOiNmZDA7fS5jbHMtM3tmaWxsOiMzMTQ5Njc7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZS8+PGcgZGF0YS1uYW1lPSIxOCBDbG9zZWQgU2lnbiIgaWQ9Il8xOF9DbG9zZWRfU2lnbiI+PHJlY3QgY2xhc3M9ImNscy0xIiBoZWlnaHQ9IjM2IiByeD0iNiIgcnk9IjYiIHdpZHRoPSI5NiIgeD0iMTYiIHk9IjY0Ii8+PGNpcmNsZSBjbGFzcz0iY2xzLTIiIGN4PSI2NCIgY3k9IjI4IiByPSI2Ii8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNNzEuODUsNzcuODNhNC4zNyw0LjM3LDAsMCwxLDIuMzQsMSwxLjkzLDEuOTMsMCwxLDAsMi4wOC0zLjI1QTcuOTQsNy45NCwwLDAsMCw3MS44NSw3NGMtMy4xMywwLTUuNTUsMi4wNi01LjU1LDQuNTgsMCwyLjc0LDIuNjQsNC4yMSw1LjM1LDQuNTguNTUuMTEsMiwuNDUsMi4yNiwxLDAsLjU3LTEuMzgsMS0yLDFhNS4yNSw1LjI1LDAsMCwxLTIuNzktMS4xNiwxLjkzLDEuOTMsMCwxLDAtMi40MiwzLDguNzMsOC43MywwLDAsMCw1LjIzLDJjMy4xMiwwLDUuODgtMiw1Ljg4LTQuODJzLTIuODgtNC40LTUuNjYtNC43OGMtMS42LS4zMS0yLS43Ny0yLS43N0M3MC4xNSw3OC4zOSw3MC44LDc3LjgzLDcxLjg1LDc3LjgzWiIvPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTQwLDc2LjM0Vjg3YTIsMiwwLDAsMCwyLDJoNS44M2EyLDIsMCwwLDAsMC00SDQ0Vjc2LjM0QTIsMiwwLDAsMCw0MCw3Ni4zNFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik01MCw4MS40OEE3LjE2LDcuMTYsMCwxLDAsNTcuMjMsNzQsNy4zMiw3LjMyLDAsMCwwLDUwLDgxLjQ4Wm0xMC4yNiwwYzAsMi44OS0zLjIxLDQuNjQtNS4yNywyLjQzLTEuOTQtMi0uNzEtNS44NiwyLjItNS44NkEzLjI5LDMuMjksMCwwLDEsNjAuMyw4MS40OFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik0zNC40NCw3OC44MmEyLDIsMCwwLDAsMi40OS0zLjIxQTcuNyw3LjcsMCwwLDAsMzIuMTUsNzRhNy42LDcuNiwwLDAsMC03LjYsNy40OGgwYzAsNi4zLDcuNDQsOS43LDEyLjM5LDUuODZhMiwyLDAsMCwwLTIuNTEtMy4yLDMuNTIsMy41MiwwLDEsMSwwLTUuMzFaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNODcuNjksNzguMzVhMiwyLDAsMCwwLDAtNEg4MS44YTIsMiwwLDAsMC0yLDJWODdhMiwyLDAsMCwwLDEsMS43NVY4OWg2LjgzYTIsMiwwLDAsMCwwLTRIODMuODFWODMuNjVIODdhMiwyLDAsMCwwLDAtNGgtMy4yVjc4LjM1WiIvPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTEwMy4wOSw4MS42NGE3LjI5LDcuMjksMCwwLDAtNy4yOC03LjI4SDkzLjY5YTIsMiwwLDAsMC0yLDJWODdhMiwyLDAsMCwwLDIsMmgyLjEzQTcuMzEsNy4zMSwwLDAsMCwxMDMuMDksODEuNjRaTTk1LjgxLDg1aC0uMTJWNzguMzVoLjEyQzEwMC4xNCw3OC4zNSwxMDAuMTgsODQuOTMsOTUuODEsODVaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNOTIuNzMsOThIMjJhNCw0LDAsMCwxLTQtNFY3MGE0LDQsMCwwLDEsNC00SDQyLjU1YTIsMiwwLDAsMCwwLTRIMzIuODNMNTkuOTMsMzQuODlhOCw4LDAsMCwwLDguMTMsMEw4MS43MSw0OC41NGEyLDIsMCwwLDAsMi44My0yLjgzTDcwLjg4LDMyLjA2QTgsOCwwLDAsMCw2NCwyMGEyLDIsMCwwLDAsMCw0LDQsNCwwLDAsMSwyLjc5LDYuODZDNjMuNTgsMzQsNTguMjQsMzAuMDgsNjAuNTEsMjZhMiwyLDAsMCwwLTMuNDktMiw4LDgsMCwwLDAsLjA5LDhMMjcuMTcsNjJIMjJhOCw4LDAsMCwwLTgsOFY5NGE4LDgsMCwwLDAsOCw4SDkyLjczQTIsMiwwLDAsMCw5Mi43Myw5OFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik0xMDYsNjJoLTUuMTdMODguMDksNDkuMjZhMiwyLDAsMCwwLTIuODMsMi44M0w5NS4xNyw2Mkg3NmEyLDIsMCwwLDAsMCw0aDMwYTQsNCwwLDAsMSw0LDRWOTRhNCw0LDAsMCwxLTQsNEg5OC41MWEyLDIsMCwwLDAsMCw0SDEwNmE4LDgsMCwwLDAsOC04VjcwQTgsOCwwLDAsMCwxMDYsNjJaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNNzAsNjJINDkuMjJhMiwyLDAsMCwwLDAsNEg3MEEyLDIsMCwwLDAsNzAsNjJaIi8+PC9nPjwvc3ZnPg=="
+          alt="We are closed!">
+        <blockquote [innerHTML]="appDomain.before.closedMsg">
+        </blockquote>
+      </div>
+      <!-- /Application submission is closed -->
+
+      <div *ngIf="canSubmitForms === true || user && (user.role === 'Referent' || user.role === 'Admin')" class="card">
+        <div *ngIf="urlPrefix.startsWith('senior')" class="ribbon ribbon-top-right"><span>senior</span></div>
+
+        <div id="before-starting" class="card-header" [innerHTML]="appDomain.before.cardHeader">
+        </div>
+
+        <div class="card-block">
+          <section class="col-12 current-app-form">
+            <div class="card card-inverse text-center card-success">
+              <div class="card-block">
+                <blockquote class="card-blockquote">
+                  <p>
+                    <span [innerHTML]="pendingFormType.startsWith('new') ?
+                                    appDomain.before.currentNewForm
+                                    :  appDomain.before.currentRenewalForm">
+                    </span>
+                    <strong>"{{ pendingCommunity }}"</strong>.
+                  </p>
+                  <footer>
+                    {{ appDomain.before.warningLabel }}
+                  </footer>
+                </blockquote>
+              </div>
+            </div>
+          </section>
+
+          <section class="before-starting" [innerHTML]="beforeStartingMsg">
+          </section>
+
+          <section class="ending-submission" [innerHTML]="appDomain.before.endingSubmission">
+          </section>
+
+          <section class="ending-submission">
+            <h4 class="text-primary">Support</h4>
+            <p>{{ appDomain.supportLabel }}<mark><a [routerLink]="['', { outlets: { contact: ['compose'] } }]">
+              {{ appDomain.contactUs }}</a></mark>.</p>
+          </section>
+
+          <div class="text-right">
+            <button data-test="btn-start-form" type="button" id="start-form" class="btn btn-primary" (click)="goToForm()"><i
+                class="fa fa-pencil-square-o"></i>&nbsp;&nbsp; {{ appDomain.before.nextButtonLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

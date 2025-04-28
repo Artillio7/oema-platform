@@ -1,0 +1,17 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<div class="col-md-12">
+  <label class="form-control-label" for="{{ formElement.name }}" [innerHTML]="formElement.label"></label>
+</div>
+<div class="input-group file-upload col-md-5">
+  <input data-test="form-input-file" type="file" (change)="fileChange(input)" #input name="{{ formElement.name }}" class="file-upload-input"
+    accept="{{ formElement.options?.accept ?? 'application/pdf' }}" />
+  <input type="text" class="form-control filename-input" placeholder="Choose a file..." value="{{ file }}">
+  <i class="fa fa-times delete-file" (click)="removeFile()" *ngIf="file"></i>
+  <span class="input-group-btn file-upload-btn">
+    <button class="btn btn-primary" type="button" [innerHTML]="uploadButtonLabel"></button>
+  </span>
+</div>
+<span class="help-block text-danger col-md-12" *ngIf="errorMessage">{{ errorMessage }}</span>

@@ -1,0 +1,59 @@
+<div [hidden]="!tableReady" class="oema-datatables mt-1 mb-2" style="clear: both;">
+  <table id="forms-list" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+    class="table table-bordered table-hover nowrap" width="100%">
+    <thead>
+      <tr>
+        <th class="row-expand"></th>
+        <th class="row-selector"></th>
+        <th class="username">Last name</th>
+        <th class="username">First name</th>
+        <th>Email</th>
+        <th class="hidden-column">Raw data index</th>
+        <th>Entity</th>
+        <th>Country</th>
+        <th>{{ isSeniorApp ? 'Community' : 'Type' }}</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>Submitted</th>
+        <!--<th>Status</th>-->
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let form of forms; let formIdx = index">
+        <td></td>
+        <td class="row-selector"></td>
+        <td class="username"><span class="lastname">{{ form.applicant[0].lastname || '' }}</span></td>
+        <td class="username"><span class="firstname">{{ (form.applicant[0].firstname || '') | capitalizeName }}</span></td>
+        <td>{{ form.email }}</td>
+        <td class="hidden-column">{{ formIdx }}</td>
+        <td>
+          <a href="{{ form.applicant[0].directoryUrl || '' }}" target="_blank" class="hint">
+            {{ formatEntity(form.applicant[0].entity) }}
+            <span class="hint-text hint-left" style="right: 100%;">{{ form.applicant[0].entity || '' }}</span>
+          </a>
+        </td>
+        <td>{{ form.applicant[0].country || '' }}</td>
+        <td>{{ isSeniorApp ? (form.communityName || '') : (form.formType === 'new' ? 'New':'Renewal') }}</td>
+        <td>{{ form.createdAt | date: 'dd/MM/yyyy @ HH:mm' }}</td>
+        <td>{{ form.lastUpdatedAt ? (form.lastUpdatedAt | date: 'dd/MM/yyyy @ HH:mm') : '' }}</td>
+        <td>{{ form.submittedAt ? (form.submittedAt | date: 'dd/MM/yyyy @ HH:mm') : '' }}</td>
+        <!--<td>{{ form.status || '' }}</td>-->
+        <td class="action">
+          <div ngbDropdown class="d-inline-block form-settings">
+            <button class="btn btn-outline-info" ngbDropdownToggle>Select</button>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdown-form-settings">
+              <a class="dropdown-item" href="/{{ (isSeniorApp ? 'senior-' : '') + urlPrefix }}/application/appform/{{form['_id']}}/{{ form.communityId }}/{{ form.formType + (isSeniorApp ?  '-senior' : '') }}"
+                target="_blank"><i class="fa fa-external-link" aria-hidden="true"></i> View app</a>
+              <button class="dropdown-item" type="button" (click)="downloadArchive($event, formIdx)">
+                <i class="fa fa-download" aria-hidden="true"></i> Download app</button>
+              <button [hidden]="!form.submittedAt" class="dropdown-item" type="button"
+                (click)="addApplicationToBeReviewed($event, formIdx)"><i class="fa fa-id-card-o" aria-hidden="true"></i>
+                Review app</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

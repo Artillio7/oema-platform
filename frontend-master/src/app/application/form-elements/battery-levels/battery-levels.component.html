@@ -1,0 +1,47 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<div class="row mb-2">
+  <label class="form-control-label col" [innerHTML]="formElement.label"></label>
+</div>
+<div *ngFor="let competence of formElement.options?.items ?? [];" class="row battery-levels-bottom-spacing">
+  <div class="col-xl-4" style="margin-left:10px">
+    <label class="form-control-label"> {{ competence.label }}</label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input data-test="form-battery-checkbox-level-0" type="radio" id="battery-0-{{ competence.name }}" name="{{ competence.name }}" value="battery-0"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-0'">
+    <label for="battery-0-{{ competence.name }}" class="battery-0">
+      <i class="fa fa-battery-0"></i>
+    </label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input data-test="form-battery-checkbox-level-1" type="radio" id="battery-1-{{ competence.name }}" name="{{ competence.name }}" value="battery-1"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-1'">
+    <label for="battery-1-{{ competence.name }}" class="battery-1">
+      <i class="fa fa-battery-1"></i>
+    </label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input data-test="form-battery-checkbox-level-2" type="radio" id="battery-2-{{ competence.name }}" name="{{ competence.name }}" value="battery-2"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-2'">
+    <label for="battery-2-{{ competence.name }}" class="battery-2">
+      <i class="fa fa-battery-2"></i>
+    </label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input data-test="form-battery-checkbox-level-3" type="radio" id="battery-3-{{ competence.name }}" name="{{ competence.name }}" value="battery-3"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-3'">
+    <label for="battery-3-{{ competence.name }}" class="battery-3">
+      <i class="fa fa-battery-3"></i>
+    </label>
+  </div>
+  <div class="radio-inline abc-radio abc-radio-primary col-xl-1">
+    <input data-test="form-battery-checkbox-level-4" type="radio" id="battery-4-{{ competence.name }}" name="{{ competence.name }}" value="battery-4"
+      (click)="onChecked($event)" [checked]="innerBatteriesList[competence.name]==='battery-4'">
+    <label for="battery-4-{{ competence.name }}" class="battery-4">
+      <i class="fa fa-battery-4"></i>
+    </label>
+  </div>
+</div>

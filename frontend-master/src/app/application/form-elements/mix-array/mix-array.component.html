@@ -1,0 +1,39 @@
+<div *ngIf="formElement.options?.mandatory" class="text-danger">
+  <i class="fa fa-exclamation-circle" style="margin-right: 5px;" aria-hidden="true"></i>
+  {{ formElement.options?.mandatoryHint || 'Mandatory question, you must answer before going to next step.' }}
+</div>
+<label class="form-control-label" for="{{ formElement.name }}" [innerHTML]="formElement.label"></label>
+<div class="table-responsive" id="{{ formElement.name }}" [formGroup]="maForm">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th *ngFor="let column of formElement.options?.columns ?? []">{{column.name}}</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of formElement.options?.rows ?? []">
+        <td *ngFor="let column of formElement.options?.columns ?? []">
+          <div *ngFor="let question of row[column.prop]" [ngSwitch]="question.type" class="mb-1">
+            <app-form-input-text *ngSwitchCase="FormElementType.TextInput" [formElement]="question"
+              formControlName="{{ question.name }}"></app-form-input-text>
+            <app-form-textarea *ngSwitchCase="FormElementType.Textarea" [formElement]="question"
+              formControlName="{{ question.name }}"></app-form-textarea>
+            <app-form-battery-levels *ngSwitchCase="FormElementType.BatteryLevels" [formElement]="question"
+              formControlName="{{ question.name }}"></app-form-battery-levels>
+            <app-form-input-checkboxes *ngSwitchCase="FormElementType.Checkbox" [formElement]="question"
+              formControlName="{{ question.name }}"></app-form-input-checkboxes>
+            <app-form-select *ngSwitchCase="FormElementType.Select" [formElement]="question" formControlName="{{ question.name }}">
+            </app-form-select>
+            <app-form-input-radio *ngSwitchCase="FormElementType.Radio" [formElement]="question"
+              formControlName="{{ question.name }}"></app-form-input-radio>
+            <app-form-input-file *ngSwitchCase="FormElementType.File" [formElement]="question"
+              formControlName="{{ question.name }}"></app-form-input-file>
+            <app-form-unknown-element *ngSwitchCase="FormElementType.Text" [formElement]="question"></app-form-unknown-element>
+            <app-form-unknown-element *ngSwitchDefault></app-form-unknown-element>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

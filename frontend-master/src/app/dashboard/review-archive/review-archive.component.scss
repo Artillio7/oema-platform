@@ -1,0 +1,37 @@
+.reviews-archive-table {
+  .main-page-menu {
+    .view-archive-year {
+      width:240px;
+      max-width: 100%;
+    }
+  }
+}
+
+.card.fullscreened {
+  .review-settings, .dataTables_length, .dt-buttons.btn-group {display: none}
+  .application-review-matrix {margin-top:0 !important}
+}
+
+.show-table {
+  opacity: 1;
+  transition: opacity 1s;
+}
+
+.hide-table {
+  opacity: 0;
+  transition: opacity 1s;
+}
+
+@media screen and (max-width: 540px) {
+  .reviews-archive-table {
+    .main-page-menu {
+      .view-archive-year {
+        width:100%;
+      }
+      .btn-export-excel {
+        width: 100%;
+        margin-top: 20px;
+      }
+    }
+  }
+}

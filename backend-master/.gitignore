@@ -1,0 +1,17 @@
+node_modules
+.DS_Store
+errors*
+default
+app/msmtprc
+mail.txt
+msmtprc
+
+# IntelliJ
+.idea
+*.ipr
+*.iml
+*.iws
+
+# Cache folder used by puppeteer
+.cache
+openshift/helm/values-backup-staging.yaml

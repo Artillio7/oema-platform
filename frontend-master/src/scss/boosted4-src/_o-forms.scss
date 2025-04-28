@@ -1,0 +1,274 @@
+//
+//  Orange forms
+//
+
+.input-group {
+  > .input-group-addon,
+  > .form-control {
+    border-color: #000;
+  }
+
+  > .form-control {
+    &:focus {
+      border-color: $brand-primary;
+    }
+  }
+}
+
+.has-success {
+  .input-group > .form-control {
+    // Feedback states
+    border-color: $state-success-text;
+  }
+}
+
+.has-error {
+  .input-group > .form-control {
+    // Feedback states
+    border-color: $state-danger-text;
+  }
+}
+
+.has-warning {
+  .input-group > .form-control {
+    // Feedback states
+    border-color: $state-warning-text;
+  }
+}
+
+.form-group {
+
+  /*label,
+  .form-control-label,
+  .col-form-label {
+    padding-top: calc(#{$input-padding-y} + #{$input-btn-border-width});
+    padding-bottom: calc(#{$input-padding-y} + #{$input-btn-border-width});
+    font-weight: bold;
+  }*/
+
+  .form-control-label {
+    margin-bottom: 0;
+  }
+
+  &.row {
+
+    .form-control-feedback {
+      padding-left: 0;
+    }
+
+    &.has-danger.top {
+      flex-direction: row;
+
+      label,
+      .col-form-label,
+      .form-control-label {
+        order: 2;
+      }
+
+      .form-control {
+        margin-top: 0;
+        order: 3;
+      }
+
+      .form-control-feedback {
+        order: 1;
+      }
+    }
+
+    &.has-danger.right {
+      label,
+      .col-form-label,
+      .form-control-label {
+        min-width: auto;
+      }
+    }
+
+    .form-control-label {
+      padding: .625rem 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &.is-required .form-control-label::after {
+    margin-left: 6px;
+    font-weight: bold;
+    color: $brand-primary;
+    content: "*";
+  }
+
+  // browser reset
+  .form-control:invalid {
+    outline: none;
+    box-shadow: none;
+  }
+
+  &.has-danger,
+  &.has-warning,
+  &.has-success {
+    .col-form-label,
+    .form-control-label {
+      color: #000;
+    }
+  }
+
+  .form-control-feedback {
+    margin-top: .625rem;
+    font-size: $font-size-sm;
+    font-weight: normal;
+    line-height: 1;
+  }
+
+  &.has-danger {
+    position: relative;
+
+    .form-control-feedback {
+      font-weight: bold;
+      color: $brand-danger;
+    }
+
+    .form-control-danger {
+      background-image: none;
+    }
+
+    &.top {
+      display: flex;
+      flex-direction: column;
+
+      .form-control-label {
+        margin-bottom: 0;
+      }
+
+      .form-control {
+        order: 3;
+      }
+
+      .form-control-feedback {
+        order: 2;
+      }
+
+      .form-control-feedback {
+        margin-top: 0;
+        margin-bottom: .8125rem;
+      }
+    }
+
+    &.right {
+      display: flex;
+      flex-flow: row wrap;
+
+      label,
+      .form-control-label {
+        min-width: 100%;
+      }
+
+      .form-control-message,
+      .form-control-feedback {
+        margin-left: .625rem;
+      }
+    }
+
+    .form-control-feedback {
+      margin-top: .8125rem;
+    }
+  }
+}
+
+select.form-control {
+  &:not([size]):not([multiple]) {
+    height: auto;
+    padding-top: .4375rem;
+    padding-bottom: .4375rem;
+
+    &.form-control-lg {
+      padding-top: .65625rem;
+      padding-bottom: .65625rem;
+    }
+
+    &.form-control-sm {
+      padding-top: .1875rem;
+      padding-bottom: .1875rem;
+    }
+  }
+}
+
+// Reposition feedback icon if input has visible label above
+.has-feedback label {
+  ~ .form-control-feedback {
+    top: ($line-height-base + .5); // Height of the `label` and its margin
+  }
+}
+
+.form-group {
+  input[type="radio"],
+  input[type="checkbox"] {
+    width: auto;
+  }
+}
+
+// custom checkboxes // Patrick
+
+/*.custom-control .custom-control-description {
+  font-weight: bold;
+}
+
+.form-group .custom-control {
+  display: inline-block;
+}
+
+.custom-control-indicator {
+  top: auto;
+  background-color: #fff;
+  border: 2px solid $gray;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-indicator {
+  background-size: 1rem;
+  border: 0;
+}
+
+.custom-checkbox .custom-control-input:active ~ .custom-control-indicator,
+.custom-checkbox .custom-control-input:indeterminate ~ .custom-control-indicator {
+  border: 0;
+}
+
+.custom-control-input:disabled ~ .custom-control-indicator {
+  background-color: #fff;
+  border: 2px solid $gray-light-o;
+}
+
+.custom-checkbox .custom-control-input:checked:disabled ~ .custom-control-indicator {
+  background-color: $gray-light-o;
+  background-image: $custom-checkbox-checked-icon;
+  border: 0;
+}
+
+.custom-radio {
+  .custom-control-input ~ .custom-control-indicator,
+  .custom-control-input:disabled ~ .custom-control-indicator {
+    border-width: 2px;
+  }
+
+  .custom-control-input:checked ~ .custom-control-indicator {
+    background-color: #fff;
+    background-image: none;
+    border: 6px solid $brand-primary;
+  }
+
+  .custom-control-input:checked:disabled ~ .custom-control-indicator {
+    border-color: $gray-light-o;
+    border-width: 6px;
+  }
+}*/
+
+// custom select
+
+.custom-select {
+  padding-right: 1.875rem;
+  font-weight: bold;
+  background-position-x: right .625rem;
+  background-size: .875rem;
+}
+
+.form-text {
+  color: $gray;
+}

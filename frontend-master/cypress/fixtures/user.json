@@ -1,0 +1,22 @@
+{
+    "email": "test.cypress@orange.com",
+    "password": "Test1234!!",
+    "directoryUrl": "https://annuaire.sso.infra.ftgroup/persons/oJhfyOsDziADjHYH_9OurA%3D%3D",
+    "firstname": "Test",
+    "lastname": "Cypress",
+    "gender": "Male",
+    "birthday": "04/09/2000",
+    "cuid": "ABCD1234",
+    "phone": "0612345678",
+    "classification": "I.3",
+    "entity": "Orange/INNOVATION",
+    "country": "France",
+    "location": "Chatillon",
+    "managerFirstname": "Manager",
+    "managerLastname": "Cypress",
+    "managerEmail": "manager.cypress@orange.com",
+    "hrFirstname": "HR",
+    "hrLastname": "Cypress",
+    "hrEmail": "hr.cypress@orange.com",
+    "pdfFileName": "profile.pdf"
+}

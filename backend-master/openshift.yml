@@ -1,0 +1,277 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: oswe-backend
+  annotations:
+    openshift.io/display-name: "OEMA backend Application"
+    description: "Application template for OEMA with MongoDB and Redis"
+    iconClass: "icon-redis"
+parameters:
+    - name: appname
+      description: The name for the application OEMA
+      required: true
+    - name: env
+      description: "Env for our app (prod, staging)"
+      required: true
+    - name: hostname
+      description: "the environment hostname (provided by GitLab CI template)"
+      required: true
+    - name: project
+      description: OEMA  project namespace
+      required: true
+    - name: docker_image_digest
+      description: Docker image provided by Gitlab CI template
+      required: true
+    - name: BACKEND_NAME
+      description: OEMA backend name
+      required: true
+      value: "oswe-backend"
+    - name: FRONTEND_NAME
+      description: OEMA frontend name
+      required: true
+      value: "oswe-frontend"
+    - name: JWT_EXPIRES_IN
+      descritpion: JWT expire time in hours
+      required: true
+      value: "6h"
+    - name: SMTP_HOST
+      descritpion: SMTP host
+      required: true
+      value: "fed-apps.itn.intraorange"
+    - name: SMTP_PORT
+      descritpion: SMTP port
+      required: true
+      value: "25"
+    - name: SMTP_AUTH_USER
+      descritpion: SMTP User
+      required: true
+    - name: SMTP_AUTH_PASSWORD
+      descritpion: SMTP password
+      required: true
+    - name: REDIS_PASSWORD
+      description: Redis password
+      required: true
+    - name: MONGO_DB
+      descritpion: Mongo database name
+      required: true
+      value: "oemadb"
+    - name: MONGO_USER
+      descritpion: Mongo user
+      required: true
+    - name: MONGO_PASSWD
+      descritpion: Mongo password
+      required: true
+    - name: JWT_SECRET
+      descritpion: JWT secret
+      required: true
+    - name: EXPRESSJS_SESSION_SECRET
+      descritpion: ExpressJS session secret
+      required: true
+    - name: MAIL_FROM
+      descritpion: Administrator mail
+      required: true
+      value: '"Orange Expert Programme" <orange-experts.programme@orange.com>'
+    - name: ADMIN_MAIL
+      descritpion: Administrator mail
+      required: true
+      value: "sandrine.lovisa@orange.com"
+    - name: SENIOR_ORANGE_EXPERTS_ADMIN_MAIL
+      descritpion: Orange Senior Experts Administrator mail
+      required: true
+      value: "jerome.pons@orange.com"
+    - name: DATA_UP_ADMIN_MAIL
+      descritpion: Data UP Administrator mail
+      required: true
+      value: "orange.securityschool@orange.com"
+    - name: EXPERTS_DTSI_ADMIN_MAIL
+      descritpion: Expert DTSI Administrator mail
+      required: true
+      value: "gaetan.montury@orange.com"
+    - name: HTTP_PROXY
+      description: HTTP Proxy
+      value: "http://cs.pr-proxy.service.sd.diod.tech:3128/"
+objects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ${appname}-config
+    labels:
+      app: ${appname}
+  data:
+    STAGE: ${env}
+    BACKEND_NAME: ${BACKEND_NAME}-${env}
+    BACKEND_PORT: "4040"
+    BASE_URL: "http://${BACKEND_NAME}-${env}"
+    FRONTEND_NAME: ${FRONTEND_NAME}-${env}
+    FRONTEND_PORT: "4200"
+    FRONTEND_PUBLIC_PORT: "80"
+    JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+    MONGO_DB: ${MONGO_DB}
+    SMTP_HOST: ${SMTP_HOST}
+    SMTP_PORT: ${SMTP_PORT}
+    MAIL_FROM: ${MAIL_FROM}
+    ADMIN_MAIL: ${ADMIN_MAIL}
+    SENIOR_ORANGE_EXPERTS_ADMIN_MAIL: ${SENIOR_ORANGE_EXPERTS_ADMIN_MAIL}
+    DATA_UP_ADMIN_MAIL: ${DATA_UP_ADMIN_MAIL}
+    EXPERTS_DTSI_ADMIN_MAIL: ${EXPERTS_DTSI_ADMIN_MAIL}
+    ORANGE_EXPERTS_ADMIN_MAIL: ${ADMIN_MAIL}
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: ${appname}-secret
+    labels:
+      app: ${appname}
+  stringData:
+    JWT_SECRET: ${JWT_SECRET}
+    EXPRESSJS_SESSION_SECRET: ${EXPRESSJS_SESSION_SECRET}
+    SMTP_AUTH_USER: ${SMTP_AUTH_USER}
+    SMTP_AUTH_PASSWD: ${SMTP_AUTH_PASSWORD}
+    MONGO_URI: mongodb://${MONGO_USER}:${MONGO_PASSWD}@${MONGO_DB}-${env}-orange-mongodb-headless:27017/${MONGO_DB}?authSource=admin&replicaSet=${MONGO_DB}
+    MONGO_USER: ${MONGO_USER}
+    MONGO_PASSWD: ${MONGO_PASSWD}
+    REDIS_HOST: red-${MONGO_DB}-${env}-service
+    REDIS_PORT: "6379"
+    REDIS_PASSWORD: ${REDIS_PASSWORD}
+  type: Opaque
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: ImageStream for OEMA backend Docker image
+      labels:
+        app: ${appname}
+    name: ${appname}
+  spec:
+    lookupPolicy:
+      local: true
+    tags:
+    - annotations:
+        openshift.io/imported-from: registry.gitlab.tech.orange/oswe/application-tools/application-tools-backend
+      from:
+        kind: DockerImage
+        name: ${docker_image_digest}
+      importPolicy: {}
+      name: latest
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: ${appname}
+    labels:
+      app: ${appname}
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: ${appname}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          alpha.image.policy.openshift.io/resolve-names: '*'
+        labels:
+          app: ${appname}
+      spec:
+        containers:
+          - name: ${appname}
+            image: ${docker_image_digest}
+            imagePullPolicy: Always
+            env:
+              - name: NODE_ENV
+                value: "production"
+              - name: XDG_CONFIG_HOME
+                value: "/tmp/.chromium"
+              - name: XDG_CACHE_HOME
+                value: "/tmp/.chromium"
+            envFrom:
+              - configMapRef:
+                  name: ${appname}-config
+              - configMapRef:
+                  name: ${appname}-config-url
+              - configMapRef:
+                  name: ${appname}-config-env
+              - configMapRef:
+                  name: ${appname}-config-s3
+              - secretRef:
+                  name: ${appname}-secret
+              - secretRef:
+                  name: ${appname}-secret-orange-connect
+            ports:
+              - containerPort: 4040
+                protocol: TCP
+            resources:
+              limits:
+                cpu: 500m
+                memory: 2Gi
+              requests:
+                cpu: 300m
+                memory: 1Gi
+            livenessProbe:
+              tcpSocket:
+                port: 4040
+              initialDelaySeconds: 30
+              timeoutSeconds: 1
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            readinessProbe:
+              httpGet:
+                path: /api/
+                port: 4040
+              initialDelaySeconds: 5
+              timeoutSeconds: 1
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            terminationMessagePath: /dev/termination-log
+            securityContext:
+              capabilities: {}
+              privileged: false
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${appname}
+        from:
+          kind: ImageStreamTag
+          name: ${appname}:latest
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${appname}
+    labels:
+      app: ${appname}
+  spec:
+    ports:
+      - name: ${appname}
+        protocol: TCP
+        port: 4040
+        targetPort: 4040
+    selector:
+      app: ${appname}
+    type: ClusterIP
+    sessionAffinity: None
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: ${appname}
+    labels:
+      app: ${appname}
+  spec:
+    host: ${hostname}
+    path: /docs
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+    to:
+      kind: Service
+      name: ${appname}
+      weight: 100
+    port:
+      targetPort: ${appname}

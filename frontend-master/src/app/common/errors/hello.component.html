@@ -1,0 +1,63 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7 col-xl-5">
+        <div class="clearfix text-center" *ngIf="!urlPrefix?.length || isAuthed">
+          <h1 class="display-3 text-primary">Hello!</h1>
+          <h4 class="pt-1">Give a man a fish and you feed him for a day...</h4>
+          <p class="lead">teach a man to fish and you feed him for a lifetime!</p>
+          <p class="text-primary font-weight-bold mt-3">Sail {{isAuthed ? ' back ' : ''}} to:</p>
+          <button type="button" class="btn btn-secondary mx-2 my-1" *ngIf="!urlPrefix?.length || urlPrefix === 'orange-experts'" routerLink="/orange-experts">Orange Experts</button>
+          <button type="button" class="btn btn-secondary mx-2 my-1" *ngIf="!urlPrefix?.length || urlPrefix === 'experts-dtsi'" routerLink="/experts-dtsi">Experts DTSI</button>
+        </div>
+
+        <div *ngIf="urlPrefix?.length && !isAuthed && !userId" class="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+
+        <div *ngIf="urlPrefix?.length && userId === '-1'" class="card">
+          <div id="oidc-welcome" class="card-header">
+            Welcome {{ userName }}!
+          </div>
+          <div class="card-block">
+            <section class="before-starting">
+              <p>We found no account for the email address {{ userEmail }} associated with your Orange Connect credentials.</p>
+              <ul>
+                <li>
+                  <p>If you think <b>you already have an account with another email address</b>, you can request to recover your account. Just click on the following button and enter your account address.</p>
+                  <button type="button" class="btn btn-secondary my-1" [routerLink]="['/' + urlPrefix + '/auth/account-recovery']" [queryParams]="{ newEmail: userEmail }">Recover my account</button>
+                </li>
+                <li class="mt-1">
+                  <p>If this is your <b>first time on the Orange Expert Management Application</b>, please read and accept our privacy policy before creating your account.</p>
+                  <button type="button" class="btn btn-primary my-1"(click)="createNewAccount()">Create new account</button>
+                </li>
+                <li class="mt-1">
+                  Otherwise, you can close this page and thank you for your visit!
+                </li>
+              </ul>
+            </section>
+          </div>
+        </div>
+
+        <ng-template #privacyPolicy let-c="close" let-d="dismiss">
+          <div class="modal-header">
+            <h4 class="modal-title text-primary">{{ appDomain.policy.title }}</h4>
+          </div>
+
+          <div class="modal-body" [innerHTML]="appDomain.policy.body">
+
+          </div>
+          <div class="modal-footer mt-2">
+            <button type="button" id="deny-policy" class="btn btn-secondary" (click)="declinePrivacyPolicy()">{{
+              appDomain.policy.denyLabel }}</button>
+            <button id="accept-policy" class="btn btn-primary" (click)="acceptPrivacyPolicy()">
+              {{ appDomain.policy.acceptLabel }}
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

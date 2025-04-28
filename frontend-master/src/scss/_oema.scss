@@ -1,0 +1,1456 @@
+@use "sass:math";
+
+$success-color: #2d922d;
+$info-color: #248dad;
+$warning-color: #f79a17;
+$danger-color: #bf1725;
+
+.container-fluid {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.input-group {
+
+  >.input-group-addon,
+  >.form-control {
+    border-color: $gray-lighter;
+  }
+}
+
+button,
+html [type="button"],
+[type="reset"],
+[type="submit"] {
+  cursor: pointer;
+}
+
+a,
+input {
+  outline: none;
+}
+
+.sidebar {
+
+  .nav {
+    .nav-title {
+      &.rounded-label {
+        background-color: gray;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 20px;
+        padding: .5rem;
+        margin: .95rem 1rem;
+      }
+      &.senior {
+        background-color: #3498db;
+      }
+    }
+
+    .nav-item .nav-link i {
+      color: #c0cadd;
+    }
+  }
+}
+
+.dropdown-item i {
+  color: #7f8c8d;
+}
+
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+
+.app-body {
+  overflow: hidden;
+}
+
+.btn-circle.btn-sm {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  font-size: 8px;
+  text-align: center;
+}
+
+.btn-circle.btn-md {
+  width: 50px;
+  height: 50px;
+  padding: 7px 10px;
+  border-radius: 25px;
+  font-size: 10px;
+  text-align: center;
+}
+
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  border-radius: 35px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.hint {
+  position: relative;
+  display: inline-block;
+}
+
+.hint .hint-text {
+  visibility: hidden;
+  position: absolute;
+  //width: 120px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #555;
+
+  &.orange {
+    background-color: #f16e00;
+  }
+
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity .6s;
+}
+
+.hint:hover .hint-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.hint-left {
+  top: -5px;
+  bottom: auto;
+  right: 128%;
+}
+
+.hint-left::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #555;
+}
+
+.orange.hint-left::after {
+  border-color: transparent transparent transparent #f16e00;
+}
+
+.hint-right {
+  top: -5px;
+  left: 125%;
+}
+
+.hint-right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #555 transparent transparent;
+}
+
+.orange.hint-right::after {
+  border-color: transparent #f16e00 transparent transparent;
+}
+
+.hint-bottom {
+  top: 135%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.hint-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+
+.orange.hint-bottom::after {
+  border-color: transparent transparent #f16e00 transparent;
+}
+
+.hint-top {
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.hint-top::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.orange.hint-top::after {
+  border-color: #f16e00 transparent transparent transparent;
+}
+
+/*** Header navbar : dashboard menu, logo, profile menu ***/
+/*** <Fix issues due to Boosted migration> ***/
+header.navbar {
+  .navbar-brand {
+    &::before {
+      min-width: auto;
+      min-height: auto;
+      width: auto;
+      height: auto;
+    }
+
+    line-height: 1rem;
+    margin: 0 0 0 70px;
+
+    .programme-logo {
+      height: $navbar-height;
+      width: $navbar-height;
+      padding: 5px;
+    }
+
+    span {
+      color: #000;
+    }
+
+    &.no-menu {
+      margin-left: 20px;
+    }
+  }
+
+  .navbar-nav {
+    align-self: center;
+
+    .nav-item {
+      border: none;
+    }
+  }
+
+  .navbar-user-name,
+  .user-menu .dropdown-toggle::after {
+    color: $Orange-color;
+  }
+
+  .dropdown-item {
+    min-width: 0;
+  }
+}
+
+.breadcrumb-item {
+
+  // The separator between breadcrumbs
+  +.breadcrumb-item::before {
+    padding-top: 0.3125rem;
+  }
+}
+
+/*** </Fix issues due to Boosted migration> ***/
+
+/*** <Profile> ***/
+.navbar-nav .nav-link {
+  color: #000;
+}
+
+.app-form:hover {
+  cursor: pointer;
+
+  .community-name {
+    color: $Orange-color;
+  }
+}
+
+.app-form-active {
+  .community-name {
+    color: $Orange-color;
+  }
+}
+
+.profile-cover {
+  position: relative;
+  min-height: 140px;
+
+  .media {
+    display: table;
+    left: 20px;
+    right: 20px;
+
+    .media-left {
+      display: table-cell;
+      vertical-align: middle;
+      padding-right: 20px;
+    }
+
+    .media-body {
+      display: table-cell;
+      vertical-align: middle;
+      color: #333;
+      text-shadow: none;
+
+      h5 {
+        margin-bottom: 0;
+
+        small {
+          color: #333;
+          text-shadow: none;
+
+          &.display-block {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+
+/*** </Profile> ***/
+
+
+/*** <Icon for the dashboard menu> ***/
+$button-width: 40px; // The width of the button area
+$button-height: 40px; // The height of the button area
+$bar-thickness: 3px; // The thickness of the button bars
+$button-pad: 6px; // The left/right padding between button area and bars.
+$button-bar-space: 6px; // The spacing between button bars
+$button-transistion-duration: 0.4s; // The transition duration
+
+.c-hamburger {
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  overflow: hidden;
+  margin: 0 0 0 20px;
+  padding: 0;
+  width: $button-width;
+  height: $button-height;
+  font-size: 0;
+  text-indent: -9999px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+  border: none;
+  cursor: pointer;
+  transition: background $button-transistion-duration;
+}
+
+.c-hamburger:focus {
+  outline: none;
+}
+
+.c-hamburger span {
+  display: block;
+  position: absolute;
+  top: math.div($button-height, 2) - math.div($bar-thickness, 2);
+  left: $button-pad;
+  right: $button-pad;
+  height: $bar-thickness;
+  background: $Orange-color;
+}
+
+.c-hamburger span::before,
+.c-hamburger span::after {
+  position: absolute;
+  display: block;
+  left: 0;
+  width: 100%;
+  height: $bar-thickness;
+  background-color: $Orange-color;
+  content: "";
+}
+
+.c-hamburger span::before {
+  top: -$bar-thickness - $button-bar-space;
+}
+
+.c-hamburger span::after {
+  bottom: -$bar-thickness - $button-bar-space;
+}
+
+.c-hamburger--rot {
+  background-color: #fff;
+}
+
+.c-hamburger--rot span {
+  transition: transform $button-transistion-duration;
+}
+
+/* active state, i.e. menu open */
+.c-hamburger--rot.is-vertical {
+  background-color: #fff;
+}
+
+.c-hamburger--rot.is-vertical span {
+  transform: rotate(90deg);
+}
+
+/*** </Icon for the dashboard menu> ***/
+
+/*** <Grid to X icon button> ***/
+$base : 0.45rem;
+$space : math.div($base, 4);
+$color : #444;
+$hover-color: $Orange-color;
+$transition: .3s; // increase this to see the transformations in slow-motion
+
+button.grid-button {
+  display: inline-block;
+  margin: 0 1em;
+  border: none;
+  background: none;
+}
+
+button.grid-button span {
+  display: block;
+}
+
+.grid-button {
+  padding: $base * 2; //2rem
+  cursor: pointer;
+  user-select: none;
+}
+
+.grid-button .grid {
+  width: $base;
+  height: $base;
+  background: $color;
+  color: $color;
+  transition: $transition;
+}
+
+.grid-button.rearrange .grid {
+  box-shadow:
+    -($base+$space) 0,
+    -($base+$space) ($base+$space),
+    $base+$space 0,
+    ($base+$space) (-($base+$space)),
+    0 (-($base+$space)),
+    -($base+$space) (-($base+$space)),
+    0 ($base+$space),
+    ($base+$space) ($base+$space);
+}
+
+.grid-button.rearrange.cross-close .grid {
+  box-shadow:
+    -$base 0,
+    0 0 transparent,
+    $base 0,
+    0 0 transparent,
+    0 (-$base),
+    0 0 transparent,
+    0 $base,
+    0 0 transparent;
+  transform: rotate3d(0, 0, 1, -45deg) scale3d(.8, .8, .8);
+}
+
+/*** </Grid to X icon button> ***/
+
+
+/*** Footer : logo Orange ***/
+footer .orange-brand {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  padding: 5px 0 5px 10px;
+  background-image: $navbar-brand-orange;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 40px auto;
+  outline: none;
+}
+
+
+/*** Loading animation ***/
+.spinner {
+  margin: 100px auto;
+  width: 70px;
+  text-align: center;
+}
+
+.loading-error {
+  text-align: center;
+  margin-top: -80px;
+}
+
+.spinner>div {
+  width: 18px;
+  height: 18px;
+  background-color: $Orange-color;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0)
+  }
+
+  40% {
+    -webkit-transform: scale(1.0)
+  }
+}
+
+@keyframes sk-bouncedelay {
+
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+
+  40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
+
+/*** Fullscreen on card ***/
+body.fullscreen-card {
+
+  header.app-header,
+  footer {
+    display: none;
+  }
+
+  .app-body {
+    margin-top: 0 !important;
+
+    .sidebar,
+    .aside-menu,
+    .breadcrumb {
+      display: none;
+    }
+  }
+}
+
+.card.fullscreened {
+  .card-block {
+    .btn-remove-appform {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.scrolling {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+
+/*** Community Selection on the welcome page ***/
+div.cs-select {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  text-align: left;
+  background: #fff;
+  z-index: 100;
+  width: 100%;
+  max-width: 500px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+div.cs-select:focus {
+  outline: none;
+  /* For better accessibility add a style for this in your skin */
+}
+
+.cs-select select {
+  display: none;
+}
+
+.cs-select span {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  padding: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Placeholder and selected option */
+.cs-select>span {
+  padding-right: 3em;
+}
+
+.cs-select>span::after,
+.cs-select .cs-selected span::after {
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.cs-select>span::after {
+  content: '\25BE';
+  right: 1em;
+}
+
+.cs-select .cs-selected span::after {
+  content: '\2713';
+  margin-left: 1em;
+}
+
+.cs-select.cs-active>span::after {
+  -webkit-transform: translateY(-50%) rotate(180deg);
+  transform: translateY(-50%) rotate(180deg);
+}
+
+div.cs-active {
+  z-index: 200;
+}
+
+/* Options */
+.cs-select .cs-options {
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  background: $Orange-color;
+  visibility: hidden;
+}
+
+.cs-select.cs-active .cs-options {
+  visibility: visible;
+}
+
+.cs-select ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.cs-select ul span {
+  padding: 1em;
+}
+
+.cs-select ul li.cs-focus span {
+  background-color: #ddd;
+}
+
+/* Optgroup and optgroup label */
+.cs-select li.cs-optgroup ul {
+  padding-left: 1em;
+}
+
+.cs-select li.cs-optgroup>span {
+  cursor: default;
+}
+
+div.cs-skin-border {
+  background: transparent;
+  font-size: 1.2rem;
+  font-weight: 700;
+  max-width: 400px;
+}
+
+.cs-skin-border>span {
+  border: 2px solid $Orange-color;
+  /*border-color: inherit;*/
+  color: $Orange-color;
+  -webkit-transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.cs-skin-border>span::after,
+.cs-skin-border .cs-selected span::after {
+  font-family: 'FontAwesome';
+  content: '\f063';
+}
+
+.cs-skin-border ul span::after {
+  content: '';
+  opacity: 0;
+}
+
+.cs-skin-border .cs-selected span::after {
+  content: '\f00c';
+  /* check icon */
+  color: #fff;
+  font-size: 1.2em;
+  opacity: 1;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+}
+
+.cs-skin-border.cs-active>span {
+  background: $Orange-color;
+  border-color: $Orange-color;
+  color: #fff;
+}
+
+.cs-skin-border .cs-options {
+  color: #fff;
+  font-size: 1rem;
+  opacity: 0;
+  -webkit-transition: opacity 0.2s, visibility 0s 0.2s;
+  transition: opacity 0.2s, visibility 0s 0.2s;
+}
+
+.cs-skin-border.cs-active .cs-options {
+  opacity: 1;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+}
+
+.cs-skin-border ul span {
+  padding: 1em 2em;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.cs-skin-border .cs-options li span:hover,
+.cs-skin-border li.cs-focus span {
+  background: #282828;
+}
+
+.btn-outline-white {
+  color: #fff;
+  background-image: none;
+  background-color: transparent;
+  border-color: #fff;
+  font-size: 1.2rem;
+  white-space: normal;
+}
+
+.btn-outline-white:hover {
+  color: #000;
+  border-color: #000;
+}
+
+@media screen and (max-width: 32em) {
+
+  /* 544px */
+  div.cs-skin-border,
+  .btn-outline-white,
+  .cs-skin-border .cs-options {
+    font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 25em) {
+
+  /* 425 */
+  div.cs-skin-border,
+  .btn-outline-white,
+  .cs-skin-border .cs-options {
+    font-size: 0.9em;
+  }
+}
+
+@media screen and (max-width: 20em) {
+
+  /* 340 */
+  div.cs-skin-border,
+  .btn-outline-white {
+    font-size: 0.7em;
+    max-width: 200px;
+  }
+
+  .cs-skin-border .cs-options {
+    font-size: 0.9em;
+  }
+}
+
+/* ellipsis of 'select an expert community' between 340 and 354 px */
+
+
+/*** Form validation icons ***/
+$form-icon-success: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{url-friendly-colour($brand-success)}' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E") !default;
+
+$form-icon-warning: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='#{url-friendly-colour($brand-warning)}' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E") !default;
+
+$form-icon-danger: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{url-friendly-colour($brand-danger)}' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E") !default;
+
+.form-group {
+  .form-control-label {
+    margin-bottom: 10px;
+  }
+
+  .help-block {
+    .text-danger {
+      font-size: 12px;
+    }
+  }
+}
+
+.form-control {
+  &.checking-field.ng-touched {
+    padding-right: 2.25rem;
+    background-repeat: no-repeat;
+    background-position: center right 0.625rem;
+    background-size: 1.25rem 1.25rem;
+
+    &.ng-invalid {
+      border-color: $brand-danger;
+      background-image: $form-icon-danger;
+    }
+  }
+}
+
+
+/*** Alert notification ***/
+.alert {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 50%;
+  min-width: 280px;
+  z-index: 10000;
+  box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-auth .alert {
+  top: 20px;
+}
+
+.alert-dismissible .close {
+  position: absolute;
+  top: -0.7rem;
+  right: -0.5rem;
+  padding: 1.125rem;
+}
+
+.aside-menu-fixed .alert {
+  right: 270px;
+}
+
+.aside-menu-fixed.aside-menu-hidden .alert {
+  right: 20px;
+}
+
+
+/*** Authentification pages ***/
+.card-auth {
+  margin-bottom: 1.8rem !important;
+  margin-top: 1.8rem !important;
+}
+
+.px-auth {
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+}
+
+
+/*** Application submission closed ***/
+.application-closed {
+  text-align: center;
+
+  .fishy {
+    max-width: 50%;
+    width: 512px;
+  }
+
+  blockquote {
+    color: $Orange-color;
+    font-weight: bold;
+  }
+}
+
+
+/*** Form controls ***/
+.has-success .form-control-success {
+  background-image: none;
+}
+
+.has-success .input-group-addon {
+  background-color: #fff;
+  color: inherit;
+}
+
+.has-success .input-group>.form-control {
+  border-color: #eee;
+}
+
+/*** Battery levels for OE Software ***/
+.battery-0 {
+  color: #e74c3c;
+}
+
+.battery-1 {
+  color: #f39c12;
+}
+
+.battery-2 {
+  color: #f1c40f;
+}
+
+.battery-3 {
+  color: #2ecc71;
+}
+
+.battery-4 {
+  color: #27ae60;
+}
+
+
+/*** Contact pop-up ***/
+.contact-us {
+  margin-left: 40px;
+  padding: 30px;
+  background-color: #ECF0F1;
+  -webkit-box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);
+
+  .contact-form {
+    margin-top: -0.925rem;
+
+    .contact-textarea {
+      height: 10em;
+      width: 40em;
+    }
+  }
+
+  .contact-form-error {
+    margin-bottom: 0.925rem;
+  }
+}
+
+.modal-mail-compose {
+  .modal-header {
+    margin-bottom: 2rem;
+
+    h4 {
+      color: $Orange-color;
+    }
+  }
+
+  .modal-body {
+    p {
+      font-weight: bold;
+      font-size: 0.93rem;
+
+      &.success {
+        color: $success-color;
+      }
+
+      &.danger {
+        color: $danger-color;
+      }
+    }
+
+    label {
+      font-weight: bold;
+    }
+  }
+}
+
+
+/*** <Ribbon for Senior Orange Experts> ***/
+.ribbon {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+  pointer-events: none;
+}
+.ribbon::before,
+.ribbon::after {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  display: block;
+  border: 5px solid #2980b9;
+}
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 225px;
+  padding: 15px 0;
+  background-color: #3498db;
+  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  color: #fff;
+  font: 700 18px/1 'Lato', sans-serif;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-transform: uppercase;
+  text-align: center;
+  z-index: 1000000;
+}
+
+/* top right*/
+.ribbon-top-right {
+  top: -10px;
+  right: -10px;
+}
+.ribbon-top-right::before,
+.ribbon-top-right::after {
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+.ribbon-top-right::before {
+  top: 0;
+  left: 0;
+}
+.ribbon-top-right::after {
+  bottom: 0;
+  right: 0;
+}
+.ribbon-top-right span {
+  left: -25px;
+  top: 30px;
+  transform: rotate(45deg);
+}
+/*** </Ribbon for Senior Orange Experts> ***/
+
+/*** Dashboard ***/
+$admin-color: #c23616;
+$referent-color: #f39c12;
+$reviewer-color: #009432;
+
+.badge.review-count {
+  margin-top: -0.15rem !important;
+}
+
+.is-admin {
+  color: $admin-color;
+}
+
+.is-referent {
+  color: $referent-color;
+}
+
+.is-reviewer {
+  color: $reviewer-color;
+}
+
+.btn-export-excel:hover,
+.btn-review-process-settings:hover {
+  color: $Orange-color;
+}
+
+.popover {
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: .3rem;
+}
+
+.popover-title {
+  padding: 8px 14px;
+  margin-bottom: 0;
+  font-size: 1rem;
+  color: #212529;
+  border-bottom: 1px solid #ebebeb;
+  border-top-left-radius: calc(.3rem - 1px);
+  border-top-right-radius: calc(.3rem - 1px);
+}
+
+
+/*** Fix temporary issues due to Boosted migration... ***/
+.card-header {
+  color: $black;
+
+  &.card-danger {
+    color: $white;
+  }
+}
+
+
+/*** Improve responsiveness ***/
+@media screen and (max-width: 980px) {
+
+  header.navbar .navbar-brand a,
+  .btn-user-guide {
+    display: none;
+  }
+
+  header.navbar .navbar-brand {
+    margin: 0 0 0 70px !important;
+
+    &.no-menu {
+      margin: 0 0 0 20px !important;
+    }
+  }
+
+  .aside-menu {
+    margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .break-new-line {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .main .container-fluid {
+    padding: 0 10px;
+  }
+
+  .card-block {
+    padding: 1rem 0.7rem;
+  }
+
+  .cke_top {
+    display: none !important;
+  }
+
+  .fp-mt-1 {
+    margin-top: 0 !important;
+  }
+
+  .break-new-line {
+    display: inline;
+  }
+
+  .contact-us {
+    padding: 20px;
+
+    .contact-form {
+      margin-top: -1.275rem;
+
+      .contact-textarea {
+        height: 9em;
+        width: 30em;
+      }
+    }
+
+    .contact-form-error {
+      margin-bottom: 1.275rem;
+    }
+  }
+
+  .profile-cover {
+    min-height: 70px;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+    padding-bottom: 0 !important;
+
+    .media {
+      .media-body {
+        padding-top: 20px;
+
+        h5,
+        small {
+          font-size: 0.7rem;
+        }
+      }
+    }
+  }
+
+}
+
+@media screen and (max-width: 599px) {
+  .contact-us {
+    margin-left: 20px;
+    padding: 15px;
+
+    .contact-form {
+      margin-top: -2rem;
+
+      .contact-textarea {
+        height: 6em;
+        width: 25em;
+      }
+    }
+
+    .contact-form-error {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+@media screen and (max-width: 520px) {
+
+  .btn-form-prev,
+  .btn-form-save,
+  .btn-form-next,
+  .btn-form-apply,
+  .btn-remove-appform,
+  .btn-create-new-account,
+  .btn-export-excel,
+  .new-applications .btn-review-process-settings {
+    width: 100%;
+  }
+
+  .btn-form-save,
+  .btn-form-apply,
+  .btn-export-excel,
+  .new-applications .btn-review-process-settings {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .mx-2.card-auth {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .contact-us {
+    margin-left: 20px;
+    padding: 15px;
+
+    .contact-form {
+      margin-top: -2rem;
+
+      .contact-textarea {
+        height: 6em;
+        width: 19em;
+      }
+    }
+
+    .contact-form-error {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .break-new-line {
+    display: block;
+  }
+
+  .contact-us {
+    margin-left: 10px;
+    padding: 10px;
+    margin-bottom: -10px;
+
+    .contact-form {
+      margin-top: -2rem;
+
+      .contact-textarea {
+        height: 6em;
+        width: 18em;
+      }
+    }
+
+    .contact-form-error {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .modal-xl {
+    max-width: 800px
+  }
+}
+
+@media (min-width: 1280px) {
+  .modal-xl {
+    max-width: 1140px;
+    ;
+  }
+}
+
+/*** Beautifying page printing ***/
+@media print {
+  @page {
+    margin: 2cm 0cm 2cm 0cm;
+  }
+
+  body {
+    margin: -1cm 0 0 0;
+    padding: 0;
+    font-family: Arial !important;
+    font-size: 0.8rem;
+    background-color: #fff;
+  }
+
+  blockquote {
+    border: 0;
+  }
+
+  .card-block {
+    padding: 0;
+  }
+
+  .aside-menu-fixed .main {
+    margin-right: 0 !important;
+  }
+
+  .app,
+  app-root,
+  app-oema,
+  .app-body,
+  .animated>.row,
+  .submission-step-name.other-steps.row,
+  .animated>.row>div[class^="col-"]>.card,
+  .form-part.row,
+  .row.form-title,
+  .row.app-form-history-view,
+  .user-response .row {
+    display: block !important;
+  }
+
+  .app-header.navbar,
+  .breadcrumb,
+  .card-header a,
+  .card-actions,
+  #collapseWizardNav,
+  .form-wizard-toggle,
+  .form-title,
+  .sumitting-community,
+  .edit-app-form,
+  .export-pdf,
+  .cke_top,
+  .formwizard-buttons,
+  .sidebar,
+  .app-footer,
+  aside-menu,
+  app-back-top,
+  script,
+  .dz-hidden-input,
+  router-outlet {
+    display: none !important;
+  }
+
+  /** form wizard **/
+  .form-part .form-part-title {
+    margin-top: 0;
+  }
+
+  .form-part-title h5,
+  .form-part label,
+  .cke_contents {
+    page-break-inside: avoid;
+  }
+
+  .card.fullscreened {
+    position: relative !important
+  }
+
+  .card.fullscreened .card-header {
+    position: relative;
+  }
+
+  .app-form-history-view {
+    padding: 0;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  #export-pdf {
+
+    h4,
+    h5,
+    .user-response p,
+    .form-question,
+    .battery-levels-bottom-spacing {
+      page-break-inside: avoid;
+    }
+
+    h4,
+    h5,
+    .form-question {
+      page-break-after: avoid;
+    }
+
+    .battery-levels-bottom-spacing {
+      margin-top: 15px;
+    }
+  }
+
+  thead,
+  tfoot {
+    display: table-header-group;
+  }
+
+  tbody {
+    display: table-row-group;
+  }
+
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  table {
+    border-collapse: inherit !important;
+  }
+
+  p,
+  h4,
+  h5 {
+    widows: 4;
+    orphans: 3;
+  }
+
+  .isPhantomatic {
+
+    .user-response .row .col-md-6 .checkbox.checkbox-inline,
+    .user-response .abc-radio.abc-radio-primary.w-100 {
+      margin-top: 5px;
+    }
+
+    // display user profile correctly
+    .submission-step-name.user-profile-step.row {
+      display: block;
+    }
+
+    .submission-step-name.user-profile-step.row {
+      .col-sm-5 {
+        width: 250px !important;
+        float: left;
+      }
+
+      .col-sm-7 {
+        margin-left: 250px;
+      }
+
+      .col-sm-7::before {
+        content: "\200B";
+      }
+    }
+
+    .upload-label {
+      display: none
+    }
+  }
+
+  div.checkbox.checkbox-inline {
+    margin-top: 5px;
+  }
+}

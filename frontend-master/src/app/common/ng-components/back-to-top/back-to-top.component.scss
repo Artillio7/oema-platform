@@ -1,0 +1,28 @@
+$back-top-icon-size: 40px;
+$back-top-icon-bg: #242D3A;
+$back-top-color: #fff;
+
+.back-to-top {
+  position: fixed;
+  width: $back-top-icon-size;
+  height: $back-top-icon-size;
+  cursor: pointer;
+  z-index: 99999;
+  display: none;
+  text-decoration: none;
+  top: auto;
+  right: 45px;
+  bottom: 60px;
+  font-size: 30px;
+  text-align: center;
+  opacity: 0.4;
+  color: $back-top-color;
+  background-color: rgba($back-top-icon-bg, 0.75);
+  border-radius: 50%;
+  line-height: 34px;
+  pointer-events: auto;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

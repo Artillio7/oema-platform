@@ -1,0 +1,177 @@
+{
+  "currentDomain": "",
+  "domains": ["orange-experts", "experts-dtsi", "security-school", "senior-orange-experts"],
+  "orange-experts": {
+    "name": "Group Experts",
+    "community": "Orange Expertise communities",
+    "communitiesGroupFlag": 255,
+    "pageTitle": "Orange Expertise Programme",
+    "navBarTitle": "<span class=\"text-primary\">Orange Expertise</span> Programme",
+    "logo": {"name": "OEProgram.png", "navBar": "logo.png", "width": "col-sm-3", "freeSpace": "col-sm-9"},
+    "policy": {
+      "title": "Please read our privacy policy",
+      "body": "<p>Data you provide on this website to apply for the Orange Expertise Programme will be only used to examine your application in order to rule on your aspiration to be a member of an Orange Expertise community. Your data will be visible to the following persons:<p><ul><li>your manager,</li><li>jury members of the Orange Expertise community for which you apply,</li><li>members of the TGI Talent Management team,</li><li>members of the Project Management Office (PMO) of the Orange Expertise Programme,</li><li>the Human Resources (HR) department you belong to.</li></ul><p>The collection of your data falls within the scope of EU data protection laws which guarantuee the protection and the privacy of your data.</p><p>As an applicant, you can freely modify your data during the whole month of September (until the end date for application submission) by logging in this website to access your application. After September, i.e. after the deadline for application submission, an applicant may request modifications regarding his/her personal data by sending a mail to the website admin (sandrine.lovisa@orange.com).</p><p>Your data will be deleted 3 years later starting from the date you submit your application in the case you are not selected by the jury, or 3 years later after leaving your Orange Expertise community.</p><hr><h6 class=\"text-semibold\"><strong>Please confirm your acceptance or refusal of our privacy policy.</strong></h6><div class=\"form-group\"><p>Select 'I accept' to continue using our website. Otherwise ('I decline'), you will not be able to access our website.</p></div>",
+      "bodyWithoutFooter": "<p>Data you provide on this website to apply for the Orange Expertise Programme will be only used to examine your application in order to rule on your aspiration to be a member of an Orange Expertise community. Your data will be visible to the following persons:<p><ul><li>your manager,</li><li>jury members of the Orange Expertise community for which you apply,</li><li>members of the TGI Talent Management team,</li><li>members of the Project Management Office (PMO) of the Orange Expertise Programme,</li><li>the Human Resources (HR) department you belong to.</li></ul><p>The collection of your data falls within the scope of EU data protection laws which guarantuee the protection and the privacy of your data.</p><p>As an applicant, you can freely modify your data during the whole month of September (until the end date for application submission) by logging in this website to access your application. After September, i.e. after the deadline for application submission, an applicant may request modifications regarding his/her personal data by sending a mail to the website admin (sandrine.lovisa@orange.com).</p><p>Your data will be deleted 3 years later starting from the date you submit your application in the case you are not selected by the jury, or 3 years later after leaving your Orange Expertise community.</p>",
+      "acceptLabel": "I accept",
+      "denyLabel": "I decline"
+    },
+    "supportLabel": "If you have any question or need support, ",
+    "contactUs": "contact us",
+    "welcome": {
+      "title": "Welcome to the Orange Expertise Programme!",
+      "closedMsg": "Sorry, the application form submission is closed now.<br />If you have already submitted an application, you will be notified of the decision later (by the beginning of {{ thisYear }}).",
+      "pendingNewFormHeader": "You have a pending form for a <strong>new application</strong> for the <strong>{{ pendingCommunity }}</strong> community.",
+      "pendingRenewFormHeader": "You have a pending form for a <strong>renewal application</strong> for the <strong>{{ pendingCommunity }}</strong> community.",
+      "pendingFormButton": "Continue editing my pending form",
+      "pendingFormFooter": "Changing for any other choice (community and/or application form type) will override your ongoing form-filling data.",
+      "htmlMessage": "",
+      "newRenewLabel": "Please select your application type",
+      "newChoiceLabel": "<strong>New application</strong>",
+      "renewChoiceLabel": "<strong>Renewal application</strong>",
+      "newChoiceLabelHint": "You apply to be an Expert for the first time in the selected community.",
+      "renewChoiceLabelHint": "Your three-year term as an Expert ends, you renew your application.",
+      "nextButtonLabel": "Get started"
+    },
+    "before": {
+      "closedMsg": "Sorry, the application form submission is closed now.<br />If you have already submitted an application, you will be notified of the decision later (by the beginning of {{ thisYear }}).",
+      "cardHeader": "<i class=\"fa fa-exclamation-triangle text-primary\" aria-hidden=\"true\"></i> Follow the instructions carefully",
+      "currentNewForm": "You are about to fill the form for a <strong>new application</strong> for the community ",
+      "currentRenewalForm": "You are about to fill the form for a <strong>renewal application</strong> for the community ",
+      "warningLabel": "Read the following instructions carefully.",
+      "beforeStarting": "<h4 class=\"text-primary\">Before starting</h4><p>Prepare the necessary elements to apply:</p><ul><li><strong>Curriculum Vitae</strong> in English (PDF file)</li><li><strong>TM & Manager Approval</strong> (PDF file)</li></ul>",
+      "endingSubmission": "<h4 class=\"text-primary\">At the end</h4><p>The files duly completed must be uploaded in order to validate the submission of your application.</p>",
+      "nextButtonLabel": "Start"
+    },
+    "formWizard": {
+      "closedMsg": "Sorry, the application form submission is closed now.<br />If you have already submitted an application, you will be notified of the decision later (by the beginning of {{ thisYear }}).",
+      "newFormCardHeader": "<i class=\"fa fa-pencil-square-o text-primary\" aria-hidden=\"true\"></i> Applying a <span class=\"text-primary\">new application</span> for the <span class=\"text-primary\">{{ expertCommunity }}</span> community <small><a href=\"/orange-experts/application\">(change?)</a></small>",
+      "renewFormCardHeader": "<i class=\"fa fa-pencil-square-o text-primary\" aria-hidden=\"true\"></i> <span class=\"text-primary\">Renewing</span> your application for the <span class=\"text-primary\">{{ expertCommunity }}</span> community <small><a href=\"/orange-experts/application\">(change?)</a></small>"
+    }
+  },
+  "senior-orange-experts": {
+    "name": "Senior Experts",
+    "community": "Orange Expertise communities",
+    "pageTitle": "Orange Expertise Programme",
+    "navBarTitle": "<span class=\"text-primary\">Orange Expertise</span> Programme",
+    "logo": {"name": "OEProgram.png", "navBar": "logo.png", "width": "col-sm-3", "freeSpace": "col-sm-9"},
+    "policy": {
+      "title": "Please read our privacy policy",
+      "body": "<p>Data you provide on this website to apply for the Orange Expertise Programme will be only used to examine your application in order to rule on your aspiration to be a member of an Orange Expertise community. Your data will be visible to the following persons:<p><ul><li>your manager,</li><li>jury members of the Orange Expertise community for which you apply,</li><li>members of the TGI Talent Management team,</li><li>members of the Project Management Office (PMO) of the Orange Expertise Programme,</li><li>the Human Resources (HR) department you belong to.</li></ul><p>The collection of your data falls within the scope of EU data protection laws which guarantuee the protection and the privacy of your data.</p><p>As an applicant, you can freely modify your data during the whole month of September (until the end date for application submission) by logging in this website to access your application. After September, i.e. after the deadline for application submission, an applicant may request modifications regarding his/her personal data by sending a mail to the website admin (sandrine.lovisa@orange.com).</p><p>Your data will be deleted 3 years later starting from the date you submit your application in the case you are not selected by the jury, or 3 years later after leaving your Orange Expertise community.</p><hr><h6 class=\"text-semibold\"><strong>Please confirm your acceptance or refusal of our privacy policy.</strong></h6><div class=\"form-group\"><p>Select 'I accept' to continue using our website. Otherwise ('I decline'), you will not be able to access our website.</p></div>",
+      "bodyWithoutFooter": "<p>Data you provide on this website to apply for the Orange Expertise Programme will be only used to examine your application in order to rule on your aspiration to be a member of an Orange Expertise community. Your data will be visible to the following persons:<p><ul><li>your manager,</li><li>jury members of the Orange Expertise community for which you apply,</li><li>members of the TGI Talent Management team,</li><li>members of the Project Management Office (PMO) of the Orange Expertise Programme,</li><li>the Human Resources (HR) department you belong to.</li></ul><p>The collection of your data falls within the scope of EU data protection laws which guarantuee the protection and the privacy of your data.</p><p>As an applicant, you can freely modify your data during the whole month of September (until the end date for application submission) by logging in this website to access your application. After September, i.e. after the deadline for application submission, an applicant may request modifications regarding his/her personal data by sending a mail to the website admin (sandrine.lovisa@orange.com).</p><p>Your data will be deleted 3 years later starting from the date you submit your application in the case you are not selected by the jury, or 3 years later after leaving your Orange Expertise community.</p>",
+      "acceptLabel": "I accept",
+      "denyLabel": "I decline"
+    },
+    "supportLabel": "If you have any question or need support, ",
+    "contactUs": "contact us",
+    "welcome": {
+      "title": "Welcome to the Senior Expertise Programme!",
+      "closedMsg": "Sorry, the application form submission is closed now.<br />If you have already submitted an application, you will be notified of the decision later (by the beginning of {{ thisYear }}).",
+      "pendingNewFormHeader": "You have a pending form for a <strong>Senior application</strong> for the <strong>{{ pendingCommunity }}</strong> community.",
+      "pendingRenewFormHeader": "You have a pending form for a <strong>renewal application</strong> for the <strong>{{ pendingCommunity }}</strong> community.",
+      "pendingFormButton": "Continue editing my pending form",
+      "pendingFormFooter": "If you have mistakenly selected the wrong community, you can modify your choice hereafter.",
+      "htmlMessage": "",
+      "newRenewLabel": "You are about to start",
+      "newChoiceLabel": "<strong>New application</strong>",
+      "renewChoiceLabel": "<strong>Renewal application</strong>",
+      "newChoiceLabelHint": "You are an Expert in the selected community, and you want to apply to be a Senior Expert.",
+      "renewChoiceLabelHint": "Your three-year term as a Senior Expert ends, you renew your application.",
+      "nextButtonLabel": "Get started"
+    },
+    "before": {
+      "closedMsg": "Sorry, the application form submission is closed now.<br />If you have already submitted an application, you will be notified of the decision later (by the beginning of {{ thisYear }}).",
+      "cardHeader": "<i class=\"fa fa-exclamation-triangle text-primary\" aria-hidden=\"true\"></i> Follow the instructions carefully",
+      "currentNewForm": "You are about to fill the application form for being a <strong>Senior Expert</strong>.<br/>You are already an Expert for the community ",
+      "currentRenewalForm": "You are about to fill the form for <strong>renewing your Senior Expert application</strong> for the community ",
+      "warningLabel": "Read the following instructions carefully.",
+      "beforeStarting": "<h4 class=\"text-primary\">Before starting</h4><p>Prepare the following element to apply:</p><ul><li><strong>a 3-min video to introduce yourself</strong>.</li></ul>",
+      "endingSubmission": "<h4 class=\"text-primary\">At the end</h4><p>The video file duly completed must be uploaded in order to validate the submission of your application.</p>",
+      "nextButtonLabel": "Start"
+    },
+    "formWizard": {
+      "closedMsg": "Sorry, the application form submission is closed now.<br />If you have already submitted an application, you will be notified of the decision later (by the beginning of {{ thisYear }}).",
+      "newFormCardHeader": "<i class=\"fa fa-pencil-square-o text-primary\" aria-hidden=\"true\"></i> Applying an <span class=\"text-primary\"> application</span> for Senior Expert for <span class=\"text-primary\">{{ expertCommunity }}</span> <small><a href=\"/senior-orange-experts/application\">(change?)</a></small>",
+      "renewFormCardHeader": "<i class=\"fa fa-pencil-square-o text-primary\" aria-hidden=\"true\"></i> <span class=\"text-primary\">Renewing</span> your application for Senior Expert for <span class=\"text-primary\">{{ expertCommunity }}</span> <small><a href=\"/senior-orange-experts/application\">(change?)</a></small>"
+    }
+  },
+  "experts-dtsi": {
+    "name": "Experts-DTSI",
+    "community": "Experts-DTSI community",
+    "communityId": "5ae32fe2b2c22b609b33a496",
+    "communitiesGroupFlag": 65536,
+    "pageTitle": "Programme Experts-DTSI",
+    "navBarTitle": "Programme <span class=\"text-primary\">Experts-DTSI</span>",
+    "logo": {"name": "logo_experts-DTSI.png", "navBar": "Orange.png", "width": "col-sm-2", "freeSpace": "col-sm-10"},
+    "policy": {
+      "title": "Notre politique de confidentialité des données",
+      "body": "<p>Les données collectées lors des candidatures au programme Experts-DTSI servent à instruire les dossiers en vue de la validation ou non de l’adhésion des candidats à une communauté. Ces informations seront en visibilité du candidat, de leur manager, des membres du jury de la communauté concernée et des DRH des Divisions d’appartenance des candidats. Ces données entrent dans le champ d’application de la protection des données personnelles et leur confidentialité en sera garantie.<p><p>Un candidat peut modifier ses données avant la date limite de dépôt en se reconnectant sur son dossier de candidature. Après toute modification, le candidat ne doit pas oublier de resoumettre son dossier (pour que les modifications soient prises en compte).</p><p>Au-delà de la date limite de dépôt de candidature, un candidat peut demander à modifier ses données d’identification en envoyant un mail à l’administrateur de l’application (sandrine.lovisa@orange.com) </p><p>Ces données seront supprimées 3 ans après l’acte de candidature dans le cas où le candidat n’est pas retenu(e) ou 3 ans après la sortie de la communauté d’expertise.</p><hr><h6 class=\"text-semibold\"><strong>Merci de confirmer l'acceptation ou le refus de notre politique de confidentialité des données.</strong></h6><div class=\"form-group\"><p>Sélectionnez \"J'accepte\" pour continuer à utiliser notre site. Sinon, (\"Je décline\"), vous n'aurez pas l'accès à notre site.</p></div>",
+      "bodyWithoutFooter": "<p>Les données collectées lors des candidatures au programme Experts-DTSI servent à instruire les dossiers en vue de la validation ou non de l’adhésion des candidats à une communauté. Ces informations seront en visibilité du candidat, de leur manager, des membres du jury de la communauté concernée et des DRH des Divisions d’appartenance des candidats. Ces données entrent dans le champ d’application de la protection des données personnelles et leur confidentialité en sera garantie.<p><p>Un candidat peut modifier ses données avant la date limite de dépôt en se reconnectant sur son dossier de candidature. Après toute modification, le candidat ne doit pas oublier de resoumettre son dossier (pour que les modifications soient prises en compte).</p><p>Au-delà de la date limite de dépôt de candidature, un candidat peut demander à modifier ses données d’identification en envoyant un mail à l’administrateur de l’application (sandrine.lovisa@orange.com) </p><p>Ces données seront supprimées 3 ans après l’acte de candidature dans le cas où le candidat n’est pas retenu(e) ou 3 ans après la sortie de la communauté d’expertise.</p>",
+      "acceptLabel": "J'accepte",
+      "denyLabel": "Je décline"
+    },
+    "supportLabel": "Pour toute question ou support, ",
+    "contactUs": "contactez-nous",
+    "welcome": {
+      "title": "Bienvenue dans l’outil de candidature au programme Experts-DTSI&nbsp;!",
+      "closedMsg": "La soumission des candidatures est terminée.<br />Si vous avez déjà postulé, vous serez bientôt notifié de la décision.",
+      "pendingNewFormHeader": "Vous avez un formulaire en cours pour une <strong>nouvelle candidature</strong> à la communauté <strong>{{ pendingCommunity }}</strong>.",
+      "pendingRenewFormHeader": "Vous avez un formulaire en cours pour une <strong>candidature de renouvellement</strong> à la communauté <strong>{{ pendingCommunity }}</strong>.",
+      "pendingFormButton": "Continuer à éditer le formulaire",
+      "pendingFormFooter": "Si vous changez votre choix pour un autre type de candidature, toutes vos saisies dans le forumaire en cours seront perdues.",
+      "htmlMessage": "<h5 class=\"text-primary\">Dossier de candidature</h5><p>Le dossier de candidature regroupe plusieurs documents :</p><ul><li>le formulaire à remplir en ligne sur ce site ;</li><li>un <strong>CV</strong> à fournir (au format PDF) ;</li><li>un <strong>engagement managérial</strong> <a href=\"assets/misc/MR-letters/MR-Experts-DTSI.doc\"><mark>(à télécharger ici)</mark></a> que vous devrez faire remplir et signer par votre manager, puis scannez le document au format PDF pour joindre au dossier.</li></ul>",
+      "newRenewLabel": "Nouvelle candidature ou renouvellement ?",
+      "newChoiceLabel": "<strong>Nouvelle candidature</strong>",
+      "renewChoiceLabel": "<strong>Candidature de renouvellement</strong>",
+      "newChoiceLabelHint": "Vous postulez pour la première fois pour être un Expert DTSI.",
+      "renewChoiceLabelHint": "Votre période de trois ans en tant qu'Expert se termine, vous renouvelez votre mandat.",
+      "nextButtonLabel": "C'est parti !"
+    },
+    "before": {
+      "closedMsg": "La soumission des candidatures est terminée.<br />Si vous avez déjà postulé, vous serez bientôt notifié de la décision.",
+      "cardHeader": "<i class=\"fa fa-exclamation-triangle text-primary\" aria-hidden=\"true\"></i> Suivez bien les instructions",
+      "currentNewForm": "Vous avez choisi de remplir le formulaire pour une nouvelle candidature à la communauté ",
+      "currentRenewalForm": "Vous avez choisi de remplir le formulaire pour une candidature de renouvellement à la communauté ",
+      "warningLabel": "Lisez attentivement les instructions suivantes.",
+      "beforeStarting": "<h4 class=\"text-primary\">Dossier de candidature</h4><p>Le dossier de candidature regroupe plusieurs documents :</p><ul><li>un <strong>CV</strong> à fournir (au format PDF) ;</li><li>un <strong>engagement managérial</strong> <a href=\"{{ mrFileName }}\"><mark>(à télécharger ici)</mark></a> que vous devrez faire remplir et signer par votre manager, puis scannez le document au format PDF pour joindre au dossier.</li></ul>",
+      "endingSubmission": "",
+      "nextButtonLabel": "Accéder au formulaire"
+    },
+    "formWizard": {
+      "closedMsg": "La soumission des candidatures est terminée.<br />Si vous avez déjà postulé, vous serez bientôt notifié de la décision.",
+      "newFormCardHeader": "<i class=\"fa fa-pencil-square-o text-primary\" aria-hidden=\"true\"></i> <span class=\"text-primary\">Nouvelle candidature</span> à la communauté <span class=\"text-primary\">{{ expertCommunity }}</span> <small><a href=\"/experts-dtsi/application\">(changer ?)</a></small>",
+      "renewFormCardHeader": "<i class=\"fa fa-pencil-square-o text-primary\" aria-hidden=\"true\"></i> <span class=\"text-primary\">Candidature de renouvellement</span> à la communauté <span class=\"text-primary\">{{ expertCommunity }}</span> <small><a href=\"/experts-dtsi/application\">(changer ?)</a></small>"
+    }
+  },
+  "security-school": {
+    "name": "Data'Up",
+    "community": "Security School community",
+    "communityId": "5cb9d927f256043a964f0517",
+    "communitiesGroupFlag": 131072,
+    "pageTitle": "Candidature à Security School",
+    "navBarTitle": "Programme <span class=\"text-primary\">Orange Security School</span>",
+    "logo": {"name": "Security-School.png", "navBar": "Orange.png", "width": "col-sm-3", "freeSpace": "col-sm-9"},
+    "policy": {
+      "title": "Notre politique de confidentialité des données",
+      "body": "<p>Les données collectées lors des candidatures au programme Security School servent à instruire les dossiers en vue de bénéficier d’une formation diplômante. Ces informations seront en visibilité du candidat, de leur manager, des membres du jury de la communauté concernée et des DRH des Divisions d’appartenance des candidats. Ces données entrent dans le champ d’application de la protection des données personnelles et leur confidentialité en sera garantie.<p><p>Un candidat peut modifier ses données avant la date limite de dépôt en se reconnectant sur son dossier de candidature. Après toute modification, le candidat ne doit pas oublier de resoumettre son dossier (pour que les modifications soient prises en compte).</p><p>Au-delà de la date limite de dépôt de candidature, un candidat peut demander à modifier ses données d’identification en envoyant un mail à l’administrateur de l’application (sandrine.lovisa@orange.com) </p><p>Ces données seront supprimées 3 ans après l’acte de candidature.</p><hr><h6 class=\"text-semibold\"><strong>Merci de confirmer l'acceptation ou le refus de notre politique de confidentialité des données.</strong></h6><div class=\"form-group\"><p>Sélectionnez \"J'accepte\" pour continuer à utiliser notre site. Sinon, (\"Je décline\"), vous n'aurez pas l'accès à notre site.</p></div>",
+      "bodyWithoutFooter": "<p>Les données collectées lors des candidatures au programme Security School servent à instruire les dossiers en vue de bénéficier d’une formation diplômante. Ces informations seront en visibilité du candidat, de leur manager, des membres du jury de la communauté concernée et des DRH des Divisions d’appartenance des candidats. Ces données entrent dans le champ d’application de la protection des données personnelles et leur confidentialité en sera garantie.<p><p>Un candidat peut modifier ses données avant la date limite de dépôt en se reconnectant sur son dossier de candidature. Après toute modification, le candidat ne doit pas oublier de resoumettre son dossier (pour que les modifications soient prises en compte).</p><p>Au-delà de la date limite de dépôt de candidature, un candidat peut demander à modifier ses données d’identification en envoyant un mail à l’administrateur de l’application (sandrine.lovisa@orange.com) </p><p>Ces données seront supprimées 3 ans après l’acte de candidature.</p>",
+      "acceptLabel": "J'accepte",
+      "denyLabel": "Je décline"
+    },
+    "supportLabel": "Pour toute question ou support, ",
+    "contactUs": "contactez-nous via orange.securityschool@orange.com",
+    "welcome": {
+      "title": "Orange Security School",
+      "closedMsg": "La soumission des candidatures est terminée.<br />Si vous avez déjà postulé, vous serez bientôt notifié de la décision.",
+      "pendingNewFormHeader": "Vous avez un formulaire de candidature en cours qui n'est pas encore soumis.",
+      "pendingRenewFormHeader": "",
+      "pendingFormButton": "Continuer à éditer le formulaire",
+      "pendingFormFooter": "Terminez et soumettez votre formulaire avant la date limite.",
+      "htmlMessage": "<h5 class=\"text-primary\">Campagne recrutement interne</h5><p><strong>Parcours diplômants 2024</strong></p><p>Dans votre projet d’<span class=\"text-primary\">Upskill</span> ou de <span class=\"text-primary\">Reskill</span>, Orange Security School vous propose des parcours de formation adaptés.</p><p>Dans votre démarche de <strong>candidature</strong>, il est nécessaire que <strong>votre manager et votre RH</strong> aient donné leur <span class=\"text-primary\">accord en amont</span>. Votre participation à ce programme engagera la mobilisation de votre Compte Personnel de Formation (<span class=\"text-primary\">CPF</span>) et le reste à charge sera porté par votre entité.</p><p>Afin d’étudier votre candidature, votre dossier devra inclure :</p><ul><li>Un <span class=\"text-primary\">CV</span> à fournir (au format PDF)</li><li>Un <span class=\"text-primary\">pitch de motivation</span></li></ul><p>Vous trouverez <a href=\"assets/misc/MR-letters/Orange_Security_School_Parcours_2024.pdf\" target=\"_blank\">ci-joint le kit de présentation</a> de nos parcours qui vous permettra d’accéder au détail des <span class=\"text-primary\">modalités</span> et <span class=\"text-primary\">contenus pédagogiques</span>.</p><p><strong>Merci de compléter le dossier avant le 30/06/2024.</strong></p><p><strong>L’équipe Orange Security School</strong></p>",
+      "nextButtonLabel": "C'est parti !"
+    },
+    "formWizard": {
+      "closedMsg": "La soumission des candidatures est terminée.<br />Si vous avez déjà postulé, vous serez bientôt notifié de la décision.",
+      "newFormCardHeader": "<i class=\"fa fa-pencil-square-o text-primary\" aria-hidden=\"true\"></i> Candidature à <span class=\"text-primary\">Security School</span>"
+    }
+  }
+}

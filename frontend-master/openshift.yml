@@ -1,0 +1,217 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: oswe-frontend
+  annotations:
+    openshift.io/display-name: "OEMA frontend Application"
+    description: "Application template for OEMA frontend"
+    iconClass: "icon-redis"
+parameters:
+    - name: appname
+      description: The name for the application OEMA
+      required: true
+    - name: env
+      description: "Env for our app (prod, staging)"
+      required: true
+    - name: hostname
+      description: "the environment hostname (provided by GitLab CI template)"
+      required: true
+    - name: project
+      description: OEMA  project namespace
+      required: true
+    - name: docker_image_digest
+      description: Docker image provided by Gitlab CI template
+      required: true
+    - name: BACKEND_NAME
+      description: OEMA backend name
+      required: true
+      value: "oswe-backend"
+    - name: BACKEND_PORT
+      description: OEMA backend port
+      required: true
+      value: "4040"
+objects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ${appname}-config
+    labels:
+      app: ${appname}
+  data:
+    STAGE: ${env}
+    BACKEND_PORT: "4040"
+    FRONTEND_PORT: "4200"
+    REVERSE_PROXY_BACKEND: http://${BACKEND_NAME}-${env}:${BACKEND_PORT}
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    labels:
+      app: ${appname}
+    name: ${appname}-nginx-config
+  data:
+    default.conf: |
+      server {
+        listen       4200;
+        server_name  localhost;
+
+        #access_log  /var/log/nginx/host.access.log  main;
+
+        location / {
+            root   /usr/share/nginx/html;
+            index index.html index.htm;
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /health {
+            return 200 '{"status":"UP"}';
+            add_header Content-Type application/json;
+        }
+
+        # reverse proxy for backend api
+        location /api/ {
+            proxy_pass http://${BACKEND_NAME}-${env}:${BACKEND_PORT};
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Cookie $http_cookie;
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+      }
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      description: ImageStream for OEMA frontend Docker image
+      labels:
+        app: ${appname}
+    name: ${appname}
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: registry.gitlab.tech.orange/oesw/oema/frontend
+      from:
+        kind: DockerImage
+        name: ${docker_image_digest}
+      importPolicy: {}
+      name: latest
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: ${appname}
+    labels:
+      app: ${appname}
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: ${appname}
+    template:
+      metadata:
+        annotations:
+          alpha.image.policy.openshift.io/resolve-names: '*'
+        labels:
+          app: ${appname}
+      spec:
+        volumes:
+          - name: ${appname}-nginx-volume
+            configMap:
+              name: ${appname}-nginx-config
+              items:
+                - key: "default.conf"
+                  path: "default.conf"
+        containers:
+          - name: ${appname}
+            image: ${appname}:latest
+            imagePullPolicy: Always
+            env:
+              - name: NODE_ENV
+                value: "production"
+            envFrom:
+              - configMapRef:
+                  name: ${appname}-config
+            ports:
+              - containerPort: 4200
+                protocol: TCP
+            volumeMounts:
+              # override default.conf file
+              - mountPath: /etc/nginx/conf.d/default.conf
+                name: ${appname}-nginx-volume
+                subPath: "default.conf"
+            resources:
+              limits:
+                cpu: 200m
+                memory: 512Mi
+              requests:
+                cpu: 100m
+                memory: 128Mi
+            livenessProbe:
+              tcpSocket:
+                port: 4200
+              initialDelaySeconds: 30
+              timeoutSeconds: 1
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            readinessProbe:
+              httpGet:
+                path: /
+                port: 4200
+              initialDelaySeconds: 5
+              timeoutSeconds: 1
+              periodSeconds: 10
+              successThreshold: 1
+              failureThreshold: 3
+            terminationMessagePath: /dev/termination-log
+            securityContext:
+              capabilities: {}
+              privileged: false
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${appname}
+        from:
+          kind: ImageStreamTag
+          name: ${appname}:latest
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${appname}
+    labels:
+      app: ${appname}
+  spec:
+    ports:
+      - name: ${appname}
+        protocol: TCP
+        port: 4200
+        targetPort: 4200
+    selector:
+      app: ${appname}
+    type: ClusterIP
+    sessionAffinity: None
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: ${appname}
+    labels:
+      app: ${appname}
+  spec:
+    host: ${hostname}
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+    to:
+      kind: Service
+      name: ${appname}
+      weight: 100
+    port:
+      targetPort: ${appname}

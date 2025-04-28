@@ -1,0 +1,22 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7 col-xl-5" *ngIf="message.body">
+        <div class="card card-auth"
+          [ngClass]="{'card-accent-success': message.type === 'success', 'card-accent-warning': message.type === 'warning', 'card-accent-danger': message.type === 'danger'}">
+          <div class="card-header"
+            [ngClass]="{'text-success': message.type === 'success', 'text-warning': message.type === 'warning', 'text-danger': message.type === 'danger'}"
+            [innerHTML]="message.title">
+          </div>
+          <div class="card-block">
+            {{ message.body }}
+            <button *ngIf="message.type==='success'" type="button" class="btn btn-outline-primary mt-3 pull-right"
+              routerLink="/{{ urlPrefix }}/auth/login">Go to the login page</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

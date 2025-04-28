@@ -1,0 +1,64 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7 col-xl-5">
+        <div class="card mx-2 card-auth unlock-account">
+          <div class="card-block p-2">
+            <h1>Unlock your session</h1>
+
+            <div class="media">
+              <div class="media-left">
+                <a href="javascript:void(0);" class="profile-thumb">
+                  <img src="assets/img/avatars/profile.png" class="img-circle" alt="">
+                </a>
+              </div>
+
+              <div class="media-body">
+                <h5 class="text-muted">
+                  <span class="text-primary">{{ expiredUserSession.firstname }}</span>
+                  <small class="display-block">{{ expiredUserSession.email }}</small>
+                  <small class="display-block"><b>Your session has expired!</b></small>
+                </h5>
+              </div>
+            </div>
+
+            <form role="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="form-horizontal" novalidate>
+              <div class="form-group mb-1">
+                <div class="input-group">
+                  <span class="input-group-addon" aria-hidden="true">
+                    <i class="fa fa-lock" aria-hidden="true"></i></span>
+                  <input [formControl]="password" id="password" type="password" class="form-control checking-field"
+                    placeholder="Password" name="password" required (focus)="alertService.clear()">
+                </div>
+                <span class="help-block" *ngIf="password.touched">
+                  <span class="text-danger" *ngIf="password.hasError('required')">Password is required</span>
+                </span>
+              </div>
+
+              <div class="checkbox abc-checkbox abc-checkbox-primary checkbox-inline mb-2">
+                <input [formControl]="keepalive" type="checkbox" id="alive-login" name="keepalive" value="1"
+                  (focus)="alertService.clear()">
+                <label for="alive-login">
+                  Keep session connected
+                </label>
+              </div>
+
+              <div class="form-group">
+                <button [disabled]="!form.valid" type="submit" id="unlock" class="btn btn-block btn-primary">
+                  Unlock session&nbsp;&nbsp;&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i></button>
+              </div>
+            </form>
+
+            <div class="row">
+              <div class="col-12 text-left">
+                <button type="button" id="logout" class="btn btn-link px-0" (click)="logout()">
+                  <i class="fa fa-angle-left" aria-hidden="true"></i> Log out, and change user account?</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

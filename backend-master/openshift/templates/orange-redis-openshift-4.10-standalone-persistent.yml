@@ -1,0 +1,381 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+
+metadata:
+  name: orange-redis-standalone-persistent
+  annotations:
+    openshift.io/display-name: "Orange Redis Standalone (Persistent)"
+    openshift.io/documentation-url: "https://gitlab.tech.orange/dbms/openshift/orange-redis-openshift"
+    openshift.io/provider-display-name: "Orange, Inc. (DBO Team)" 
+    openshift.io/support-url: "http://dbo.innov.intraorange/"
+    description: |
+      Redis is an open source (BSD licensed), in-memory data structure store (NoSQL)
+      This orange template defines resources needed to deploy a redis server in standalone architecture with persistent volume
+      [Tag:4.10-redis-1.0.1]
+      Mail : skillcentergroup.database@orange.com
+      Mattermost Channel : https://mattermost.tech.orange/dbms/channels/redis
+      Redis Orange Documentation : http://dbo.innov.intraorange/team/product/redis/
+    tags: "orange,orange-database,redis,nosql,database"
+    iconClass: "icon-redis"
+
+  labels:
+    template: orange-redis-standalone-persistent
+    tag: "4.10-redis-1.0.1"
+
+labels:
+  template: orange-redis-standalone-persistent
+  tag: "4.10-redis-1.0.1"
+  app.kubernetes.io/name: redis
+  app.kubernetes.io/component: database
+  app.kubernetes.io/managed-by: template
+
+parameters:
+- name: SET_NAME
+  description: "The name of the redis service. Must use only lowercase caracters"
+  displayName: "Redis Service Name"
+  value: myredis
+  required: true
+- name: ENV_NAME
+  description: "The name of your environment e.g. development / testing / acceptance / production. Must use only lowercase caracters"
+  displayName: "Environment Name"
+  value: dev
+  required: true
+- name: APP_NAME
+  description: "The name of your application. Must use only lowercase caracters"
+  displayName: "Application Name"
+  value: myappli
+  required: true
+- name: MEMORY_LIMIT
+  description: "The maximum amount of memory the container can use"
+  displayName: "Memory Limit"
+  value: 128Mi
+  required: true
+- name: CPU_REQUEST
+  description: "The minimum CPU power the container can use"
+  displayName: "CPU Request"
+  value: 100m
+  required: true
+- name: CPU_LIMIT
+  description: "The maximum CPU power the container can use"
+  displayName: "CPU Limit"
+  value: 500m
+  required: true
+- name: PV_SIZE
+  description: "The size of the persistent volume requested to store redis files (AOF, RDB, conf file)"
+  displayName: "Persistent Volume Size (in Mi or Gi)"
+  value: 256Mi
+  required: true
+- name: PV_CLASS
+  displayName: "Persistent Volume Class"
+  description: "The Storage class name of the persistent volume"
+  value: block-default-storage-class
+  required: true
+- name: OREDISIMAGE
+  description: "The Orange Redis Image (>= 5.0.9 or >= 6.0.9 or >= 6.2.2). See https://gitlab.tech.orange/dbms/docker/orange-redis/blob/master/README.md"
+  displayName: "Redis Image"
+  value: "6.2.7-alpine3.15-4"
+  required: true
+- name: OREDISMAXCLIENTS
+  description: "Redis Maximum Clients Setting"
+  displayName: "Redis Maximum Clients"
+  value: "512"
+  required: true
+- name: OREDISMAXMEMORY
+  description: "Redis Maximum Memory Limit for cache in bytes (0=Unlimited)"
+  displayName: "Redis Cache Size (in bytes)"
+  value: "0"
+  required: true
+- name: OREDISMAXMEMORYPOLICY
+  description: "Redis Eviction Policy when the maxmemory limit is reached (noeviction/allkeys-lru/volatile-lru/volatile-ttl)"
+  displayName: "Redis Eviction Policy"
+  value: "noeviction"
+  required: true
+- name: OREDISCLIENTUSERNAME
+  description: "Name of the user to access to redis server from client (Redis >= 6 only with ACL)"
+  displayName: "Redis Connection Username (Redis 6)"
+  value: "client"
+  required: true
+- name: OREDISCLIENTPASSWORD
+  description: "Password to access to redis server from client (Redis >= 6 only with ACL)"
+  displayName: "Redis Connection Password (Redis 6)"
+  generate: expression
+  from: "[a-zA-Z0-9]{16}"
+  required: true
+- name: OREDISPASSWORD
+  description: "Password to access to redis server with default/admin user"
+  displayName: "Redis Connection Password (Redis 5)"
+  generate: expression
+  from: "[a-zA-Z0-9]{16}"
+  required: true
+- name: OREDISAOFENABLED
+  description: "Redis Server Append-Only File (AOF) Setting (yes or no). The size of AOF file is 64mb"
+  displayName: "Redis Append-Only File (AOF) Enabled (no|yes)"
+  value: "yes"
+  required: true
+- name: OREDISRDBENABLED
+  description: "Redis Server Snapshotting (RDB Files) Setting (yes or no). Redis automatically dump the dataset to disk every 300 seconds if at least 30 keys changed"
+  displayName: "Redis Snapshotting (RDB) Enabled (no|yes)"
+  value: "yes"
+  required: true
+
+message: "... The Redis Password (REDIS_PASSWORD) is ${OREDISPASSWORD} ..."
+message: "... The Redis Client name (REDIS_CLIENTUSERNAME) is ${OREDISCLIENTUSERNAME}) and the Redis Client Password (REDIS_CLIENTPASSWORD) is ${OREDISCLIENTPASSWORD} [Redis >= 6 only]..."
+
+objects:
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: red-${SET_NAME}-${ENV_NAME}-password
+    labels:
+      setname: red-${SET_NAME}-${ENV_NAME}
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      app.kubernetes.io/instance: red-${SET_NAME}-${ENV_NAME}
+      app.kubernetes.io/version: "${OREDISIMAGE}"
+      app.kubernetes.io/part-of: ${APP_NAME}
+  stringData:
+    REDIS_PASSWORD : ${OREDISPASSWORD}
+    REDIS_CLIENTUSERNAME : ${OREDISCLIENTUSERNAME}
+    REDIS_CLIENTPASSWORD : ${OREDISCLIENTPASSWORD}
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: red-${SET_NAME}-${ENV_NAME}-service
+    labels:
+      name: red-${SET_NAME}-${ENV_NAME}-service
+      domain: dbms
+      productname: redis
+      setname: red-${SET_NAME}-${ENV_NAME}
+      topology: standalone
+      role: none
+      protocol: tcp
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      app.kubernetes.io/instance: red-${SET_NAME}-${ENV_NAME}
+      app.kubernetes.io/version: "${OREDISIMAGE}"
+      app.kubernetes.io/part-of: ${APP_NAME}
+    annotations:
+      prometheus.io/port: '6379'
+      prometheus.io/scrape: 'true'
+  spec:
+    ports:
+      - name: red-${SET_NAME}-${ENV_NAME}-service
+        port: 6379
+        protocol: TCP
+        targetPort: 6379
+    type: ClusterIP
+    sessionAffinity: None
+    selector:
+      setname: red-${SET_NAME}-${ENV_NAME}
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: red-${SET_NAME}-${ENV_NAME}-api
+    labels:
+      name: red-${SET_NAME}-${ENV_NAME}-api
+      domain: dbms
+      productname: redis
+      setname: red-${SET_NAME}-${ENV_NAME}
+      topology: standalone
+      role: none
+      protocol: http
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      app.kubernetes.io/instance: red-${SET_NAME}-${ENV_NAME}
+      app.kubernetes.io/version: "${OREDISIMAGE}"
+      app.kubernetes.io/part-of: ${APP_NAME}
+    annotations:
+      prometheus.io/port: '8080'
+      prometheus.io/scrape: 'true'
+  spec:
+    ports:
+    - name: api-port
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    type: ClusterIP
+    sessionAffinity: None
+    selector:
+      setname: red-${SET_NAME}-${ENV_NAME}
+
+- kind: StatefulSet
+  apiVersion: apps/v1
+  metadata:
+    name: red-${SET_NAME}-${ENV_NAME}
+    annotations:
+      template.alpha.openshift.io/wait-for-ready: "true"
+    labels:
+      setname: red-${SET_NAME}-${ENV_NAME}
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      app.kubernetes.io/instance: red-${SET_NAME}-${ENV_NAME}
+      app.kubernetes.io/version: "${OREDISIMAGE}"
+      app.kubernetes.io/part-of: ${APP_NAME}
+  spec:
+    serviceName: red-${SET_NAME}-${ENV_NAME}-service
+    replicas: 1
+    maxReplicas: 1
+    selector:
+      matchLabels:
+        setname: red-${SET_NAME}-${ENV_NAME}
+        domain: dbms
+        productname: redis
+        app: ${APP_NAME}
+        env: ${ENV_NAME}
+    template:
+      metadata:
+        labels:
+          domain: dbms
+          productname: redis
+          setname: red-${SET_NAME}-${ENV_NAME}
+          topology: standalone
+          role: none
+          app: ${APP_NAME}
+          env: ${ENV_NAME}
+        annotations:
+          prometheus.io/scrape: 'true'
+          prometheus.io/port: '9121'
+      spec:
+        containers:
+        - name: redis-metrics-exporter
+          image: "database-virt-docker-stable.repos.tech.orange/orange-redis-exporter:1.37.0-alpine3.15-3"
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: red-${SET_NAME}-${ENV_NAME}-password
+                  key: REDIS_PASSWORD
+            - name: oredisRelease
+              value: ${OREDISIMAGE}
+          ports:
+            - name: redis-exporter
+              containerPort: 9121
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          livenessProbe:
+            tcpSocket:
+              port: 9121
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+            periodSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+        - name: redis-sidecar
+          image: "database-virt-docker-stable.repos.tech.orange/orange-redis-sidecar:${OREDISIMAGE}"
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: REDIS_HOSTNAME
+              value: localhost
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: red-${SET_NAME}-${ENV_NAME}-password
+                  key: REDIS_PASSWORD
+          ports:
+            - name: redis-api
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+            periodSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+        - name: redis-server
+          image: "database-virt-docker-stable.repos.tech.orange/orange-redis:${OREDISIMAGE}"
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: oredisMaxclients
+              value: ${OREDISMAXCLIENTS}
+            - name: oredisMaxmemory
+              value: ${OREDISMAXMEMORY}
+            - name: oredisMaxmemoryPolicy
+              value: ${OREDISMAXMEMORYPOLICY}
+            - name: oredisAuthEnabled
+              value: "yes"
+            - name: oredisPassword
+              valueFrom:
+                secretKeyRef:
+                  name: red-${SET_NAME}-${ENV_NAME}-password
+                  key: REDIS_PASSWORD
+            - name: oredisClientUsername
+              valueFrom:
+                secretKeyRef:
+                  name: red-${SET_NAME}-${ENV_NAME}-password
+                  key: REDIS_CLIENTUSERNAME
+            - name: oredisClientPassword
+              valueFrom:
+                secretKeyRef:
+                  name: red-${SET_NAME}-${ENV_NAME}-password
+                  key: REDIS_CLIENTPASSWORD
+            - name: oredisAofEnabled
+              value: ${OREDISAOFENABLED}
+            - name: oredisRdbEnabled
+              value: ${OREDISRDBENABLED}
+          ports:
+            - name: redis-service
+              containerPort: 6379
+              protocol: TCP
+          resources:
+            requests:
+              cpu: ${CPU_REQUEST}
+              memory: ${MEMORY_LIMIT}
+            limits:
+              cpu: ${CPU_LIMIT}
+              memory: ${MEMORY_LIMIT}
+          volumeMounts:
+            - name: dbms-redis-vol
+              mountPath: /redis
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - /healthcheck.sh
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 1
+          terminationMessagePath: /dev/termination-log
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 120
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+    volumeClaimTemplates:
+    - metadata:
+        name: dbms-redis-vol
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: "${PV_SIZE}"
+        storageClassName: "${PV_CLASS}"

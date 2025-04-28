@@ -1,0 +1,443 @@
+/*** CSS for application form wizard ***/
+$wizard-step-success: #555;
+
+.formwizard-container {
+  .form-wizard-toggle {
+    display: none;
+  }
+
+  .col-md-x-8 {
+    position: relative;
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .step {
+    pointer-events: none;
+    text-align: center;
+
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      background-color: $gray-light;
+      top: 0;
+      margin-top: 23px;
+      width: 50%;
+      height: 5px;
+      border-top: 1px solid $gray;
+      border-bottom: 1px solid $gray;
+    }
+
+    &:before {
+      left: 0;
+    }
+
+    &:after {
+      right: 0;
+    }
+
+    &:first-child:before {
+      display: none;
+    }
+
+    &.last:after {
+      display: none;
+    }
+
+    .step-icon {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      background: $gray-light;
+      border: 1px solid $gray;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin: 0 auto;
+
+      i {
+        margin: 0 auto;
+        font-size: 20px;
+        color: $gray;
+      }
+    }
+
+    &.active {
+
+      &:before,
+      &:after {
+        background: $brand-primary;
+        border: none;
+      }
+
+      .step-icon {
+        background: $brand-primary;
+        border: none;
+
+        i {
+          color: $default-color;
+        }
+      }
+    }
+
+    &.valid {
+      cursor: pointer;
+      pointer-events: auto;
+
+      &:before,
+      &:after {
+        background: $wizard-step-success;
+        border: none;
+      }
+
+      .step-icon {
+        background: $wizard-step-success;
+        border: none;
+
+        i {
+          color: $default-color;
+        }
+      }
+    }
+
+    &.valid.active {
+      pointer-events: none;
+
+      &:before,
+      &:after {
+        background: $brand-primary;
+        border: none;
+      }
+
+      .step-icon {
+        background: $brand-primary;
+        border: none;
+
+        i {
+          color: $default-color;
+        }
+      }
+    }
+
+    .step-name {
+      display: block;
+      margin-top: 14px;
+      color: $gray;
+
+      &.active {
+        color: $brand-primary;
+      }
+
+      &.valid {
+        color: $wizard-step-success;
+      }
+    }
+  }
+
+  .form-wizard {
+    margin-top: 25px;
+    margin-bottom: 20px;
+    background: $body-bg;
+    padding-top: 15px;
+    min-height: 400px;
+
+    .form-title {
+      margin-bottom: 15px;
+      color: $brand-primary;
+      border-bottom: 1px solid $gray-light;
+      padding: 0 15px;
+
+      h4 {
+        margin-bottom: 1rem;
+      }
+    }
+
+    /*.form-control-label{
+        color: $text-color !important;
+    }*/
+    .help-block {
+      position: absolute;
+      font-size: 12px;
+    }
+
+    .input-group-addon {
+      color: #9faecb
+    }
+  }
+
+  .arrow {
+    font-size: 12px;
+  }
+
+  .form-part {
+    .form-part-title {
+      h5 {
+        border-bottom: 1px solid $brand-primary;
+        color: $brand-inverse;
+        margin: 0 5px 40px;
+        padding: 15px 0;
+      }
+
+      &.fp-mt-1 {
+        margin-top: 1.2rem;
+      }
+    }
+  }
+
+  .bottom-spacing {
+    margin-bottom: 40px;
+  }
+
+  .formwizard-buttons {
+    text-align: center;
+  }
+
+  .btn-remove-appform:hover {
+    background-color: $brand-danger;
+    color: #fff;
+  }
+}
+
+
+@media (min-width: 1024px) {
+  .formwizard-container .col-md-x-8 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 12.5%;
+    flex: 0 0 12.5%;
+    max-width: 12.5%;
+  }
+}
+
+@media (min-width: 840px) and (max-width:1023px) {
+  .formwizard-container .col-md-x-8 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+}
+
+@media (max-width:1023px) {
+  .formwizard-container .col-md-x-8.step {
+    margin-bottom: 10px;
+    text-align: left;
+
+    .step-icon {
+      float: left;
+      margin-right: 15px;
+    }
+
+    &:before,
+    &:after {
+      content: none;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .formwizard-container {
+    .step {
+      margin-bottom: 10px;
+      text-align: left;
+
+      .step-icon {
+        float: left;
+        margin-right: 15px;
+      }
+
+      &:before,
+      &:after {
+        content: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  .formwizard-container {
+    .form-wizard-toggle {
+      display: block;
+    }
+  }
+}
+
+
+/*** CSS for editing form template ***/
+.editing-form-template {
+  #collapseWizardNav {
+    clear: both;
+  }
+
+  .form-wizard {
+    margin-top: 60px;
+
+    .btn-circle.btn-sm.hint {
+      font-size: 16px;
+      padding: 0 6px;
+    }
+
+    .hint-text {
+      button {
+        color: #fff;
+
+        &:hover {
+          color: $Orange-color;
+          background-color: transparent;
+          border-color: transparent;
+        }
+      }
+
+      &.show-template-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        top: -74px;
+
+        hr.solid {
+          border-top: 1px solid #fff;
+          margin: 5px 0 0;
+          padding: 0;
+          height: 0;
+        }
+      }
+    }
+
+    .form-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+
+      h4 {
+        width: auto;
+        max-width: 90%;
+        cursor: pointer;
+
+        &.anchor-disable {
+          cursor: auto;
+        }
+      }
+    }
+
+    .form-part {
+      .form-part-title {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 40px;
+
+        editable {
+          flex-grow: 2;
+
+          h5 {
+            padding: 10px 0;
+            margin: 0 5px;
+          }
+        }
+
+        .btn-circle.btn-sm.hint {
+          margin: 5px;
+        }
+      }
+
+      .form-question-label {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 5px;
+
+        .fa-tag {
+          color: #3867d6;
+        }
+
+        editable {
+          flex-grow: 2;
+
+          label {
+            cursor: pointer;
+          }
+        }
+
+        .btn-circle.btn-sm.hint {
+          margin: 0 5px;
+
+          &.hint-input-file {
+            margin-right: -5px;
+          }
+
+          .show-template-menu.two-sections {
+            top: -50px;
+          }
+        }
+      }
+    }
+  }
+
+  .show~.form-wizard {
+    margin-top: 25px;
+  }
+
+  .form-template-wizard-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .btn-form-writing {
+      margin-top: 10px;
+
+      .btn-form-template-save {
+        margin: 0 10px;
+      }
+    }
+
+    .btn-form-prev,
+    .btn-form-next {
+      margin-top: 10px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .editing-form-template {
+    .form-wizard {
+      .form-part {
+        .form-question-label {
+          .btn-circle.btn-sm.hint {
+            &.hint-row {
+              margin-right: 10px;
+            }
+
+            &.hint-input-file {
+              margin-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 550px) {
+  .editing-form-template {
+    .form-template-wizard-buttons {
+
+      .btn-form-prev,
+      .btn-form-next,
+      .btn-new-step {
+        width: 100%;
+      }
+
+      .btn-form-writing {
+        width: 100%;
+
+        .btn-new-step {
+          width: 100%;
+        }
+
+        .btn-form-template-save {
+          width: 100%;
+          margin: 10px 0;
+        }
+      }
+    }
+  }
+}

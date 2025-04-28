@@ -1,0 +1,124 @@
+<div class="animated fadeIn">
+  <div class="row justify-content-center">
+
+    <div class="col-xl-10">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-history text-primary" aria-hidden="true"></i> Viewing an application review
+        </div>
+        <div class="card-block">
+
+          <div *ngIf="messageBody" class="card card-inverse text-center"
+            [ngClass]="{'card-success': messageType === 'success', 'card-warning': messageType === 'warning', 'card-danger': messageType === 'danger'}">
+            <div class="card-block">
+              <blockquote class="card-blockquote">
+                <p>
+                  {{ messageBody }}
+                </p>
+              </blockquote>
+            </div>
+          </div>
+
+          <div *ngIf="canBeDisplayed" class="row app-form-review-view mt-1">
+            <h6>{{ applicationType }} application by <span class="text-primary">{{ applicantName }}</span> for the community <span class="text-primary">{{ communityName }} @ {{ submissionYear }}</span></h6>
+
+            <div class="application-review mb-1">
+              <input id="tab1-reviewers" class="tab1" type="radio" name="tabs-review" checked value="tab1">
+              <label for="tab1-reviewers">Reviewers</label>
+
+              <input id="tab2-deliberation" class="tab2" type="radio" name="tabs-review" value="tab2">
+              <label for="tab2-deliberation">Deliberation</label>
+
+              <section class="content1 mb-1">
+                <div class="section-part">
+                  <div class="section-part-header">
+                    <h6 style="width:auto;float:none;"><i class="fa fa-angle-right" aria-hidden="true"></i><span>Reviewers' decisions</span></h6>
+                  </div>
+                  <div class="applicant-rate">
+                    <label>Final rate (total - mean - std. dev.):</label>
+                    <span [ngClass]="{'accepted': rate['total-score'] > 0, 'fair': rate['total-score'] === 0, 'refused': rate['total-score'] <= 0}">
+                      {{ rate['total-score'] }}
+                    </span>
+                    <span [ngClass]="{'accepted': rate['total-score'] > 0, 'fair': rate['total-score'] === 0, 'refused': rate['total-score'] <= 0}">
+                      {{ rate['avg-score'] }}
+                    </span>
+                    <span>{{ rate['std-dev-score'] }}</span>
+                    <span *ngIf="!rate['total-score'] || !rate['avg-score'] || !rate['std-dev-score']">&nbsp;&nbsp;not rated yet.</span>
+                  </div>
+                  <ul class="collapse-list">
+                    <li *ngFor="let reviewer of reviewers; let idx = index" class="item-{{ idx }}">
+                      <input class="collapse-open" type="checkbox" id="collapse-{{ idx }}">
+                      <label class="collapse-btn" for="collapse-{{ idx }}">
+                        <span class="text-capitalize">
+                          {{ reviewer.reviewer.firstname && reviewer.reviewer.lastname ?
+                        reviewer.reviewer.firstname + ' ' + reviewer.reviewer.lastname.toUpperCase() : reviewer.reviewer.email }}
+                        </span>
+                      </label>
+                      <div class="collapse-panel">
+                        <div class="collapse-inner">
+                          <div class="stars rate read-only">
+                            <span class="rating">Rate: {{ reviewer.rating.rate ? '(' + reviewer.rating.rate + ')' : '' }}</span>
+                            <input class="star star-5" id="star-5-{{ idx }}-5" type="radio" name="star-{{ idx }}" value="+2" [checked]="reviewer.rating.rate === '+2'" />
+                            <label class="star star-5" for="star-5-{{ idx }}-5"></label>
+                            <input class="star star-4" id="star-4-{{ idx }}-4" type="radio" name="star-{{ idx }}" value="+1" [checked]="reviewer.rating.rate === '+1'" />
+                            <label class="star star-4" for="star-4-{{ idx }}-4"></label>
+                            <input class="star star-3" id="star-3-{{ idx }}-3" type="radio" name="star-{{ idx }}" value="0" [checked]="reviewer.rating.rate === '0'" />
+                            <label class="star star-3" for="star-3-{{ idx }}-3"></label>
+                            <input class="star star-2" id="star-2-{{ idx }}-2" type="radio" name="star-{{ idx }}" value="-1" [checked]="reviewer.rating.rate === '-1'" />
+                            <input class="star star-1" id="star-1-{{ idx }}-1" type="radio" name="star-{{ idx }}" value="-2" [checked]="reviewer.rating.rate === '-2'" />
+                            <label class="star star-2" for="star-2-{{ idx }}-2"></label>
+                            <label class="star star-1" for="star-1-{{ idx }}-1"></label>
+
+                          </div>
+                          <div class="form-group comments mt-1">
+                            <label class="form-control-label">Comments:</label>
+                            <p>{{ reviewer.comments || '' }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </section>
+
+              <section class="content2">
+                <div class="section-part">
+                  <div class="section-part-header">
+                    <h6 style="width:auto;float:none;"><i class="fa fa-angle-right" aria-hidden="true"></i><span>Deliberation for {{ applicantName }}</span></h6>
+                  </div>
+                  <div class="deliberation row">
+                    <div class="applicant-status row">
+                      <div class="col-sm-5 col-md-4 col-lg-3">Final recommendation</div>
+                      <div class="col-sm-7 col-md-8 col-lg-9">
+                        <span
+                        [ngClass]="{'accepted': deliberation.recommendation === 'Approved', 'refused': deliberation.recommendation === 'Rejected', 'pending': deliberation.recommendation === 'Pending'}">
+                          {{ deliberation.recommendation ? deliberation.recommendation : 'recommendation: none' }}
+                        </span>
+                      </div>
+                      <div class="col-sm-5 col-md-4 col-lg-3 mt-2">Status</div>
+                      <div class="col-sm-7 col-md-8 col-lg-9 mt-2">
+                        <span>
+                          {{ deliberation.status ? deliberation.status : 'status: none' }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="form-group comments mt-1">
+                      <label class="form-control-label">Comments:</label>
+                      <p>{{ deliberation.comments }}</p>
+                    </div>
+
+                    <div class="form-group notes">
+                      <label class="form-control-label">Notes:</label>
+                      <p>{{ deliberation.notes }}</p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

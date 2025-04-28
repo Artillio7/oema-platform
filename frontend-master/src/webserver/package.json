@@ -1,0 +1,27 @@
+{
+  "name": "oema-webserver",
+  "version": "1.0.0",
+  "description": "HTTP web server for serving the front-end of the Orange Expertise Management Application",
+  "main": "front-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Express.js",
+    "webserver",
+    "front-end",
+    "OEMA"
+  ],
+  "author": "Patrick Truong",
+  "license": "MIT",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^9.0.2",
+    "express": "^4.17.1",
+    "helmet": "^4.5.0",
+    "http-proxy-middleware": "^2.0.0",
+    "joi": "^17.4.0",
+    "morgan": "^1.10.0"
+  }
+}

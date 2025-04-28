@@ -1,0 +1,84 @@
+<div class="animated fadeIn">
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      <div class="card">
+        <div id="create-account-page" class="card-header">
+          <i class="fa fa-user-plus text-primary" aria-hidden="true"></i> Create a new user account
+        </div>
+        <div class="card-block">
+          <form role="form" [formGroup]="accountForm" (ngSubmit)="createUserAccount()" class="row mt-2" novalidate>
+            <div class="form-group col-md-6 mb-2">
+              <label class="form-control-label" for="email">Email</label>
+              <div class="input-group">
+                <div class="input-group-addon" aria-hidden="true"><i class="fa fa-at"></i></div>
+                <input [formControl]="accountEmail" id="email"
+                  class="form-control checking-field text-lowercase" name="email" type="email" placeholder="Email" required>
+              </div>
+              <span id="help-block-email" class="help-block" *ngIf="accountEmail.touched">
+                <span id="required-email" class="text-danger" *ngIf="accountEmail.hasError('required')">Email is required</span>
+                <span id="invalid-email" class="text-danger" *ngIf="accountEmail.hasError('invalidEmail')">Invalid email address</span>
+              </span>
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="form-group col-md-6 mb-2">
+              <label class="form-control-label" for="password">New password</label>
+              <div class="input-group">
+                <div class="input-group-addon" aria-hidden="true"><i class="fa fa-lock"></i></div>
+                <input [formControl]="accountPassword" id="password" class="form-control checking-field" name="password" type="password"
+                  placeholder="Password" required>
+              </div>
+              <span id="help-block-passwd" class="help-block" *ngIf="accountPassword.touched">
+                <span id="required-passwd" class="text-danger" *ngIf="accountPassword.hasError('required')">Password is required</span>
+                <span id="invalid-passwd" class="text-danger"
+                  *ngIf="!accountPassword.hasError('required') && accountPassword.hasError('invalidPassword')">
+                  At least 8 characters, one number, one special character, upper & lowercase letters</span>
+              </span>
+            </div>
+
+            <div class="form-group col-md-6 mb-2">
+              <label class="form-control-label" for="repeat_password">Confirm new password</label>
+              <div class="input-group">
+                <div class="input-group-addon" aria-hidden="true"><i class="fa fa-lock"></i></div>
+                <input [formControl]="accountConfirmPassword" id="repeat_password" class="form-control checking-field"
+                  name="repeat_password" type="password" placeholder="Repeat password" required>
+              </div>
+              <span id="help-block-confirm-passwd" class="help-block" *ngIf="accountConfirmPassword.touched">
+                <span id="required-confirm-passwd" class="text-danger" *ngIf="accountConfirmPassword.hasError('required')">
+                  Confirm Password is required</span>
+                <span id="mismatched-passwd" class="text-danger" *ngIf="accountConfirmPassword.hasError('mismatchedPasswords')">
+                  Passwords do not match</span>
+              </span>
+            </div>
+
+            <div class="form-group col-md-12">
+              <button [disabled]="!accountForm.valid" id="create-account-btn" class="btn btn-primary pull-right" type="submit" [innerHTML]="accountButtonLabel"></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-10" *ngIf="createdUser">
+      <div appCardWidget class="card">
+        <div class="card-header">
+          <i class="fa fa-user-circle text-primary" aria-hidden="true"></i> Set the profile for the user {{ createdUser.email }}?
+        </div>
+        <div class="card-block">
+          <form role="form" class="mt-2" (ngSubmit)="updateCreatedUserProfile()" novalidate>
+            <app-user-profile-form [profileForm]="profileForm" [profileHasError]="profileHasError">
+            </app-user-profile-form>
+
+            <div class="row">
+              <div class="form-group col-md-12">
+                <button class="btn btn-primary pull-right" type="submit" [innerHTML]="profileButtonLabel"></button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

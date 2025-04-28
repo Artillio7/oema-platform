@@ -1,0 +1,14 @@
+<div class="profile-image">
+  <label class="image-label" for="user-photo">
+    <i class="fa fa-camera" aria-hidden="true"></i>
+    <span>Change</span>
+  </label>
+  <input type="file" id="user-photo" name="user-photo" (change)="fileChange(input)" #input accept="image/*" />
+  <img [src]="imgSrc" id="photo-output" />
+  <label *ngIf="fileStatus" class="error-label" for="user-photo">
+    <span [innerHTML]="statusMessage"></span>
+  </label>
+  <label *ngIf="profileHasError && formControl.hasError('required')" class="error-label" for="user-photo">
+    <span>Photo required!</span>
+  </label>
+</div>

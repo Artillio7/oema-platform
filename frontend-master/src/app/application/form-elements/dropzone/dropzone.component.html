@@ -1,0 +1,5 @@
+<div class="col-md-12">
+  <label class="form-control-label" for="{{ formElement.name }}" [innerHTML]="formElement.label"></label>
+</div>
+<div class="dropzone col-md-12" id="multiple-uploads"></div>
+<span class="help-block text-danger col-md-12" *ngIf="errorMessage">{{ errorMessage }}</span>

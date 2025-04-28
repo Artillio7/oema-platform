@@ -1,0 +1,568 @@
+kind: Template
+apiVersion: template.openshift.io/v1
+
+metadata:
+  name: orange-mongodb-rs
+  annotations:
+    openshift.io/display-name: "Orange MongoDB Replica Set (Persistent)"
+    openshift.io/documentation-url: "https://gitlab.tech.orange/dbms/openshift/orange-mongodb-openshift/-/tree/4.10"
+    openshift.io/provider-display-name: "Orange, Inc. (DBO Team)"
+    openshift.io/support-url: "http://dbo.innov.intraorange"
+    description: |
+      MongoDB (from 'humongous') is a cross-platform document-oriented database
+      This orange template defines resources needed to deploy a MongoDB Replica Set architecture with persistent volume
+      contact: skillcentergroup.database@orange.com
+      [4.10-1.0.0]
+    tags: "orange,orange-database,mongodb,nosql,database"
+    iconClass: "icon-mongodb"
+
+  labels:
+    tag: "4.10-1.0.0"
+    template: orange-mongodb-rs
+
+labels:
+  tag: "4.10-1.0.0"
+  template: orange-mongodb-rs
+  app.kubernetes.io/component: database
+  app.kubernetes.io/managed-by: template
+  app.kubernetes.io/name: mongodb
+
+parameters:
+- name: REPLICA_COUNT
+  displayName: "Number of mongod database in the Replica Set"
+  description: "The number of mongod database in the Replica Set (should be an odd number)"
+  value: "3"
+  required: true
+- name: REPLICASET_NAME
+  displayName: "MongoDB Replica Set Name"
+  description: "The name of the MongoDB Replica Set. Must use only lowercase caracters"
+  value: rs0
+  required: true
+- name: APP_NAME
+  displayName: "Application Name"
+  description: "The name of your application"
+  value: myapp
+  required: true
+- name: ENV_NAME
+  displayName: "Environment Name"
+  description: "The name of your environment e.g. development / testing / acceptance / production. Must use only lowercase caracters"
+  value: dev
+  required: true
+- name: MEMORY_LIMIT
+  displayName: "Memory Limit"
+  description: "The maximum amount of memory the container can use"
+  value: 1024Mi
+  required: true
+- name: CPU_LIMIT
+  displayName: "CPU Limit"
+  description: "The maximum CPU power the container can use"
+  value: 1000m
+  required: true
+- name: PV_SIZE
+  displayName: "Persistent Volume Size (in Mi or Gi)"
+  description: "The size of the persistent volume requested to store MongoDB files"
+  value: 2Gi
+  required: true
+- name: PV_CLASS
+  displayName: "Persistent Volume Class"
+  description: "The Storage class name of the persistent volume : nfs-default-storage-class or block-default-storage-class"
+  value: block-default-storage-class
+  required: true
+- name: MONGO_IMAGE
+  displayName: "MongoDB Image"
+  description: "The MongoDB Image. See https://gitlab.tech.orange/dbms/docker/orange-mongodb#last-supported-tags-and-respective-dockerfile-links"
+  value: "4.4.18-ubuntu20-1"
+  required: true
+- name: MONGO_ROOT_USERNAME
+  displayName: "MongoDB root username"
+  description: "Username for the root user"
+  value: root
+  required: true
+- name: MONGO_ROOT_PASSWORD
+  displayName: "MongoDB root password"
+  description: "Password for the root user (If not set, it will be automatically generated)"
+  generate: expression
+  from: "[a-zA-Z0-9]{10}"
+  required: true
+- name: MONGO_BACKUP_USERNAME
+  displayName: "MongoDB backup username"
+  description: "Username for the backup user"
+  value: backup
+  required: true
+- name: MONGO_BACKUP_PASSWORD
+  displayName: "MongoDB backup password"
+  description: "Password for the backup user (If not set, it will be automatically generated)"
+  generate: expression
+  from: "[a-zA-Z0-9]{10}"
+  required: true
+- name: MONGO_RESTORE_USERNAME
+  displayName: "MongoDB restore username"
+  description: "Username for the restore user"
+  value: restore
+  required: true
+- name: MONGO_RESTORE_PASSWORD
+  displayName: "MongoDB restore password"
+  description: "Password for the restore user (If not set, it will be automatically generated)"
+  generate: expression
+  from: "[a-zA-Z0-9]{10}"
+  required: true
+- name: MONGO_MONITOR_USERNAME
+  displayName: "MongoDB monitor username"
+  description: "Username for the monitor user"
+  value: monitor
+  required: true
+- name: MONGO_MONITOR_PASSWORD
+  displayName: "MongoDB monitor password"
+  description: "Password for the monitor user (If not set, it will be automatically generated)"
+  generate: expression
+  from: "[a-zA-Z0-9]{10}"
+  required: true
+- name: MONGO_APP_USERNAME
+  displayName: "MongoDB application username"
+  description: "Username for the application"
+  value: app
+  required: true
+- name: MONGO_APP_PASSWORD
+  displayName: "MongoDB application password"
+  description: "Password for the application (If not set, it will be automatically generated)"
+  generate: expression
+  from: "[a-zA-Z0-9]{10}"
+  required: true
+- name: MONGO_KEYFILE_VALUE
+  displayName: "MongoDB keyfile"
+  description: "Keyfile value for server (Security between members of the replica set)"
+  generate: expression
+  from: "[a-zA-Z0-9]{253}"
+  required: true
+- name: MONGO_OPLOGSIZEMB
+  displayName: "MongoDB oplog size"
+  description: "Oplog Size (replication log size)"
+  value: "128"
+  required: true
+- name: MONGO_IMAGE_EXPORTER
+  displayName: "MongoDB Exporter Image"
+  description: "The MongoDB Exporter Image. See https://gitlab.tech.orange/dbms/docker/orange-mongodb-exporter#last-supported-tags-and-respective-dockerfile-links"
+  value: "0.36.0-ubuntu20-1"
+  required: true
+- name: MONGO_EXPORTER_PARAMETERS
+  displayName: "MongoDB exporter parameters"
+  description: "Parameters used in the mongodb-exporter commands"
+  value: "--collect-all --mongodb.global-conn-pool"
+  required: false
+
+message: |+
+  ... The MongoDB Credentials ...
+      root: ${MONGO_ROOT_USERNAME} / ${MONGO_ROOT_PASSWORD}
+      backup: ${MONGO_BACKUP_USERNAME} / ${MONGO_BACKUP_PASSWORD}
+      restore: ${MONGO_RESTORE_USERNAME} / ${MONGO_RESTORE_PASSWORD}
+      monitor: ${MONGO_MONITOR_USERNAME} / ${MONGO_MONITOR_PASSWORD}
+      app: ${MONGO_APP_USERNAME} / ${MONGO_APP_PASSWORD}
+
+objects:
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}
+    labels:
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+  stringData:
+    MONGO_HOSTNAME: "mon-${REPLICASET_NAME}-${ENV_NAME}"
+    MONGO_PORT: "27017"
+    MONGO_REPLICATION_REPLSETNAME: ${REPLICASET_NAME}
+    MONGO_KEYFILE_VALUE: ${MONGO_KEYFILE_VALUE}
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}-root
+    labels:
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+  stringData:
+    MONGO_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+    MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    MONGO_HOSTNAME: "mon-${REPLICASET_NAME}-${ENV_NAME}"
+    MONGO_PORT: "27017"
+    MONGO_REPLICATION_REPLSETNAME: ${REPLICASET_NAME}
+    MONGO_URI: "mongodb://mon-${REPLICASET_NAME}-${ENV_NAME}:27017"
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}-backup
+    labels:
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+  stringData:
+    MONGO_BACKUP_USERNAME: ${MONGO_BACKUP_USERNAME}
+    MONGO_BACKUP_PASSWORD: ${MONGO_BACKUP_PASSWORD}
+    MONGO_HOSTNAME: "mon-${REPLICASET_NAME}-${ENV_NAME}"
+    MONGO_PORT: "27017"
+    MONGO_REPLICATION_REPLSETNAME: ${REPLICASET_NAME}
+    MONGO_URI: "mongodb://mon-${REPLICASET_NAME}-${ENV_NAME}:27017"
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}-restore
+    labels:
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+  stringData:
+    MONGO_RESTORE_USERNAME: ${MONGO_RESTORE_USERNAME}
+    MONGO_RESTORE_PASSWORD: ${MONGO_RESTORE_PASSWORD}
+    MONGO_HOSTNAME: "mon-${REPLICASET_NAME}-${ENV_NAME}"
+    MONGO_PORT: "27017"
+    MONGO_REPLICATION_REPLSETNAME: ${REPLICASET_NAME}
+    MONGO_URI: "mongodb://mon-${REPLICASET_NAME}-${ENV_NAME}:27017"
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}-monitor
+    labels:
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+  stringData:
+    MONGO_MONITOR_USERNAME: ${MONGO_MONITOR_USERNAME}
+    MONGO_MONITOR_PASSWORD: ${MONGO_MONITOR_PASSWORD}
+    MONGO_HOSTNAME: "mon-${REPLICASET_NAME}-${ENV_NAME}"
+    MONGO_PORT: "27017"
+    MONGO_REPLICATION_REPLSETNAME: ${REPLICASET_NAME}
+    MONGO_URI: "mongodb://mon-${REPLICASET_NAME}-${ENV_NAME}:27017"
+
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}-app
+    labels:
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+  stringData:
+    MONGO_APP_USERNAME: ${MONGO_APP_USERNAME}
+    MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD}
+    MONGO_HOSTNAME: "mon-${REPLICASET_NAME}-${ENV_NAME}"
+    MONGO_PORT: "27017"
+    MONGO_REPLICATION_REPLSETNAME: ${REPLICASET_NAME}
+    MONGO_URI: "mongodb://mon-${REPLICASET_NAME}-${ENV_NAME}:27017"
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}
+    labels:
+      app: ${APP_NAME}
+      domain: dbms
+      env: ${ENV_NAME}
+      name: mon-${REPLICASET_NAME}-${ENV_NAME}
+      productname: mongodb
+      protocol: tcp
+      role: none
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      topology: rs
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+    annotations:
+      prometheus.io/port: '27017'
+      prometheus.io/scrape: 'true'
+  spec:
+    ports:
+    - name: service-port
+      port: 27017
+      protocol: TCP
+      targetPort: 27017
+    clusterIP: None
+    selector:
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}-api
+    labels:
+      app: ${APP_NAME}
+      domain: dbms
+      env: ${ENV_NAME}
+      name: mon-${REPLICASET_NAME}-${ENV_NAME}-api
+      productname: mongodb
+      protocol: http
+      role: none
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      topology: rs
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+    annotations:
+      prometheus.io/port: '8080'
+      prometheus.io/scrape: 'true'
+  spec:
+    ports:
+    - name: api-port
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    type: ClusterIP
+    sessionAffinity: None
+    selector:
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+
+- kind: StatefulSet
+  apiVersion: apps/v1
+  metadata:
+    name: mon-${REPLICASET_NAME}-${ENV_NAME}
+    annotations:
+      template.alpha.openshift.io/wait-for-ready: "true"
+    labels:
+      app: ${APP_NAME}
+      env: ${ENV_NAME}
+      setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/instance: mon-${REPLICASET_NAME}-${ENV_NAME}
+      app.kubernetes.io/part-of: ${APP_NAME}
+      app.kubernetes.io/version: ${MONGO_IMAGE}
+  spec:
+    serviceName: mon-${REPLICASET_NAME}-${ENV_NAME}
+    replicas: ${{REPLICA_COUNT}}
+    selector:
+      matchLabels:
+        setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+        domain: dbms
+        productname: mongodb
+    template:
+      metadata:
+        labels:
+          app: ${APP_NAME}
+          env: ${ENV_NAME}
+          domain: dbms
+          productname: mongodb
+          role: none
+          setname: mon-${REPLICASET_NAME}-${ENV_NAME}
+          topology: rs
+        annotations:
+          prometheus.io/scrape: 'true'
+          prometheus.io/port: '9216'
+      spec:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: setname
+                  operator: In
+                  values:
+                  - mon-${REPLICASET_NAME}-${ENV_NAME}
+              topologyKey: "kubernetes.io/hostname"
+        containers:
+        - name: mongodb
+          image: database-virt-docker-stable.repos.tech.orange/orange-mongodb:${MONGO_IMAGE}
+          imagePullPolicy: IfNotPresent
+          ports:
+          - name: mon-mongodb
+            containerPort: 27017
+            protocol: TCP
+          env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-root
+                key: MONGO_ROOT_USERNAME
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-root
+                key: MONGO_ROOT_PASSWORD
+          - name: MONGO_INITDB_BACKUP_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-backup
+                key: MONGO_BACKUP_USERNAME
+          - name: MONGO_INITDB_BACKUP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-backup
+                key: MONGO_BACKUP_PASSWORD
+          - name: MONGO_INITDB_RESTORE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-restore
+                key: MONGO_RESTORE_USERNAME
+          - name: MONGO_INITDB_RESTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-restore
+                key: MONGO_RESTORE_PASSWORD
+          - name: MONGO_INITDB_MONITOR_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-monitor
+                key: MONGO_MONITOR_USERNAME
+          - name: MONGO_INITDB_MONITOR_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-monitor
+                key: MONGO_MONITOR_PASSWORD
+          - name: MONGO_INITDB_APP_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-app
+                key: MONGO_APP_USERNAME
+          - name: MONGO_INITDB_APP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-app
+                key: MONGO_APP_PASSWORD
+          - name: MONGO_INITDB_KEYFILE_VALUE
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}
+                key: MONGO_KEYFILE_VALUE
+          - name: MONGO_REPLICATION_MODE
+            value: RS
+          - name: MONGO_REPLICATION_REPLSETNAME
+            value: ${REPLICASET_NAME}
+          - name: MONGO_REPLICATION_OPLOGSIZEMB
+            value: "${MONGO_OPLOGSIZEMB}"
+          resources:
+            requests:
+              memory: "${MEMORY_LIMIT}"
+              cpu: 128m
+            limits:
+              memory: "${MEMORY_LIMIT}"
+              cpu: "${CPU_LIMIT}"
+          volumeMounts:
+          - name: dbms-mongodb-data
+            mountPath: /data/db
+          - name: dbms-mongodb-run
+            mountPath: /data/run
+          readinessProbe:
+            exec:
+              command:
+              - bash
+              - healthcheck.sh
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 1
+          livenessProbe:
+            exec:
+              command:
+              - bash
+              - healthcheck.sh
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 10
+          terminationMessagePath: /dev/termination-log
+
+        - name: mongodb-sidecar
+          image: database-virt-docker-stable.repos.tech.orange/orange-mongodb-sidecar:1.1.2-ubuntu20-1
+          imagePullPolicy: IfNotPresent
+          ports:
+          - name: mon-sidecar
+            containerPort: 8080
+            protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+          - name: dbms-mongodb-run
+            mountPath: /data/run
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+
+        - name: mongodb-exporter
+          image: database-virt-docker-stable.repos.tech.orange/orange-mongodb-exporter:${MONGO_IMAGE_EXPORTER}
+          imagePullPolicy: IfNotPresent
+          ports:
+          - name: mon-exporter
+            containerPort: 9216
+            protocol: TCP
+          env:
+          - name: MONGO_MONITOR_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-monitor
+                key: MONGO_MONITOR_USERNAME
+          - name: MONGO_MONITOR_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mon-${REPLICASET_NAME}-${ENV_NAME}-monitor
+                key: MONGO_MONITOR_PASSWORD
+          command:
+          - /usr/local/bin/docker-entrypoint.sh
+          - /usr/local/bin/mongodb_exporter
+          - ${MONGO_EXPORTER_PARAMETERS}
+          resources:
+            requests:
+              cpu: 10m
+              memory: 48Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9216
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+
+        volumes:
+        - name: dbms-mongodb-run
+
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 120
+        dnsPolicy: ClusterFirst
+        securityContext: {}
+
+    volumeClaimTemplates:
+    - metadata:
+        name: dbms-mongodb-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: "${PV_SIZE}"
+        storageClassName: "${PV_CLASS}"

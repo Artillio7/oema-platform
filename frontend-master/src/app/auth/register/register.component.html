@@ -1,0 +1,104 @@
+<div class="app flex-row align-items-center">
+  <div class="container register-account">
+    <div class="row justify-content-center">
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7 col-xl-5">
+        <div class="card mx-2 card-auth">
+          <div class="card-block p-2">
+            <h1>Sign up <img src="assets/img/{{ appDomain.logo.name }}"
+                class="img-orange-expert-logo col-sm-6 float-right"></h1>
+
+            <div class="pt-2 pb-2" style="clear: both">
+              <a href="/api/auth/login/oidc"><button type="button" class="btn btn-block btn-primary" (click)="signInWithOrangeConnect()">
+                <i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp;Sign up with Orange Connect
+              </button></a>
+            </div>
+
+            <p class="font-weight-bold text-center">-- or --</p>
+
+            <p class="text-muted">Create your account</p>
+            <form role="form" [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-horizontal" novalidate>
+              <div class="form-group mb-1 pt-2">
+                <div class="input-group">
+                  <span class="input-group-addon" aria-hidden="true"><i class="fa fa-at" aria-hidden="true"></i></span>
+                  <input [formControl]="email" id="email" type="email" name="email"
+                    class="form-control checking-field text-lowercase" placeholder="Email" required
+                    (focus)="closeNotification()">
+                </div>
+                <span id="help-block-email" class="help-block" *ngIf="email.touched">
+                  <span id="required-email" class="text-danger" *ngIf="email.hasError('required')">Email is required</span>
+                  <span id="invalid-email" class="text-danger" *ngIf="email.hasError('invalidEmail')">Invalid email address</span>
+                  <span id="unauthorized-email" class="text-danger" *ngIf="email.hasError('externEmail')">The Orange Expert programme is restricted to internal employees.</span>
+                </span>
+              </div>
+
+              <div class="form-group mb-1">
+                <div class="input-group">
+                  <span class="input-group-addon" aria-hidden="true">
+                    <i class="fa fa-lock" aria-hidden="true"></i></span>
+                  <input [formControl]="password" id="password" type="password" name="password" class="form-control checking-field"
+                    placeholder="Password" required (focus)="closeNotification()">
+                </div>
+                <span id="help-block-passwd" class="help-block" *ngIf="password.touched">
+                  <span id="required-passwd" class="text-danger" *ngIf="password.hasError('required')">Password is required</span>
+                  <span id="invalid-passwd" class="text-danger"
+                    *ngIf="!password.hasError('required') && password.hasError('invalidPassword')">
+                    At least 8 characters, one number, one special character, upper & lowercase letters</span>
+                </span>
+              </div>
+
+              <div class="form-group mb-2">
+                <div class="input-group">
+                  <span class="input-group-addon" aria-hidden="true">
+                    <i class="fa fa-lock" aria-hidden="true"></i></span>
+                  <input [formControl]="confirmPassword" id="repeat_password" type="password" name="repeat_password"
+                    class="form-control checking-field" placeholder="Repeat password" required
+                    (focus)="closeNotification()">
+                </div>
+                <span id="help-block-confirm-passwd" class="help-block" *ngIf="confirmPassword.touched">
+                  <span id="required-confirm-passwd" class="text-danger" *ngIf="confirmPassword.hasError('required')">
+                    Confirm Password is required</span>
+                  <span id="mismatched-passwd" class="text-danger" *ngIf="confirmPassword.hasError('mismatchedPasswords')">
+                    Passwords do not match</span>
+                </span>
+              </div>
+
+              <div class="form-group">
+                <p class="terms">By creating an account, you agree to our <span (click)="openPrivacyPolicy()"
+                    class="text-primary" role="button" style="cursor: pointer;">Terms & Privacy Policy</span>.</p>
+              </div>
+
+              <div class="form-group">
+                <button [disabled]="!registerForm.valid" type="submit" id="register" class="btn btn-block btn-primary">
+                  Create Account</button>
+              </div>
+            </form>
+
+            <div class="row">
+              <div class="col-12 text-left">
+                <button type="button" class="btn btn-link px-0" routerLink="/{{ urlPrefix }}/auth/login"
+                  style="white-space: normal">Already have an account? Sign in!</button>
+              </div>
+            </div>
+
+            <ng-template #privacyPolicy let-c="close" let-d="dismiss">
+              <div class="modal-header">
+                <h4 class="modal-title text-primary">{{ appDomain.policy.title }}</h4>
+              </div>
+
+              <div class="modal-body" [innerHTML]="appDomain.policy.body">
+
+              </div>
+              <div class="modal-footer mt-2">
+                <button type="button" id="deny-policy" class="btn btn-secondary" (click)="declinePrivacyPolicy()">
+                  {{ appDomain.policy.denyLabel }}</button>
+                <button id="accept-policy" class="btn btn-primary" (click)="acceptPrivacyPolicy()">
+                  {{ appDomain.policy.acceptLabel }}</button>
+              </div>
+            </ng-template>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

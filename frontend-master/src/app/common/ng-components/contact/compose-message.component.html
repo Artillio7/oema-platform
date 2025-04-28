@@ -1,0 +1,20 @@
+<div class="contact-us">
+  <h5>Contact us for support or bug report</h5>
+  <div *ngIf="details" class="contact-form-error">
+    {{ details }}
+  </div>
+  <form role="form" (ngSubmit)="send()" #contactForm="ngForm" class="form-horizontal contact-form">
+    <div>
+      <div>
+        <label>Message: </label>
+      </div>
+      <div>
+        <textarea [(ngModel)]="message" class="contact-textarea" [disabled]="sending" name="message"></textarea>
+      </div>
+    </div>
+    <div *ngIf="!sending" class="mt-1">
+      <button class="btn btn-outline-primary mr-1" type="submit">Send</button>
+      <button class="btn btn-outline-secondary" type="button" (click)="cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,122 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+
+      <div appCardWidget class="card">
+
+        <div class="card-header">
+          <i class="fa fa-users text-primary" aria-hidden="true"></i> Registered Users
+          <div class="card-actions widget-controls">
+            <a data-widgster="fullscreen" href="#" class="transition" (click)="manageClicksOnDocument($event)">
+              <i class="fa fa-expand"></i>
+            </a>
+            <a data-widgster="restore" href="#" class="transition" (click)="manageClicksOnDocument($event)">
+              <i class="fa fa-compress"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-block widget-body users-table">
+          <div class="main-page-menu mt-1 mb-1">
+            <a href="/{{ urlPrefix }}/dashboard/users/create-account" id="create-account" class="btn btn-outline-info pull-left btn-create-new-account mt-1"><i class="fa fa-user-plus"
+                aria-hidden="true"></i>
+              &nbsp;Create new account</a>
+            <button [disabled]="users?.length === 0 || excelExportBtn==='fa-spinner fa-pulse fa-fw'" type="button"
+              class="btn btn-default pull-right btn-export-excel mt-1" [appXlsxExport]="users" [xlsxDataType]="'users'"
+              [xlsxFileName]="'export-users_experts-management.xlsx'" (backEndResponse)="onExcelExport($event)"><i
+                class="fa {{ excelExportBtn }}" aria-hidden="true"></i> &nbsp;Export as Excel</button>
+          </div>
+
+          <div *ngIf="!tableReady" class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+
+          <div class="oema-datatables mt-1 mb-2">
+            <table id="users-list" datatable [dtOptions]="dtOptions"
+              class="table table-bordered table-hover nowrap" width="100%">
+              <thead>
+                <tr>
+                  <th class="row-selector"></th>
+                  <th class="username">Last name</th>
+                  <th class="username">First name</th>
+                  <th>Gender</th>
+                  <th>Birthday</th>
+                  <th>Class.</th>
+                  <th>Entity</th>
+                  <th>Location</th>
+                  <th>Country</th>
+                  <th>CUID</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Manager Name</th>
+                  <th>Manager Email</th>
+                  <th>HR Name</th>
+                  <th>HR Email</th>
+                  <th>Registered on</th>
+                  <!--<th class="community-name">Community</th>-->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <!--<td>{{ user.community }}</td>-->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <ng-template #accountDeletion let-c="close" let-d="dismiss">
+        <div class="modal-header">
+          <h4 class="modal-title">Sure to delete account(s) permanently?</h4>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form role="form" [formGroup]="deleteAccountsForm" (ngSubmit)="deleteSelectedUserAccounts()" class="row mt-2" novalidate>
+          <div class="modal-body">
+            <p>We will immediately delete all of the selected user account(s), along with all of user-saved data.</p>
+            <p class="text-danger">The action is irreversible.</p>
+            <hr>
+
+            <h6 class="text-semibold"><strong>To delete the account(s), please confirm.</strong></h6>
+            <div class="form-group">
+              <label class="form-control-label" for="confirm" style="margin-top:10px">Type <code
+                  class="noselect text-danger">delete the account(s)</code> below:</label>
+              <input formControlName="confirm" type="text"
+                class="form-control text-danger text-semibold text-size-small" id="confirm" name="confirm">
+              <span class="help-block text-danger"
+                *ngIf="deleteAccountsHasError && deleteAccountsFormConfirm.hasError('invalidConfirmMsg')">Write <code
+                  class="noselect">delete the account(s)</code> to confirm removal</span>
+            </div>
+          </div>
+          <div class="modal-footer mt-2">
+            <button type="button" id="cancel-account-deletion" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+            <button type="submit" id="delete-accounts" class="btn btn-danger">Delete now</button>
+          </div>
+        </form>
+      </ng-template>
+
+    </div>
+  </div>
+</div>

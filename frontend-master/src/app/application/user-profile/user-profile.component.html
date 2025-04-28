@@ -1,0 +1,222 @@
+<div class="animated fadeIn">
+  <div *ngIf="userToDisplay && user" class="row justify-content-center user-profile">
+    <div class="profile-cover col-xl-10">
+      <div class="media">
+        <div class="media-left">
+          <app-form-user-photo [userId]="userToDisplay._id" [imgSrc]="userToDisplayPhotoSrc" [formControl]="profileFormUserPhoto" [profileHasError]="profileHasError"></app-form-user-photo>
+        </div>
+
+        <div class="media-body">
+          <h5 class="text-primary">
+            {{ (userToDisplay.firstname || '') | capitalizeName }} {{ userToDisplay.lastname?.toUpperCase() || '' }}
+            <small class="display-block">{{ userToDisplay.email }}</small>
+            <small class="display-block">
+              {{ userToDisplay.location ? userToDisplay.location + ', ' : '' }} {{ userToDisplay.country || '' }}
+            </small>
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-10">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-user-circle text-primary" aria-hidden="true"></i> Profile information
+        </div>
+        <div class="card-block">
+          <form role="form" class="mt-2" (ngSubmit)="updateProfile()" novalidate>
+            <app-user-profile-form [profileForm]="profileForm" [profileHasError]="profileHasError">
+            </app-user-profile-form>
+
+            <div class="row">
+              <div class="form-group col-md-12">
+                <button class="btn btn-primary pull-right" type="submit" [innerHTML]="profileButtonLabel"></button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-10">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-cog text-primary" aria-hidden="true"></i> Account settings
+        </div>
+        <div class="card-block">
+          <form role="form" [formGroup]="accountForm" (ngSubmit)="updateAccount()" class="row mt-2" novalidate>
+            <div class="form-group col-md-6 mb-2">
+              <label class="form-control-label" for="email">Email</label>
+              <div class="input-group">
+                <div class="input-group-addon" aria-hidden="true"><i class="fa fa-at"></i></div>
+                <input *ngIf="userToDisplay.email !== user.email" [formControl]="accountFormEmail" id="email"
+                  class="form-control text-lowercase" name="email" type="email" value="{{ userToDisplay.email }}">
+                <input *ngIf="userToDisplay.email === user.email" [formControl]="accountFormEmail" id="email"
+                  class="form-control checking-field text-lowercase" name="email" type="email" readonly="readonly"
+                  value="{{ userToDisplay.email }}">
+              </div>
+              <span class="help-block" *ngIf="accountFormEmail.touched">
+                <span class="text-danger" *ngIf="accountFormEmail.hasError('invalidEmail')">Invalid email address</span>
+              </span>
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="form-group col-md-6 mb-2">
+              <label class="form-control-label" for="password">New password</label>
+              <div class="input-group">
+                <div class="input-group-addon" aria-hidden="true"><i class="fa fa-lock"></i></div>
+                <input [formControl]="accountFormPassword" id="password" class="form-control" name="password" type="password"
+                  placeholder="Password" required>
+              </div>
+              <span class="help-block" *ngIf="accountFormPassword.touched">
+                <span class="text-danger"
+                  *ngIf="accountFormPassword.hasError('invalidPassword')">
+                  At least 8 characters, one number, one special character, upper & lowercase letters</span>
+              </span>
+            </div>
+
+            <div class="form-group col-md-6 mb-2">
+              <label class="form-control-label" for="repeat_password">Confirm new password</label>
+              <div class="input-group">
+                <div class="input-group-addon" aria-hidden="true"><i class="fa fa-lock"></i></div>
+                <input [formControl]="accountFormConfirmPassword" id="repeat_password" class="form-control"
+                  name="repeat_password" type="password" placeholder="Repeat password" required>
+              </div>
+              <span class="help-block" *ngIf="accountFormConfirmPassword.touched">
+                <span class="text-danger" *ngIf="accountFormConfirmPassword.hasError('mismatchedPasswords')">
+                  Passwords do not match</span>
+              </span>
+            </div>
+
+
+            <!--<div *ngIf="user && (user.role === 'Referent' || user.role === 'Admin')" class="form-group col-md-3 mb-2">
+                    <label class="form-control-label" for="role">Role</label>
+                    <div class="input-group">
+                        <div class="input-group-addon" aria-hidden="true"><i class="fa fa-smile-o"></i></div>
+                        <select formControlName="role" id="role" class="form-control" name="role" size="1">
+                            <option disabled>Please select</option>
+                            <option value="Applicant" selected>Applicant</option>
+                            <option value="Reviewer">Reviewer</option>
+                            <option value="Referent">Referent</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                </div>-->
+
+            <div *ngIf="user && (user.role === 'Referent' || user.role === 'Admin')" class="form-group col-md-3 mb-2">
+              <label class="form-control-label" for="account">Account</label>
+              <div class="input-group">
+                <div class="input-group-addon" aria-hidden="true"><i class="fa fa-dot-circle-o"></i></div>
+                <select formControlName="account" id="account" class="form-control" name="account" size="1">
+                  <option disabled value="Select an action">Select an action</option>
+                  <option value="suspended">Suspend</option>
+                </select>
+              </div>
+            </div>
+
+            <!--<div *ngIf="user && (user.role === 'Referent' || user.role === 'Admin')" class="form-group col-md-3 mb-2">
+                    <label class="form-control-label" for="status">Status</label>
+                    <div class="input-group">
+                        <div class="input-group-addon" aria-hidden="true"><i class="fa fa-graduation-cap"></i></div>
+                        <select formControlName="status" id="status" class="form-control" name="status" size="1">
+                            <option disabled>Please select</option>
+                            <option value="None" selected>None</option>
+                            <option value="Expert">Expert</option>
+                            <option value="Referent">Referent</option>
+                            <option value="Guest">Guest</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div *ngIf="user && (user.role === 'Referent' || user.role === 'Admin')" class="form-group col-md-3 mb-2">
+                    <label class="form-control-label" for="community">Community</label>
+                    <div class="input-group">
+                        <div class="input-group-addon" aria-hidden="true"><i class="fa fa-cubes"></i></div>
+                        <select formControlName="community" id="community" class="form-control" name="community" size="1">
+                            <option disabled>Please select</option>
+                            <option value="Applicant">None</option>
+                            <option *ngFor="let community of communities" value="{{ community.name }}">{{ community.name }}</option>
+                        </select>
+                    </div>
+                </div>-->
+
+            <div class="form-group col-md-12">
+              <button class="btn btn-primary pull-right" type="submit" [innerHTML]="accountButtonLabel"></button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-10">
+      <div class="card">
+        <div class="card-header card-inverse card-danger">
+          <i class="fa fa-user-times" aria-hidden="true"></i> Delete account
+        </div>
+        <div class="card-block">
+          <p><strong>Warning:</strong> once you delete your account, <code
+              class="text-danger">there is no going back</code>. Please be careful.</p>
+
+          <ng-template #deletion let-c="close" let-d="dismiss">
+            <div class="modal-header">
+              <h4 class="modal-title">Sure to delete account?</h4>
+              <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form role="form" [formGroup]="deleteForm" (ngSubmit)="deleteAccount()" class="row mt-2" novalidate>
+              <div class="modal-body">
+                <p>We will immediately delete all of personal and account information, along with all of saved data. The
+                  action is irreversible.</p>
+                <hr>
+
+                <h6 class="text-semibold"><strong>To delete your account, please enter in lowercase</strong></h6>
+                <div class="form-group">
+                  <label class="form-control-label" for="email">{{ (user.role === 'Referent' || user.role === 'Admin')
+                    && user.email !== userToDisplay.email ? 'The user email address' : 'Your email address' }}</label>
+                  <input formControlName="email" type="text" class="form-control text-semibold" id="email" name="email">
+                  <span class="help-block text-danger"
+                    *ngIf="deleteHasError && deleteFormEmail.hasError('required')">Email is required</span>
+                  <span class="help-block text-danger"
+                    *ngIf="deleteHasError && deleteFormEmail.hasError('invalidUserEmail')">Email address does not
+                    match</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-control-label" for="confirm" style="margin-top:10px">
+                    To confirm, type <code class="noselect text-danger">
+                      {{ (user.role === 'Referent' || user.role === 'Admin')
+                      && user.email !== userToDisplay.email ? 'delete the account' : 'delete my account' }}
+                    </code> below:
+                  </label>
+                  <input formControlName="confirm" type="text"
+                    class="form-control text-danger text-semibold text-size-small" id="confirm" name="confirm">
+                  <span class="help-block text-danger"
+                    *ngIf="deleteHasError && deleteFormConfirm.hasError('invalidConfirmMsg')">
+                    Write <code class="noselect">
+                      {{ (user.role === 'Referent' || user.role === 'Admin')
+                      && user.email !== userToDisplay.email ? 'delete the account' : 'delete my account' }}
+                    </code> to confirm removal
+                  </span>
+                </div>
+              </div>
+              <div class="modal-footer mt-2">
+                <button type="button" class="btn btn-secondary" (click)="c('Close click')">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete now</button>
+              </div>
+            </form>
+          </ng-template>
+
+
+          <button type="button" class="btn btn-danger mt-2" (click)="openAccountDeletionModal(deletion)">
+            <i class="fa fa-user-times"></i>&nbsp; {{ (user.role === 'Referent' || user.role === 'Admin')
+              && user.email !== userToDisplay.email ? 'Delete the account' : 'Delete my account' }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>

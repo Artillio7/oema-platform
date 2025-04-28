@@ -1,0 +1,92 @@
+.forms-table {
+  .main-page-menu {
+    .view-expert-community {
+      width: 300px;
+      max-width: 100%;
+    }
+
+    h6 {
+      clear: both;
+      padding-top: 40px;
+    }
+  }
+
+  .select-app-type {
+    display: inline-block;
+    position: relative;
+    border-radius: 5px;
+    background-color: lighten(#1FBDED, 20%);
+    margin-bottom: 20px;
+
+    select {
+      width: auto;
+      margin: 0;
+      padding: .75em 1.5em;
+      outline: none;
+      cursor: pointer;
+      border: none;
+      border-radius: 0;
+      background-color: transparent;
+      color: darken(#1FBDED, 35%);
+      font-weight: 700;
+
+      /* removes the native down arrow */
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      text-indent: 0.01px;
+      text-overflow: '';
+
+      &::-ms-expand {
+        display: none;
+      }
+
+    }
+
+    &:after {
+      position: absolute;
+      top: 1.25em;
+      right: 1em;
+      /* Styling the down arrow */
+      width: 0;
+      height: 0;
+      padding: 0;
+      content: '';
+      border-left: .25em solid transparent;
+      border-right: .25em solid transparent;
+      border-top: .375em solid darken(#1FBDED, 25%);
+      pointer-events: none;
+    }
+  }
+
+  @-moz-document url-prefix() {
+    .custom-select select {
+      padding-right: 1.75em;
+    }
+  }
+
+  @media screen and (-webkit-min-device-pixel-ratio:0) {
+    .custom-select select {
+      padding-right: 2em;
+    }
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .forms-table {
+    .main-page-menu {
+      .view-expert-community {
+        width: 100%;
+      }
+
+      .btn-create-new-form {
+        width: 100%;
+        margin-top: 20px;
+      }
+
+      .btn-export-excel {
+        width: 100%;
+        margin-top: 0 !important;
+      }
+    }
+  }
+}

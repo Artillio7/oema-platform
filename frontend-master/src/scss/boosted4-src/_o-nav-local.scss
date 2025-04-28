@@ -1,0 +1,126 @@
+//
+//      Nav local
+//
+
+.o-nav-local {
+  margin-bottom: ($spacer * 2);
+
+  hr {
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid $gray-light-o;
+  }
+
+  .nav-item + .nav-item {
+    margin-left: 1rem;
+  }
+
+  .nav.flex-column .nav-item {
+    margin-left: 0;
+  }
+
+  .nav-link {
+    padding: .9375rem 0 1.0625rem;
+    font-size: $font-size-base;
+    font-weight: bold;
+    line-height: 1;
+
+    &.active {
+      color: $brand-primary;
+    }
+  }
+}
+
+.o-nav-local.inverse {
+  background-color: #000;
+
+  hr {
+    border-top: 1px solid $gray-dark;
+  }
+
+  .nav-link {
+    @include hover-focus {
+      color: $brand-primary;
+    }
+
+    &:focus {
+      outline-color: #fff;
+    }
+
+    color: #fff;
+    background-color: #000;
+
+    &.active {
+      color: $brand-primary;
+    }
+  }
+}
+
+// Mobile
+
+@include media-breakpoint-down(sm) {
+  .o-nav-local {
+
+    .local-select {
+      position: relative;
+      width: 100%;
+
+      &::after {
+        position: absolute;
+        top: 1rem;
+        right: .625rem;
+        padding-left: .375rem;
+        font-family: "icon-orange";
+        font-size: inherit;
+        color: #000;
+        content: "\e93c";
+      }
+    }
+
+    .nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 20;
+      display: none;
+      flex-flow: column;
+      width: 100%;
+      margin-top: -1px;
+      background-color: #fff;
+      border: 2px solid $gray-light-o;
+
+      &.show {
+        display: flex;
+      }
+
+      .nav-item {
+        margin-left: 0;
+
+        .nav-link {
+          @include hover {
+            color: #fff;
+            background-color: $brand-primary;
+          }
+
+          @include focus {
+            color: #000;
+            background-color: #fff;
+          }
+
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .o-nav-local.inverse {
+    .local-select::after {
+      color: #fff;
+    }
+
+    .nav-item .nav-link:focus {
+      color: $brand-primary;
+      background-color: #000;
+    }
+  }
+}

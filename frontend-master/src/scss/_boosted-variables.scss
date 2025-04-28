@@ -1,0 +1,97 @@
+// Boosted overrides
+
+// Colors
+//
+$Orange-color: #f16e00;
+
+$gray-dark: #384042;
+$gray: #9faecb;
+$gray-light: #c0cadd;
+$gray-lighter: #e1e6ef;
+$gray-lightest: #f9f9fa;
+
+$default-color: #fff;
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+
+$enable-transitions: true;
+$enable-rounded: false;
+
+// Spacing
+//
+$spacer: 1rem !default;
+$spacer-x: $spacer  !default;
+$spacer-y: $spacer  !default;
+$spacers: (
+  q: (x: ($spacer-x * 0.25),
+    y: ($spacer-y * 0.25)),
+  h: (x: ($spacer-x * 0.5),
+    y: ($spacer-y * 0.5)),
+  0: (x: 0,
+    y: 0),
+  1: (x: $spacer-x,
+    y: $spacer-y ),
+  2: (x: ($spacer-x * 1),
+    y: ($spacer-y * 1.5)),
+  3: (x: ($spacer-x * 3),
+    y: ($spacer-y * 3))
+);
+
+// Body
+//
+$body-bg: #f2f4f8;
+
+// Typography
+//
+$font-size-base: 0.925rem;
+
+
+// Breadcrumbs
+//
+$breadcrumb-padding-x: 2rem;
+$breadcrumb-padding-y: .75rem;
+$breadcrumb-bg: transparent;
+
+// Cards
+//
+$card-border-color: $gray-lighter;
+$card-cap-bg: $gray-lightest;
+$card-border-width: 1px;
+
+// Dropdowns
+//
+$dropdown-padding-y: 0;
+$dropdown-border-color: $gray-lighter;
+$dropdown-divider-bg: $gray-lightest;
+$dropdown-header-color: $gray-light;
+$dropdown-link-color: $gray-dark;
+$dropdown-border-width: 1px;
+// Progress bars
+//
+$progress-bg: darken($gray-lightest, 1%);
+
+// Forms
+//
+$input-border-color: $gray-lighter;
+
+//Nav
+//
+$nav-tabs-border-width: 1px;
+
+//Popover
+//
+$popover-bg: $white;
+$popover-border-width: 1px;
+$popover-border-color: rgba($black, .2);
+$popover-box-shadow: 0 5px 10px rgba($black, .2);
+
+$popover-title-bg: $gray-lightest;
+
+$popover-arrow-color: $popover-bg;
+$popover-arrow-outer-color: fade-in($popover-border-color, .05);
+
+//Table
+//
+$table-bg-hover: #F7F7F7;

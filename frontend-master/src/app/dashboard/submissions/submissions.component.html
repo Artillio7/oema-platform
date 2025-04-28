@@ -1,0 +1,46 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-md-12">
+
+      <div appCardWidget class="card">
+        <div *ngIf="isSeniorExpert" class="ribbon ribbon-top-right"><span>senior</span></div>
+
+        <div class="card-header">
+          <i class="fa fa-pencil-square text-primary" aria-hidden="true"></i> Application Submissions in {{ thisYear - 1 }}
+          <div class="card-actions widget-controls">
+            <a data-widgster="fullscreen" href="#" class="transition"><i class="fa fa-expand"></i></a>
+            <a data-widgster="restore" href="#" class="transition"><i class="fa fa-compress"></i></a>
+          </div>
+        </div>
+
+        <div class="card-block widget-body forms-table">
+          <div class="main-page-menu mb-1">
+            <h6 *ngIf="infoMsg" [innerHTML]="infoMsg" class="pull-left"></h6>
+
+            <button [hidden]="!tableReady" [disabled]="!forms || excelExportBtn==='fa-spinner fa-pulse fa-fw'"
+              type="button" class="btn btn-default pull-right btn-export-excel mt-2 mb-1"
+              [appXlsxExport]="{community: myCommunity, communityId: myCommunityId, year: thisYear}"
+              [xlsxDataType]="'preview-submissions'" [xlsxFileName]="isSeniorExpert ? 'export-senior-submitted-applications.xlsx' : 'export-submitted-applications.xlsx'"
+              [isSeniorExpert]="isSeniorExpert"
+              (backEndResponse)="onExcelExport($event)">
+              <i class="fa  {{ excelExportBtn }}" aria-hidden="true"></i> &nbsp;Export submitted forms as Excel
+            </button>
+          </div>
+
+          <div *ngIf="!tableReady && !infoMsg" class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+
+          <app-ongoing-forms-table [urlPrefix]="urlPrefix"
+            [myEmail]="userProfileService.user ? userProfileService.user.email : ''" [tableReady]="tableReady"
+            [dtTrigger]="dtTrigger" [forms]="forms" [isSeniorApp]="isSeniorExpert" (appMenuSelected)="setEventNotification($event)">
+          </app-ongoing-forms-table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,138 @@
+<div class="animated fadeIn">
+  <div class="row justify-content-center">
+    <div class="col-xl-8">
+      <div *ngIf="canSubmitForms === undefined"></div>
+      <!-- Application submission is closed ! -->
+      <div *ngIf="canSubmitForms === false && user && (user.role === 'Applicant' || user.role === 'Reviewer')"
+        class="application-closed">
+        <img class="fishy"
+          src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pjxzdmcgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiNmODk5MWQ7fS5jbHMtMntmaWxsOiNmZDA7fS5jbHMtM3tmaWxsOiMzMTQ5Njc7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZS8+PGcgZGF0YS1uYW1lPSIxOCBDbG9zZWQgU2lnbiIgaWQ9Il8xOF9DbG9zZWRfU2lnbiI+PHJlY3QgY2xhc3M9ImNscy0xIiBoZWlnaHQ9IjM2IiByeD0iNiIgcnk9IjYiIHdpZHRoPSI5NiIgeD0iMTYiIHk9IjY0Ii8+PGNpcmNsZSBjbGFzcz0iY2xzLTIiIGN4PSI2NCIgY3k9IjI4IiByPSI2Ii8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNNzEuODUsNzcuODNhNC4zNyw0LjM3LDAsMCwxLDIuMzQsMSwxLjkzLDEuOTMsMCwxLDAsMi4wOC0zLjI1QTcuOTQsNy45NCwwLDAsMCw3MS44NSw3NGMtMy4xMywwLTUuNTUsMi4wNi01LjU1LDQuNTgsMCwyLjc0LDIuNjQsNC4yMSw1LjM1LDQuNTguNTUuMTEsMiwuNDUsMi4yNiwxLDAsLjU3LTEuMzgsMS0yLDFhNS4yNSw1LjI1LDAsMCwxLTIuNzktMS4xNiwxLjkzLDEuOTMsMCwxLDAtMi40MiwzLDguNzMsOC43MywwLDAsMCw1LjIzLDJjMy4xMiwwLDUuODgtMiw1Ljg4LTQuODJzLTIuODgtNC40LTUuNjYtNC43OGMtMS42LS4zMS0yLS43Ny0yLS43N0M3MC4xNSw3OC4zOSw3MC44LDc3LjgzLDcxLjg1LDc3LjgzWiIvPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTQwLDc2LjM0Vjg3YTIsMiwwLDAsMCwyLDJoNS44M2EyLDIsMCwwLDAsMC00SDQ0Vjc2LjM0QTIsMiwwLDAsMCw0MCw3Ni4zNFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik01MCw4MS40OEE3LjE2LDcuMTYsMCwxLDAsNTcuMjMsNzQsNy4zMiw3LjMyLDAsMCwwLDUwLDgxLjQ4Wm0xMC4yNiwwYzAsMi44OS0zLjIxLDQuNjQtNS4yNywyLjQzLTEuOTQtMi0uNzEtNS44NiwyLjItNS44NkEzLjI5LDMuMjksMCwwLDEsNjAuMyw4MS40OFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik0zNC40NCw3OC44MmEyLDIsMCwwLDAsMi40OS0zLjIxQTcuNyw3LjcsMCwwLDAsMzIuMTUsNzRhNy42LDcuNiwwLDAsMC03LjYsNy40OGgwYzAsNi4zLDcuNDQsOS43LDEyLjM5LDUuODZhMiwyLDAsMCwwLTIuNTEtMy4yLDMuNTIsMy41MiwwLDEsMSwwLTUuMzFaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNODcuNjksNzguMzVhMiwyLDAsMCwwLDAtNEg4MS44YTIsMiwwLDAsMC0yLDJWODdhMiwyLDAsMCwwLDEsMS43NVY4OWg2LjgzYTIsMiwwLDAsMCwwLTRIODMuODFWODMuNjVIODdhMiwyLDAsMCwwLDAtNGgtMy4yVjc4LjM1WiIvPjxwYXRoIGNsYXNzPSJjbHMtMyIgZD0iTTEwMy4wOSw4MS42NGE3LjI5LDcuMjksMCwwLDAtNy4yOC03LjI4SDkzLjY5YTIsMiwwLDAsMC0yLDJWODdhMiwyLDAsMCwwLDIsMmgyLjEzQTcuMzEsNy4zMSwwLDAsMCwxMDMuMDksODEuNjRaTTk1LjgxLDg1aC0uMTJWNzguMzVoLjEyQzEwMC4xNCw3OC4zNSwxMDAuMTgsODQuOTMsOTUuODEsODVaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNOTIuNzMsOThIMjJhNCw0LDAsMCwxLTQtNFY3MGE0LDQsMCwwLDEsNC00SDQyLjU1YTIsMiwwLDAsMCwwLTRIMzIuODNMNTkuOTMsMzQuODlhOCw4LDAsMCwwLDguMTMsMEw4MS43MSw0OC41NGEyLDIsMCwwLDAsMi44My0yLjgzTDcwLjg4LDMyLjA2QTgsOCwwLDAsMCw2NCwyMGEyLDIsMCwwLDAsMCw0LDQsNCwwLDAsMSwyLjc5LDYuODZDNjMuNTgsMzQsNTguMjQsMzAuMDgsNjAuNTEsMjZhMiwyLDAsMCwwLTMuNDktMiw4LDgsMCwwLDAsLjA5LDhMMjcuMTcsNjJIMjJhOCw4LDAsMCwwLTgsOFY5NGE4LDgsMCwwLDAsOCw4SDkyLjczQTIsMiwwLDAsMCw5Mi43Myw5OFoiLz48cGF0aCBjbGFzcz0iY2xzLTMiIGQ9Ik0xMDYsNjJoLTUuMTdMODguMDksNDkuMjZhMiwyLDAsMCwwLTIuODMsMi44M0w5NS4xNyw2Mkg3NmEyLDIsMCwwLDAsMCw0aDMwYTQsNCwwLDAsMSw0LDRWOTRhNCw0LDAsMCwxLTQsNEg5OC41MWEyLDIsMCwwLDAsMCw0SDEwNmE4LDgsMCwwLDAsOC04VjcwQTgsOCwwLDAsMCwxMDYsNjJaIi8+PHBhdGggY2xhc3M9ImNscy0zIiBkPSJNNzAsNjJINDkuMjJhMiwyLDAsMCwwLDAsNEg3MEEyLDIsMCwwLDAsNzAsNjJaIi8+PC9nPjwvc3ZnPg=="
+          alt="We are closed!">
+        <blockquote [innerHTML]="appDomain.welcome.closedMsg">
+        </blockquote>
+      </div>
+      <!-- /Application submission is closed -->
+
+      <div *ngIf="canSubmitForms === true || user && (user.role === 'Referent' || user.role === 'Admin')" class="card">
+        <div *ngIf="urlPrefix.startsWith('senior')" class="ribbon ribbon-top-right"><span>senior</span></div>
+
+        <div class="card-header">
+          <i class="fa fa-hashtag text-primary" aria-hidden="true"></i> Hello{{ userFirstname }}!
+        </div>
+        <div class="card-block">
+          <h4 class="text-primary row" style="font-size: 1.2rem;">
+            <div class="{{ appDomain.logo.freeSpace }}" [innerHTML]="appDomain.welcome.title"></div>
+            <img src="assets/img/{{ appDomain.logo.name }}"
+              class="float-right img-orange-expert-logo {{ appDomain.logo.width }}" alt="{{ appDomain.name }} logo">
+          </h4>
+
+          <div class="clearfix"></div>
+
+          <div *ngIf="pendingCommunity && !creatingApplicationForUserId" class="col-12">
+            <div class="card card-inverse card-danger text-center">
+              <div class="card-block">
+                <blockquote class="card-blockquote">
+                  <p [innerHTML]="pendingFormNotification">
+                  </p>
+                  <p>
+                    <a class="btn btn-outline-white mt-1 mb-1" role="button"
+                      routerLink="/{{ urlPrefix }}/application/form">{{ appDomain.welcome.pendingFormButton }}</a>
+                  </p>
+                  <footer>
+                    <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{
+                      appDomain.welcome.pendingFormFooter }}</strong>
+                  </footer>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="user && (user.role === 'Referent' || user.role === 'Admin')" class="col-12 mt-2 mb-2">
+            <div class="text-primary settings-section-header">
+              <h6><i class="fa fa-pencil" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;As a Referent or Admin, you can create or modify an application for a user.</h6>
+            </div>
+
+            <app-user-search-by-email-name
+            [description]="'Select the user for whom you want to create or modify an application.'"
+            [buttonTitle]="'Select user'"
+            [myRole]="myRole" (userFound)="getUserIdForEditingApplication($event)">
+            </app-user-search-by-email-name>
+          </div>
+
+          <div *ngIf="creatingApplicationForUserId" class="col-12 app-for-user-warning">
+            <div class="card card-inverse card-info text-center">
+              <div class="card-block">
+                <blockquote class="card-blockquote">
+                  <p [innerHTML]="pendingFormForUserNotification">
+                  </p>
+                  <p *ngIf="pendingForUserCommunity">
+                    <a class="btn btn-outline-white mt-1 mb-1" role="button"
+                      routerLink="/{{ urlPrefix }}/application/form/edit/{{ pendingForUserFormId }}/{{ pendingForUserCommunityId }}/{{ pendingForUserFormType }}">Continue editing his/her application</a>
+                  </p>
+                  <footer>
+                    <strong *ngIf="pendingForUserCommunity"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                      NB: you need to submit or delete the candidate's pending form if you want to change for any other choice (community and/or application form type).
+                    </strong>
+
+                    <button class="btn btn-outline-white pull-right mt-2" type="button" (click)="cancelForUserApplication()">
+                      <i class="fa fa-remove" aria-hidden="true"></i>&nbsp; Cancel</button>
+                  </footer>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+
+          <form role="form" (ngSubmit)="startAppForm()" *ngIf="!creatingApplicationForUserId || (creatingApplicationForUserId && !pendingForUserCommunity)">
+            <section class="welcome-msg form-group" [innerHTML]="appDomain.welcome.htmlMessage">
+            </section>
+            <section *ngIf="communities.length > 1" class="community-selection form-group">
+              <h5>{{ urlPrefix.startsWith('senior') ? 'Select the community in which you are an Expert' : 'Please choose the community you want to apply' }}</h5>
+              <div class="text-center">
+                <div id="select-community" class="cs-select cs-skin-border" [ngClass]="{'cs-active': isCommunitiesSelectVisible}" tabindex="0"
+                  (click)="isCommunitiesSelectVisible = !isCommunitiesSelectVisible"
+                  (blur)="isCommunitiesSelectVisible === false">
+                  <span data-test="select-community" class="cs-placeholder">{{ selectedCommunity }}</span>
+                  <div class="cs-options">
+                    <ul>
+                      <li *ngFor="let community of communities; let idx = index"
+                        [ngClass]="{'cs-selected': selectedCommunity === community.name}" (click)="onCommunitySelected($event)">
+                        <span [attr.data-community-id]="idx" id="{{ community.label }}">{{ community.name }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="renewal-selection form-group pt-1" *ngIf="appDomain.welcome.newRenewLabel !== undefined && communities.length > 0">
+              <h5>{{ appDomain.welcome.newRenewLabel }}</h5>
+              <div class="text-primary application-type-radios">
+                <div id="new-app" class="radio abc-radio abc-radio-primary mb-1 hint">
+                  <input type="radio" id="radio1" name="application-type" [(ngModel)]="selectedFormType" value="new"
+                    checked>
+                  <label for="radio1" [innerHTML]="appDomain.welcome.newChoiceLabel">
+                  </label>
+                  <span class="hint-text hint-top" [innerText]="appDomain.welcome.newChoiceLabelHint"></span>
+                </div>
+                <div *ngIf="renewalFormExists" id="renew-app" class="radio abc-radio abc-radio-primary mb-3 hint">
+                  <input type="radio" id="radio2" name="application-type" [(ngModel)]="selectedFormType" value="renew">
+                  <label for="radio2" [innerHTML]="appDomain.welcome.renewChoiceLabel">
+                  </label>
+                  <span class="hint-text hint-top" [innerText]="appDomain.welcome.renewChoiceLabelHint"></span>
+                </div>
+              </div>
+            </section>
+
+            <section class="welcome-contact">
+              <p>{{ appDomain.supportLabel }}<mark><a [routerLink]="['', { outlets: { contact: ['compose'] } }]">{{
+                    appDomain.contactUs }}</a></mark>.</p>
+            </section>
+
+            <div class="text-right">
+              <button data-test="btn-get-started-app" type="submit" id="get-started" class="btn btn-primary">{{ appDomain.welcome.nextButtonLabel }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
