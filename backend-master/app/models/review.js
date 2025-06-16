@@ -264,6 +264,6 @@ Reviews['Senior' + process.env.NETWORK_OPERATIONS] = mongoose.model('Senior' + p
 Reviews['Senior' + process.env.SECURITY] = mongoose.model('Senior' + process.env.SECURITY + 'Review', ReviewSchema);
 Reviews['Senior' + process.env.SOLUTIONS_CONTENT_SERVICES] = mongoose.model('Senior' + process.env.SOLUTIONS_CONTENT_SERVICES + 'Review', ReviewSchema);
 Reviews['Senior' + process.env.BIG_DATA_AI] = mongoose.model('Senior' + process.env.BIG_DATA_AI + 'Review', ReviewSchema);
-
+Reviews['Review'] = mongoose.model('Review', ReviewSchema);
 
 module.exports = Reviews;

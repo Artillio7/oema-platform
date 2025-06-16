@@ -139,7 +139,7 @@ Forms[process.env.SOLUTIONS_CONTENT_SERVICES] = mongoose.model(process.env.SOLUT
 Forms[process.env.BIG_DATA_AI] = mongoose.model(process.env.BIG_DATA_AI, AppFormSchema);
 Forms[process.env.EXPERTS_DTSI] = mongoose.model(process.env.EXPERTS_DTSI, AppFormSchema);
 Forms[process.env.DATA_UP] = mongoose.model(process.env.DATA_UP, AppFormSchema);
-
+Forms['Form'] = mongoose.model('Form', AppFormSchema);
 Forms['Senior' + process.env.SOFTWARE] = mongoose.model('Senior' + process.env.SOFTWARE, AppFormSchema);
 Forms['Senior' + process.env.COMMUNICATION_SERVICES] = mongoose.model('Senior' + process.env.COMMUNICATION_SERVICES, AppFormSchema);
 Forms['Senior' + process.env.ENERGY_ENVIRONMENT] = mongoose.model('Senior' + process.env.ENERGY_ENVIRONMENT, AppFormSchema);
@@ -148,6 +148,4 @@ Forms['Senior' + process.env.NETWORK_OPERATIONS] = mongoose.model('Senior' + pro
 Forms['Senior' + process.env.SECURITY] = mongoose.model('Senior' + process.env.SECURITY, AppFormSchema);
 Forms['Senior' + process.env.SOLUTIONS_CONTENT_SERVICES] = mongoose.model('Senior' + process.env.SOLUTIONS_CONTENT_SERVICES, AppFormSchema);
 Forms['Senior' + process.env.BIG_DATA_AI] = mongoose.model('Senior' + process.env.BIG_DATA_AI, AppFormSchema);
-
-
 module.exports = Forms;
